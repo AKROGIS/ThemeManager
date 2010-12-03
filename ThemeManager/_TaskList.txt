@@ -1,0 +1,141 @@
+﻿Priority User Features
+======================
+filtering (general solution needs to archive shortcuts in session.xml)
+Shortcuts
+
+
+Priority Admin Features
+=======================
+Save As...
+node-cloning not working
+multi-select drag-n'-drop not working
+
+
+TM 2.0 missing features
+=======================
+Save to MSAccess DB
+Help System
+
+Bugs
+=====
+See Help.doc
+ 
+
+Testing
+=======
+Check with "borrowed license"
+Check with no license
+
+
+Cleanup/Beautification
+======================
+Review the Iserializable classes.  Make sure we are not serializing more than we need.
+Clean up/beautify properties panel
+Preferences Panel Cleanup and Expansion
+
+
+New features - Editing/Misc
+===========================
+Filter Theme list based on user/park preferences
+Select multiple themes
+New Logo
+Undo/Redo when editing themelists
+Prompt to save (if themelists were edited) when quitting
+Store favorites and search results as "shortcuts", not clones
+Allow park based configuration files
+Save user choice of Sort Order for each treeview
+Search results to show pointer back to source
+preload metadata as a preference
+Take advantage of ArcGIS 10 Indexing ??
+Create my own metadata cache/index
+Compress the xml themelist
+Preload metadata abstract into description
+button to check/update theme data (description, pubdate) from metadata
+Save an arbitary tree as a new themelist
+Use today's date as pubdate when creating a new category/themelist
+use layerfile's file date when creating a new theme if there is no pubdate in metadata)
+Check out license in background
+Preload metadata in the background (disable with setting)
+Setting to skip load of old themes from registry
+Setting to always check and load "Standard Theme" (as specified by admin)
+Setting to specify search path and load all themes found in those folders.
+Use editable datagrid for Author attributes.
+searching is confusing.  Make default searching search all.  Make advanced search easier to get to.
+Advanced search panel
+	- specify arbitrary metadata element to search.
+	- Make the search panel more like a Mac search (graphically build a search string)
+Allow relative paths - use a themelist property
+Expand Map documents layers -> sub themes
+Allow drag and drop between siblings
+ - redo draw behaviour of treeview.
+Allow drop on favorites tab (== add to favorites)
+Restore unsorted order
+Copy/Paste category theme as a theme manager path (text)
+Parallel Linq (requires .net 4.0) to speed up searches.
+Allow copy of readonly properties
+Search tree should not contain only a sub-theme (add the full theme)
+provide options to sort just visible, or just selected branches
+provide a default "new" button based on current tree/node
+provide preference so that search from toolbar uses current tab panel/current node as search point
+provide "Cancel" button while doing a Sync All on a theme list
+provide a cancel button while checking for a ArcGIS License
+Create a cache of thumbnail images, store in metadata. 
+
+
+New features - User Interface
+=============================
+Use WPF for more elegant UI
+Use flyout/dockable windows (instead of tab panels)
+Separate Toolbar, Tree browser, and metadata windows to allow repositioning.
+Implement floating toolbars
+implement closable toolbars
+context menu on form to add/remove menus/toolbars
+Fill metadata pane with instructions on first startup.
+New icon/function should switch to the last used tool.
+Add description to status bar, and/or tooltip
+Search results should show where they came from
+Allow font/color choices for different node types.
+double click a theme to launch (if no children) - set with preference
+
+
+Code reorganization (refactoring)
+===================================
+Use a metadata hashtable (so duplicate metadata files are not loaded twice for different themes)
+If drag over a tab, then switch to that tab.
+Add Logic for new XML versions.
+Remove dependency on MSXML2 (Stylesheets.cs)
+The TMNode._datastore should be a ThemeData Object, which may have a datastore property.
+
+
+Questions
+==================
+Do I want to clone or reference TMNode when copying.  I think I need to clone.
+ - edits in favorites should not show up in Theme List
+Should default search with multiple words be search all or search any.
+
+Improvements
+===============
+Faster Loading
+  - Save and read theme lists as XML
+  - Stand alone TM does not connect to license server until it needs to.
+Doesn't require an adminstrative installation
+Doesn't write to the registry
+drag'n'drop/copy'n'paste of themes and categories in all trees
+Create/Edit categories in favorites and searches
+Full editing of searches and favorites
+Saves favorites and searches
+Can drag'n'drop/copy'n'paste any file (i.e kml/mxd) into the themelist and launch
+
+Improvements supported but not yet implemented
+==============================================
+display/search metadata in SDE feature classes
+layer groups can be nested arbitrarily deep.
+
+New Ideas:
+===========
+Create a new node type which is a shortcut.
+ * Favorites and searches can be shortcuts to a themelist
+ * these shortcuts can be organized with categories/sub categorys.
+ * favorites and searches can only have a categories or shortcuts.
+ * short cuts must point to a category or theme (not themelist or subtheme) in a themelist.
+ * Shortcuts may become broken if the data they point to is missing or reorganized.

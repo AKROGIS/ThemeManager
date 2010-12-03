@@ -1,0 +1,68 @@
+﻿<!--
+This HTML file will be displayed if the metadata could not be found, or if there is an error in processing
+the metadata.  This file can be customized to suit your taste.
+Since this text is pre-processed by Theme Manager before being given to the browser, it cannot support
+hyperlinks to relative paths.  therefore, the CSS stylesheet is embedded. 
+
+The following substitutions will be made by Theme Manager:
+{0} = theme name,
+{1} = theme path with all parent categories
+{2} = metadata path/url
+{3} = Simple Error message
+{4} = verbose error message
+
+Using a substitution code is optional, or you can use them multiple times.
+It is an error to use any open or close brackets unless they enclose the numbers above.
+If you need to use a open or close bracket in your html (i.e. in embedded CSS),
+then you must prefix it with a second open or closed bracket
+If you don't see this file when theme manager runs, then there is probably a formating
+error, See the .Net formating codes for more info http://msdn.microsoft.com/en-us/library/txafckwd.aspx
+This file is processed as:
+  results = string.Format(thisfile, Name, Path, MetaPath, error, verbose_error);
+-->
+
+<html>
+	<head>
+		<title>No Metadata</title>
+		<!-- link  rel="StyleSheet" type="text/css" href="tm.css"-->
+		<style type="text/css">
+		h1
+		{{
+			text-align: center;
+			font-style: normal;
+			font-family: Helvetica, Arial, sans-serif;
+			font-variant: small-caps;
+			color: #006600;
+		}}
+
+		dl dt
+		{{
+			font-weight: bold;
+			color: #0066ff;
+		}}
+
+		dl dd
+		{{
+			font-style: italic;
+			color: #6699ff;
+		}}
+		</style>
+	</head>
+	<body>
+		<h1>No Metadata</h1>
+		<hr />
+		<dl>
+			<dt> Name:</dt>
+			<dd title="{1}">{0}</dd>
+			
+			<dt> Metadata path:</dt>
+			<dd>{2}</dd>
+			
+			<dt> Error:</dt>
+			<dd>{3}</dd>
+			
+			<dt> Exception:</dt>
+			<dd>{4}</dd>
+		</dl>
+	</body>
+</html>

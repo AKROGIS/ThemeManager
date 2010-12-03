@@ -1,0 +1,9 @@
+glob:ThemeManager.suo
+glob:ThemeManager/bin
+glob:ThemeManager/obj
+glob:ThemeManager/StyleCop.Cache
+glob:ThemeManager/ThemeManager_TemporaryKey.pfx
+glob:ThemeManager/ThemeManager.csproj.*
+glob:ThemeManager/Deployment/Theme Manager 3.0 for ArcGIS 9.3
+glob:ThemeManager/Deployment/Theme Manager 3.0 for ArcGIS 10.0
+glob:ThemeManager/Deployment/*.zip

@@ -1,0 +1,177 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NPS.AKRO.ThemeManager.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="StylesheetSubDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Metadata\Stylesheets</Value>
+    </Setting>
+    <Setting Name="RegistryArcDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HKEY_LOCAL_MACHINE\Software\ESRI\ArcGIS</Value>
+    </Setting>
+    <Setting Name="RegistryArc8Dir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HKEY_LOCAL_MACHINE\Software\ESRI\ArcInfo\Desktop\8.0</Value>
+    </Setting>
+    <Setting Name="ArcDir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Program Files\ArcGIS\</Value>
+    </Setting>
+    <Setting Name="Arc64Dir" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Program Files (x86)\ArcGIS\</Value>
+    </Setting>
+    <Setting Name="RegistryArcKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">InstallDir</Value>
+    </Setting>
+    <Setting Name="RegistryUserDatabases" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HKEY_CURRENT_USER\Software\NPS\ThemeManager\Preferences\Databases</Value>
+    </Setting>
+    <Setting Name="RegistryUserFavorites" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HKEY_CURRENT_USER\Software\NPS\ThemeManager\Preferences\Favorites</Value>
+    </Setting>
+    <Setting Name="RegistryMachineDatabases" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HKEY_LOCAL_MACHINE\Software\NPS\ThemeManager\Preferences\Databases</Value>
+    </Setting>
+    <Setting Name="RegistryMachineFavorites" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HKEY_LOCAL_MACHINE\Software\NPS\ThemeManager\Preferences\Favorites</Value>
+    </Setting>
+    <Setting Name="SavedSessionFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Session.xml</Value>
+    </Setting>
+    <Setting Name="AppName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">NPS Theme Manager</Value>
+    </Setting>
+    <Setting Name="AppIcon" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Images\NPSLogo.ico</Value>
+    </Setting>
+    <Setting Name="DefaultDatabases" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">X:\GIS\ThemeMgr\AKR Theme List.tml</Value>
+    </Setting>
+    <Setting Name="HTMLNoInitialData" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">html\NoInitialData.html</Value>
+    </Setting>
+    <Setting Name="HTMLNoMetadata" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">html\NoMetadata.html</Value>
+    </Setting>
+    <Setting Name="DefaultHtml" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">html\Startup.html</Value>
+    </Setting>
+    <Setting Name="MinimumVisibleSplitterWidth" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="StyleSheetDirectory" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Stylesheets</Value>
+    </Setting>
+    <Setting Name="mainFormSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">700, 700</Value>
+    </Setting>
+    <Setting Name="mainFormLocation" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">20, 20</Value>
+    </Setting>
+    <Setting Name="mainFormState" Type="System.Windows.Forms.FormWindowState" Scope="User">
+      <Value Profile="(Default)">Normal</Value>
+    </Setting>
+    <Setting Name="mainFormTabpage1" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="mainFormSplitter" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">236</Value>
+    </Setting>
+    <Setting Name="StyleSheetIndex" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="StayOnTop" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AgeInDays" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="KeepSearchFormOpen" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DisplayDefaultHtml" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="AgeComboIndex" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
+    <Setting Name="KeepMetaDataInMemory" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="InPlaceNodeEditing" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CheckForArcViewBeforeArcInfo" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="mainFormTabpage2" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Toolstrip1Location" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">3, 24</Value>
+    </Setting>
+    <Setting Name="Toolstrip2Location" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">335, 24</Value>
+    </Setting>
+    <Setting Name="Toolstrip1ParentName" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TopToolStripPanel</Value>
+    </Setting>
+    <Setting Name="Toolstrip2ParentName" Roaming="true" Type="System.String" Scope="User">
+      <Value Profile="(Default)">TopToolStripPanel</Value>
+    </Setting>
+    <Setting Name="RightClickSelectsNode" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DontSelectFirstNode" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ClickToClearNodeSelection" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="FocusTreeviewOnTabChange" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DontShowBetaWarning" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ShowHiddenThemes" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ObsoleteThemeLists" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">X:\GIS\ThemeMgr\Albers-Network.mdb</Value>
+    </Setting>
+    <Setting Name="RequiredThemeLists" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">X:\GIS\ThemeMgr\AKR Theme List.tml</Value>
+    </Setting>
+    <Setting Name="LoadRequiredThemeLists" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="RemoveObsoleteThemeLists" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ShowMainMenu" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ShowToolbar1" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ShowToolbar2" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ShowStatusBar" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DefaultSortOrder" Roaming="true" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="AllowUnsortedOrder" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ShowAdministrativeTools" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="HelpUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HTML\Help.html</Value>
+    </Setting>
+    <Setting Name="ShowThemeDescriptionToolTip" Roaming="true" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

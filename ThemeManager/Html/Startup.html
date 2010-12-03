@@ -1,0 +1,218 @@
+﻿<html>
+	<head>
+		<title>Welcome</title>
+		<link  rel="StyleSheet" type="text/css" href="tm.css" /> 
+	</head>
+	<body>
+		<h1>Welcome to Theme Manager</h1>
+		<hr />
+        <p>
+        If this quick start tutorial is replaced with some other document,
+        you can get it back by selecting <i>Quick Start Tutorial</i> in the <b>Help</b> menu,
+        or right clicking in this frame and selecting <i>Back</i> from the pop-up menu.
+        </p>
+		<hr />
+        <ol>
+            <li>
+                <a href="#intro">What is Theme Manager</a>
+            </li>
+            <li>
+                <a href="#using">Using Theme Manager</a>
+            </li>
+            <li>
+                <a href="#creating">Creating Theme Lists</a>
+            </li>
+        </ol>
+
+        <h2 id="intro">What is Theme Manager</h2>
+		<p>
+        <span class="tm_name">Theme Manager</span> simplifies access to GIS data.
+        It provides the most benefit to occasional GIS users,
+        or those in organizations with large data holdings.
+        It can be used on a computer without any GIS software,
+        but to get full access to all the features you must have
+        ArcGIS Desktop installed (and licensed) on your computer.
+        </p>
+        <p>
+        The information provided below is intended to help new users get started quickly.
+        If you have used previous versions of <span class="tm_name">Theme Manager</span>,
+        you may want to review the section
+        <a href="Help.html#_Toc278983447">What’s New in <span class="tm_name">Theme Manager 3.0</span></a>
+         in the main help document.
+        </p>
+
+        <h2 id="using">Using Theme Manager</h2>
+        <p>
+        For <span class="tm_name">Theme Manager</span> to be useful, you will need a theme list
+        (an organized collection of the GIS data available to you).
+        Anyone can create and edit theme lists, but usually they are provided
+        by those most familiar with the data holdings in an organization.
+        Theme lists ready for use are displayed in the <b>Themes</b> panel when the <b>Themes</b> tab 
+        is selected on the left.
+        </p>
+        <p>
+        Do you have any theme lists loaded? (<a href="#browsing">Yes</a> or <a href="#loading">No</a>)
+        </p>
+
+        <h3 id="browsing">I have themes, let's go!</h3>
+        <ul>
+            <li>Browsing</li>
+            <p>
+            Browse the treeview of themes just like a file browser.
+            When you see a theme that is interesting, select it by clicking on it and this document
+            will be replaced by detailed information about the theme.
+            </p>
+
+            <li>Adding to a map</li>
+            <p>
+            If you want to add a theme to a map, just double click it, or drag and drop it onto an open map document.
+            Note that some items cannot be added to a map. The typical ones are: theme lists
+            (<img src="images/DB.png" alt="Theme list icon"/> or 
+            <img src="images/DB_lock.png" alt="Read only theme list icon"/>), categories
+            (<img src="images/category.png" alt="Category icon"/>) and
+            sub-themes (icons vary, but text is always gray).
+            </p>
+
+            <li>Preview</li>
+            <p>
+            If you want to want see what a theme looks like before adding it to your map, first select it in the
+            tree view, then click on the <b>Preview</b> tab above.
+            </p>
+
+            <li>Searching</li>
+            <p>
+            If you are looking for something in particular, enter some defining text in the search box above
+            and press the enter key.  A list of themes will be presented in the <b>Search Results</b> tab.
+            </p>
+
+            <li>More Searching</li>
+            <p>
+            If the number of themes returned is too many, you can refine the search by right clicking
+            on a category (in either the <b>Themes</b>, <b>Favorites</b>, or <b>Search Results</b> tabs)
+            and selecting search
+            from the pop-up context menu.  In this case you will only be searching the themes in the
+            selected category.
+            </p>
+
+            <li>Favorites</li>
+            <p>
+            If you find a theme that may be useful again, you can add it to your list of favorites by
+            clicking on the star (<img src="images/FavoriteStar_16x16.png" alt="Add to favorites icon"/>) in the tool bar.
+            </p>
+        </ul>
+
+        <p>
+        That's it, you have now mastered the most common uses of <span class="tm_name">Theme Manager</span>.
+        If you are interested in creating your own theme lists, please read on.  If you would like
+        to explore these topics in more detail, please see the <a href="Help.html">main help document</a>.
+        Help is also available at any time by clicking <a href="Help.html"><img src="images/help.png" alt="Help icon"/></a>
+        on the tool bar, or selecting
+        <b>Help->View Help</b> from the main menu.
+        </p>
+
+        <h3 id="loading">My Themes tab is empty</h3>
+        <p>
+        You will need a theme list to continue.  You have two options:
+        </p>
+        <ol>
+            <li>Load an existing theme list.</li>
+
+            <p>
+            Click on the open icon (<img src="images/open.png" alt="Open theme list icon"/>) in the tool bar
+            (or select <b>File->Open Theme List</b> from the main menu),
+            and browse to the location of a theme list.  Hopefully someone has told you where you can find one.
+            If so, click the open button and your theme list will be loaded.  You are now ready for <a href="#browsing">theme browsing</a>.
+            </p>
+
+            <li>Create a new theme list.</li>
+            <p>
+            See the following section.
+            </p>
+        </ol>
+
+        <h2 id="creating">Creating Theme Lists</h2>
+        <p>
+        Creating a theme list is easy, but creating a useful theme list may require a bit more GIS knowledge
+        than this quick start document provides.  If you get stuck, see the <a href="Help.html"><span class="tm_name">Theme Manager</span> help</a>, or consult
+        your GIS specialist.
+        </p>
+        <ul>
+            <li>Creating a new theme list</li>
+            <p>
+            Select <b>File->New Theme List</b> from the main menu
+            (or click <img src="images/newDocument.png" alt="new document icon"/> on the tool bar,
+            and then select <img src="images/newDB.png" alt="new theme list icon"/> <b>New Theme List</b> from the pop-up menu).
+            </p>
+
+            <li>Adding Themes</li>
+            <p>
+            Using windows file explorer to browse to any ESRI layer file (*.lyr).  Select one or more files and drag and drop them
+            onto your theme list.  The layer files and any associated metadata will be added to your theme list.
+            </p>
+            <p>
+            Note: <span class="tm_name">Theme Manager</span> is not limited to layer files. Any file or document can be added as a theme,
+            however only ESRI layer files and map documents provide sub theme expansion and automatic metadata discovery.
+            If you do not have any layer files, they will need to be created in ArcMap.  Consult the ArcMap help if necessary.
+            </p>
+
+            <li>Organizing Themes</li>
+            <p>
+            First select (left mouse click) your theme list in the Themes panel,
+            then select <b>File->New Category</b> from the main menu
+            (or click <img src="images/newDocument.png" alt="new document icon"/>) on the tool bar,
+            and then select <img src="images/newCategory.png" alt="new category icon"/> <b>New Category</b>
+            from the pop-up menu.
+            Once a category is created, you can drag and drop existing items (themes or categories) into the
+            new category folder.
+            </p>
+            <p>
+            You can also create nested (sub) categories if you select an existing category instead of the theme list before
+            invoking the <b>New Category</b> command.
+            </p>
+
+            <li>Changing Names</li>
+            <p>
+            To change the name of a theme list, category or theme, 
+            first click on the <b>Properties</b> tab above, then select the item you wish to change.
+            Click in the top text box (labeled Theme List: Category: or Theme:) and change the name.
+            The name will update in the tree view as soon as you click on (or tab into) another property.
+            You can edit (or add) information in any of the text boxes that are not disabled.
+            All fields except the name are optional.
+            </p>
+
+            <li>Saving</li>
+            <p>
+            Click on the save icon (<img src="images/save.png" alt="Save theme list icon"/>)  in the tool bar,
+            (or select <b>File->Save</b> or <b>File->Save As...</b> from the main menu).
+            If the save icon is grayed out, then there are no new changes in your theme list that need to be saved.
+            If your theme list has never been saved before, you will be prompted for a file name/location
+            where it should be saved.
+            </p>
+
+            <li>About metadata</li>
+            <p>
+            Themes (as well as categories and theme lists) can have additional information about them
+            displayed in the metadata panel.  Themes will automatically discover any associated metadata,
+            so there is nothing more that needs to be done. However
+            If no metadata was found, you can specify it by editing the <b>Metadata</b> 
+            (<b>Url/Metadata</b> for a theme list or category) field.
+            This field can contain a web site (http://...), a path to an XML metadata file, or a path to a data source in
+            a geodatabase that has embeded metadata.  If the metadata is an XML file you can use the browse (...) button
+            to find it.
+            Themes will extract additional information (publication date, description, ...) from metadata
+            to help with searching.  IF your theme has no metadata you can add your own information in these
+            fields, or you can use the ArcCatalog to create metadata for your theme.
+            Consult the ArcCatalog help if necessary.
+            </p>
+
+        </ul>
+        <p>
+        Congratulations, you have now have a working theme list. You are ready for <a href="#browsing">theme browsing</a>.
+        If you would like
+        to explore these topics in more detail, please see the <a href="Help.html">main help document</a>.
+        Help is also available at any time by clicking <a href="Help.html"><img src="images/help.png" alt="Help icon"/></a>
+        on the tool bar, or selecting
+        <b>Help->View Help</b> from the main menu.
+        </p>
+	</body>
+</html>

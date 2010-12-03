@@ -1,0 +1,15 @@
+﻿
+* Remove the reference to ESRI.ArcGIS.Version
+	needed for new licensing in 10 and not available in 9.3
+* ArcGIS/EsriLicenseManager.cs
+	- set correct type for field _AOLicenseInitializer (see comments)
+	- comment out the call to RuntimeManager in PrivateStart()
+* ArcGIS/LicenseInitializer.cs
+	Set to not compile (only used for version 10)
+* ArcGIS/LicenseInitializer.Designer.cs
+	Set to not compile (only used for version 10)
+* ArcGIS/ESRILicenseInitializer.cs
+	Set to compile (only used for version 9.3)
+* ArcGIS/LayerUtilities.cs
+	Commment out the four checks for layer types not avaialble in 9.3
+	in the code for GetLayerTypeFromLayer()
