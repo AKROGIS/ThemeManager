@@ -618,20 +618,24 @@ namespace NPS.AKRO.ThemeManager.Model
                 // ArcGIS 9.3 XML metadata will have only FGDC elements
                 // ArcGIS 10 XML metadata may have both ArcGIS and FGDC elements
 
-                // Description(Abstract) - FGDC & ArcGIS: /metadata/idinfo/descript/abstract            
+                // Description(Abstract) - FGDC: /metadata/idinfo/descript/abstract            
+                // Description(Abstract) - ArcGIS 10: /metadata/dataIdInfo/idAbs            
                 _description = xDoc.Descendants("abstract")
+                    .Concat(xDoc.Descendants("idAbs"))
                     .Select(element => element.Value)
                     .Where(value => !string.IsNullOrEmpty(value) &&
                                     !value.StartsWith("REQUIRED:"))
                     .FirstOrDefault();
-                // Summary (Purpose) - FGDC & ArcGIS: /metadata/idinfo/descript/purpose            
+                // Summary (Purpose) - FGDC: /metadata/idinfo/descript/purpose            
+                // Summary (Purpose) - ArcGIS 10: /metadata/dataIdInfo/idPurp            
                 _summary = xDoc.Descendants("purpose")
+                    .Concat(xDoc.Descendants("idPurp"))
                     .Select(element => element.Value)
                     .Where(value => !string.IsNullOrEmpty(value) &&
                                     !value.StartsWith("REQUIRED:"))
                     .FirstOrDefault();
                 // Tags (keywords) - FGDC: metadata/idinfo/keywords/*/*key (where * = theme, place, strat, temp); each keyword in a separate element          
-                // Tags (keywords) - ArcGIS: metadata/dataIdInfo/*Keys/keyword (where * = desc, other, place, temp, disc, strat, search, theme) *Keys and keyword may appear multiple times.           
+                // Tags (keywords) - ArcGIS 10: metadata/dataIdInfo/*Keys/keyword (where * = desc, other, place, temp, disc, strat, search, theme) *Keys and keyword may appear multiple times.           
                 _tags = xDoc.Descendants("keyword")
                     .Concat(xDoc.Descendants("themekey"))
                     .Concat(xDoc.Descendants("placekey"))
@@ -639,12 +643,13 @@ namespace NPS.AKRO.ThemeManager.Model
                     .Concat(xDoc.Descendants("tempkey"))
                     .Select(element => element.Value)
                     .Where(value => !string.IsNullOrEmpty(value) &&
-                                    value != "009" &&           // keyword in otherKeys for all new ArcGIS metadata 
+                                    !value.StartsWith("00") &&           // keyword in otherKeys for all new ArcGIS metadata 
                                     !value.StartsWith("REQUIRED:"))
                     .Distinct().Concat(", ");
                 // PubDate - FGDC: /metadata/idinfo/citation/citeinfo/pubdate          
-                // PubDate - ArcGIS: /metadata/dataIdInfo/idCitation/date/pubdate            
+                // PubDate - ArcGIS 10: /metadata/dataIdInfo/idCitation/date/pubDate            
                 _pubdate = xDoc.Descendants("pubdate")
+                    .Concat(xDoc.Descendants("pubDate"))
                     .Select(element => element.Value)
                     .Where(value => !string.IsNullOrEmpty(value) && 
                                     !value.StartsWith("REQUIRED:"))
