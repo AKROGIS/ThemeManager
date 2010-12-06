@@ -210,7 +210,7 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             get
             {
-                return !IsThemeList && HasData && File.Exists(Data.Path);
+                return IsTheme && HasData && File.Exists(Data.Path);
             }
         }
 
