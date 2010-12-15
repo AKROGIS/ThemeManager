@@ -56,6 +56,14 @@ namespace NPS.AKRO.ThemeManager.UI
             // I need a mechanism to restore the themelist to it's native order.
             //else
             // sorts on Node Text (label) with alphabetic (cultural aware) sort
+
+            //Hack to sort categories above all other items
+            //FIXME - 1) make this a settings option, 2) this pollutes a generic sorter with TMNode details.
+            if (((TmTreeNode)x).TmNode.IsCategory && !((TmTreeNode)y).TmNode.IsCategory)
+                return -1;
+            if (!((TmTreeNode)x).TmNode.IsCategory && ((TmTreeNode)y).TmNode.IsCategory)
+                return 1;
+
             return (int)NodeSortOrder * string.Compare(x.Text, y.Text, TextComparer);
         }
 
