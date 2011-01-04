@@ -237,7 +237,7 @@ namespace NPS.AKRO.ThemeManager.UI
         {
             if (_selectedNodes.Count == 0)
                 return false;
-            if (_selectedNodes.All(n => n.TmNode is SubThemeNode))
+            if (_selectedNodes.All(n => n.TmNode.IsSubTheme))
                 return false;
             return true;
         }
