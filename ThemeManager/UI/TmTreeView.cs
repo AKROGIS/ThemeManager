@@ -235,7 +235,11 @@ namespace NPS.AKRO.ThemeManager.UI
 
         public bool CanCopy()
         {
-            return _selectedNodes.Count > 0;
+            if (_selectedNodes.Count == 0)
+                return false;
+            if (_selectedNodes.All(n => n.TmNode is SubThemeNode))
+                return false;
+            return true;
         }
 
         public bool CanPaste()
