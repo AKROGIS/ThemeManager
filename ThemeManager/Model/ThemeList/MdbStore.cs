@@ -117,7 +117,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
                 Load();
 
             Theme theme = FindThemebyId(themeId);
-            return new TmNode(TmNodeType.Theme,
+            TmNode newNode = new TmNode(TmNodeType.Theme,
                 theme.Name,
                 null,
                 MakeThemeData(theme.Name, theme.DataSource, theme.Type),
@@ -125,6 +125,8 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
                 null,
                 theme.PubDate
                 );
+            FillTheme(newNode, themeId);
+            return newNode;
         }
 
         private Theme FindThemebyId(int themeId)
