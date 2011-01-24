@@ -485,7 +485,10 @@ namespace NPS.AKRO.ThemeManager.UI
                 return;
 
             //SourceNode is also used to determine the drag/drop effects  see SetDndEffect();
-            sourceNodes = _selectedNodes.Select(x => x.TmNode).ToList<TmNode>();
+            sourceNodes = _selectedNodes.Select(x => x.TmNode).Where(x => (x.IsTheme || x.IsCategory)).ToList<TmNode>();
+            if (sourceNodes.Count == 0)
+                return;
+
             if (sourceNodes.Count == 1)
             {
                 Debug.Assert(IsSerializable(sourceNodes[0]), "Cannot serialize the selected node");
