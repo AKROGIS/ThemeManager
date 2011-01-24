@@ -503,11 +503,12 @@ namespace NPS.AKRO.ThemeManager.UI
             // Also drag as a file list (for ArcMap) 
             StringCollection paths = new StringCollection();
             foreach (var item in sourceNodes)
-                if (item.HasData && File.Exists(item.Data.Path))
+                if (item.IsTheme && item.HasData && File.Exists(item.Data.Path))
                 {
                     paths.Add(item.Data.Path);
                 }
-            dataObject.SetFileDropList(paths);
+            if (paths.Count > 0)
+                dataObject.SetFileDropList(paths);
 
             //FIXME - Add support for ESRI Object types
             //FIXME - do I want to add the metadata to the drag/drop??
