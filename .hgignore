@@ -1,3 +1,4 @@
+glob:_ReSharper.*
 glob:ThemeManager.suo
 glob:ThemeManager/bin
 glob:ThemeManager/obj
