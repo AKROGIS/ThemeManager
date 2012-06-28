@@ -116,6 +116,17 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                     _AOLicenseInitializer.InitializeLowerProductFirst = Settings.Default.CheckForArcViewBeforeArcInfo;
 
                     //Uncomment Additional license/extensions you want to check out
+#if ARCGIS_10_1            
+                    esriLicenseProductCode[] products = new[]
+                                                            {
+                                                                esriLicenseProductCode.esriLicenseProductCodeAdvanced,     //60
+                                                                esriLicenseProductCode.esriLicenseProductCodeStandard,   //50
+                                                                esriLicenseProductCode.esriLicenseProductCodeBasic,     //40
+                                                                //esriLicenseProductCode.esriLicenseProductCodeArcServer,   //30
+                                                                //esriLicenseProductCode.esriLicenseProductCodeEngineGeoDB, //20
+                                                                //esriLicenseProductCode.esriLicenseProductCodeEngine,      //10
+                                                            };
+#else
                     esriLicenseProductCode[] products = new[]
                                                             {
                                                                 esriLicenseProductCode.esriLicenseProductCodeArcInfo,     //60
@@ -125,6 +136,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                                                                 //esriLicenseProductCode.esriLicenseProductCodeEngineGeoDB, //20
                                                                 //esriLicenseProductCode.esriLicenseProductCodeEngine,      //10
                                                             };
+#endif
                     esriLicenseExtensionCode[] extensions = new esriLicenseExtensionCode[]
                                                                 { 
                                                                     //esriLicenseExtensionCode.esriLicenseExtensionCode3DAnalyst,
