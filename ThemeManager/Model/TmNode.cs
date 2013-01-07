@@ -581,6 +581,18 @@ namespace NPS.AKRO.ThemeManager.Model
                 return;
             }
 
+            if (ext == ".pdf")
+            {
+                Data.Type = "PDF";
+                return;
+            }
+
+            if (ext == ".doc" || ext == ".docx")
+            {
+                Data.Type = "MS Word";
+                return;
+            }
+
             if (ext == ".mxd" || ext == ".mxt")
             {
                 Data.Type = "ArcMap Document";
@@ -649,6 +661,9 @@ namespace NPS.AKRO.ThemeManager.Model
             else
                 datatype = Data.Type.ToUpper();
 
+            if (Data != null && Data.DataSource != null && Data.DataSource.StartsWith("http"))
+                return "_wms"; //11
+
             if (datatype.Contains("ANNO"))
                 return "_anno";  //2
             if (datatype.Contains("CAD"))
@@ -659,6 +674,9 @@ namespace NPS.AKRO.ThemeManager.Model
                 return "_line"; //5
             if (datatype == "NODE" || datatype == "POINT")
                 return "_point";  //6
+
+            if (datatype.Contains("WCS"))
+                return "_wms"; //must be done before raster, else theme will get the raster icon
 
             // Need to insert this New check before the *Poly* check else raster catalogs will be tagged as _poly
             if ((datatype.Contains("RASTER") || datatype.Contains("MOSAIC")) && !datatype.Contains("IMAGESERVER"))
@@ -688,6 +706,10 @@ namespace NPS.AKRO.ThemeManager.Model
                 return "_mpatch"; //new
             if (datatype == "MXD" || datatype == "ARCMAP DOCUMENT")
                 return "_mxd"; //new
+            if (datatype == "PDF")
+                return "_pdf"; //new
+            if (datatype == "MS WORD")
+                return "_doc"; //new
             if (datatype == "MAP DATA FRAME")
                 return "_dataframe"; //new
             if (datatype == "KML" || datatype == "KMZ" || datatype == "GOOGLE EARTH DOCUMENT")

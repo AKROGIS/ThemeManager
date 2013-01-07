@@ -318,6 +318,8 @@
     <Content Include="Images\DataFrame16.png" />
     <Content Include="Images\KmlIcon.png" />
     <Content Include="Images\LayerBroken16.png" />
+    <Content Include="Images\LayerPdf16.png" />
+    <Content Include="Images\LayerWord16.png" />
     <Content Include="Images\newDocument.png" />
     <Content Include="Images\newTheme.png" />
     <Content Include="Images\theme.png" />

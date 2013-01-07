@@ -343,6 +343,8 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.treeViewImageList.Images.SetKeyName(21, "Theme_cadastral");
             this.treeViewImageList.Images.SetKeyName(22, "Theme_basemap");
             this.treeViewImageList.Images.SetKeyName(23, "theme_dataframe");
+            this.treeViewImageList.Images.SetKeyName(24, "Theme_pdf");
+            this.treeViewImageList.Images.SetKeyName(25, "Theme_doc");
             // 
             // tabPage2
             // 
