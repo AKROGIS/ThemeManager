@@ -64,10 +64,12 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;ARCGIS_10_1</DefineConstants>
     <DefineConstants>TRACE;DEBUG;ARCGIS_10_1PLUS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;ARCGIS_10_1PLUS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -75,10 +77,12 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE;ARCGIS_10_1</DefineConstants>
     <DefineConstants>TRACE;ARCGIS_10_1PLUS</DefineConstants>
+    <DefineConstants>TRACE;ARCGIS_10_1PLUS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>5A0FAE1EE4C4A4978F2731C9817EA9F2672F40EA</ManifestCertificateThumbprint>
