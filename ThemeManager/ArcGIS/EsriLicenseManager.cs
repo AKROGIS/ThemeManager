@@ -116,7 +116,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                     _AOLicenseInitializer.InitializeLowerProductFirst = Settings.Default.CheckForArcViewBeforeArcInfo;
 
                     //Uncomment Additional license/extensions you want to check out
-#if ARCGIS_10_1            
+#if ARCGIS_10_1PLUS            
                     esriLicenseProductCode[] products = new[]
                                                             {
                                                                 esriLicenseProductCode.esriLicenseProductCodeAdvanced,     //60
