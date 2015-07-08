@@ -176,11 +176,13 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             string workspace = LayerUtilities.GetWorkspacePathFromLayer(layer);
             string container = LayerUtilities.GetDataSourceContainerFromLayer(layer);
             string dataset = LayerUtilities.GetDataSourceNameFromLayer(layer);
-            if (workspace[workspace.Length - 1] != '\\')
-                workspace = workspace + "\\";
-            if (string.IsNullOrEmpty(container))
-                return workspace + dataset;
-            return workspace + container + "\\" + dataset;
+            if (dataset == null)
+                return null;
+            if (workspace == null)
+                return dataset;
+            if (container == null)
+                return Path.Combine(workspace, dataset);
+            return Path.Combine(Path.Combine(workspace, container), dataset);
         }
     }
 }
