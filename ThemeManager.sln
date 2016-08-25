@@ -1,7 +1,11 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThemeManager", "ThemeManager\ThemeManager.csproj", "{612746C6-CED1-40E6-8E8B-1A8565700C00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tm", "tm\tm.csproj", "{28C37214-9C9C-4893-ACB2-AD908E3B9EDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +23,14 @@ Global
 		{612746C6-CED1-40E6-8E8B-1A8565700C00}.Release|Any CPU.Build.0 = Release|Any CPU
 		{612746C6-CED1-40E6-8E8B-1A8565700C00}.Release|x86.ActiveCfg = Release|x86
 		{612746C6-CED1-40E6-8E8B-1A8565700C00}.Release|x86.Build.0 = Release|x86
+		{28C37214-9C9C-4893-ACB2-AD908E3B9EDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28C37214-9C9C-4893-ACB2-AD908E3B9EDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28C37214-9C9C-4893-ACB2-AD908E3B9EDF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{28C37214-9C9C-4893-ACB2-AD908E3B9EDF}.Debug|x86.Build.0 = Debug|Any CPU
+		{28C37214-9C9C-4893-ACB2-AD908E3B9EDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28C37214-9C9C-4893-ACB2-AD908E3B9EDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28C37214-9C9C-4893-ACB2-AD908E3B9EDF}.Release|x86.ActiveCfg = Release|Any CPU
+		{28C37214-9C9C-4893-ACB2-AD908E3B9EDF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

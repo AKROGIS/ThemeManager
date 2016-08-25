@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{28C37214-9C9C-4893-ACB2-AD908E3B9EDF}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>tm</RootNamespace>
+    <AssemblyName>tm</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;ARCGIS_10_1PLUS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ESRI.ArcGIS.AxControls, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL" />
+    <Reference Include="ESRI.ArcGIS.Carto, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Catalog, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.DataSourcesFile, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Display, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Geodatabase, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Geometry, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.GISClient, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.System, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.SystemUI, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="ESRI.ArcGIS.Version, Version=10.4.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\ThemeManager\ArcGIS\EsriLicenseInitializer.cs">
+      <Link>ArcGIS\EsriLicenseInitializer.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\ArcGIS\EsriLicenseManager.cs">
+      <Link>ArcGIS\EsriLicenseManager.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\ArcGIS\EsriMetadata.cs">
+      <Link>ArcGIS\EsriMetadata.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\ArcGIS\LayerUtilities.cs">
+      <Link>ArcGIS\LayerUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\ArcGIS\LicenseInitializer.cs">
+      <Link>ArcGIS\LicenseInitializer.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\ArcGIS\LicenseInitializer.Designer.cs">
+      <Link>ArcGIS\LicenseInitializer.Designer.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\ArcGIS\MapUtilities.cs">
+      <Link>ArcGIS\MapUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\ArcGIS\ThemeBuilder.cs">
+      <Link>ArcGIS\ThemeBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Extensions\LinqExtensions.cs">
+      <Link>Extensions\LinqExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Extensions\NativeMethods.cs">
+      <Link>Extensions\NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Extensions\StringExtensions.cs">
+      <Link>Extensions\StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\DateRange.cs">
+      <Link>Model\DateRange.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\Metadata.cs">
+      <Link>Model\Metadata.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\SearchParameters.cs">
+      <Link>Model\SearchParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\ThemeData.cs">
+      <Link>Model\ThemeData.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\ThemeListAuthor.cs">
+      <Link>Model\ThemeListAuthor.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\ThemeList\MdbStore.cs">
+      <Link>Model\ThemeList\MdbStore.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\ThemeList\Store.cs">
+      <Link>Model\ThemeList\Store.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\ThemeList\XmlStore.cs">
+      <Link>Model\ThemeList\XmlStore.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\TmNode.cs">
+      <Link>Model\TmNode.cs</Link>
+    </Compile>
+    <Compile Include="Shims.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
