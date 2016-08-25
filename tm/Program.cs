@@ -22,10 +22,18 @@ namespace tm
             var path = args[0];
             Console.WriteLine($"Loading {path}");
             var themeList = Load(path);
+            if (themeList == null)
+            {
+                Console.WriteLine("Could not load the Theme List.");
+                return;
+            }
             themeList.SuspendUpdates();
             themeList.Build();
             Reload(themeList);
+            Sync(themeList);
+            Console.WriteLine("Saving Updated Theme List");
             themeList.SaveAs(path);
+            Console.WriteLine("Done.");
         }
 
         static TmNode Load(String path)
@@ -37,17 +45,10 @@ namespace tm
 
         static void Reload(TmNode root)
         {
-            if (root == null)
-            {
-                Console.WriteLine("No node provided for reload");
-                return;
-            }
-
             List<TmNode> nodes = root.Recurse(x => x.Children)
                                         .Where(n => n.IsTheme)
                                         .ToList();
-
-            Console.WriteLine($"Updating {nodes.Count} Themes");
+            Console.WriteLine($"Reloading {nodes.Count} Themes");
             foreach (var node in nodes)
             {
                 try
@@ -58,6 +59,19 @@ namespace tm
                 {
                     Console.WriteLine($"\nError reloading node {node.Name}: {ex.Message}");
                 }
+                Console.Write(".");
+            }
+            Console.WriteLine("");
+        }
+        static void Sync(TmNode root)
+        {
+            List<TmNode> nodes = root.Recurse(x => x.Children)
+                            .Where(n => !string.IsNullOrEmpty(n.Metadata.Path))
+                            .ToList();
+
+            Console.WriteLine($"Syncing metadata for {nodes.Count} Themes");
+            foreach (var node in nodes)
+            {
                 try
                 {
                     node.SyncWithMetadata();
@@ -68,8 +82,7 @@ namespace tm
                 }
                 Console.Write(".");
             }
-            Console.WriteLine("\nDone.");
+            Console.WriteLine("");
         }
-
     }
 }
