@@ -10,10 +10,10 @@ h1
 {
     margin-left:0.05in;
     position:relative;
-    top:-6;
+    top:-6pt;
     text-align:center;
     font-weight:bold;
-    font-size:18;
+    font-size:18pt;
     font-family:Verdana,sans-serif;
     color:#669966;
 }
@@ -22,8 +22,8 @@ h2
 {
     margin-top:0.3in;
     position:relative;
-    top:6;
-    font-size:15;
+    top:6pt;
+    font-size:15pt;
     font-family:Verdana,sans-serif;
     color:#996633;
 }
@@ -32,8 +32,8 @@ h3
 {
     margin-top:0.25in;
     position:relative;
-    top:6;
-    font-size:14;
+    top:6pt;
+    font-size:14pt;
     font-family:Verdana,sans-serif;
     color:#CC9966;
 }
