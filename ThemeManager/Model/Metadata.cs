@@ -347,7 +347,7 @@ namespace NPS.AKRO.ThemeManager.Model
                     webBrowser.Url = new Uri(Path);
                 else
                     if (styleSheet != null)
-                        webBrowser.DocumentText = styleSheet.XformText(xmlString); //TODO: check Format == xml ??
+                        webBrowser.DocumentText = styleSheet.TransformText(xmlString); //TODO: check Format == xml ??
                     else
                         webBrowser.DocumentText = xmlString;
             }

@@ -20,25 +20,25 @@ namespace NPS.AKRO.ThemeManager.Model
      * http://support.microsoft.com/?scid=kb%3Ben-us%3B815112&x=15&y=14)
      *
      * In ArcGIS 10 the stylesheets will use the a modern standard, However, Theme Manager will
-     * need to support both formats for a while. So we won't have clean code for a while. 
+     * need to support both formats for a while. So we won't have clean code for a while.
      */
 
     /* from Michael Kay (mich...@ntlworld.com) Jun 12, 2002 2:46:43 am on net.sourceforge.lists.saxon-help
-     * 
+     *
      * Microsoft produced an implementation of XSLT (it was called XSL at the time) based on an early
      * 1998 working draft of the language. Microsoft call this dialect XSL, most people call it
      * WD-xsl, (working draft XSL), and you will see that the namespace declaration in a stylesheet
      * that uses this dialect ends with "WD-xsl". No-one else supports this dialect of the language,
      * in fact Microsoft themselves have abandoned it.
-     * 
+     *
      * [.Net] can't process this dialect, which is very different from the final XSLT 1.0
      * Recommendation published in 1999. It detects that you are using this dialect by checking
      * the namespace on the xsl:stylesheet element. If you are new to XML and XSLT, don't touch
-     * WD-xsl with a bargepole. 
+     * WD-xsl with a bargepole.
      */
 
     /* from Oleg Tkachenko [XML MVP] 28 May 2008 on http://dotnet.itags.org/dotnet-tech/249517/
-     * 
+     *
      * As a matter of interest, MSXML3 does support WD-XSL language. MSXML4
      * doesn't though. I think the reason why WD-XSL is still supported is that
      * default XML stylesheet (which works when you open styleless XML
@@ -87,7 +87,7 @@ namespace NPS.AKRO.ThemeManager.Model
             return OldStyleTransform(xml);
         }
 
-        internal string XformText(string text)
+        internal string TransformText(string text)
         {
             var xml = new FreeThreadedDOMDocument();
             xml.loadXML(text);
