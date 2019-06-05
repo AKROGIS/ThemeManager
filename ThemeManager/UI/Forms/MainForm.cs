@@ -1075,8 +1075,6 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 }
                 catch (MetadataDisplayException ex)
                 {
-                    // FIXME: Use a different template (or reformat the existing template)
-                    // We may actually have metadata, we just can't display it (e.g a bad stylesheet)
                     webBrowser.DocumentText = string.Format(_cachedSafeNoMetadataTemplate, node.Name, node, node.Metadata.Path, ex.Message, ex);
                 }
             }
@@ -1084,10 +1082,11 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
         //See the html file at Properties.Settings.Default.HTMLNoMetadata for the set of substitutions that may transform the html.
         //This should return an html string for formatting with 5 subtitutions
+        //This html is used whenever there are problems displaying the metadata for a theme
         private string GetSafeNoMetadataTemplate()
         {
             string result;
-            string safetyNet = "<HTML><BODY><H2>No Metadata</H2>Theme = <B>{0}</B><BR/>Metadata = <I>{2}</I><BR/>Error = {3}<BR/><I>{4}</I></BODY></HTML>";
+            string safetyNet = "<HTML><BODY><H2>Metadata Problems</H2>Theme = <B>{0}</B><BR/>Metadata = <I>{2}</I><BR/>Error = {3}<BR/><I>{4}</I></BODY></HTML>";
             string noMetadataFile = Settings.Default.HTMLNoMetadata;
             if (!File.Exists(noMetadataFile)) {
                 return safetyNet;

@@ -2,7 +2,7 @@
 This HTML file will be displayed if the metadata could not be found, or if there is an error in processing
 the metadata.  This file can be customized to suit your taste.
 Since this text is pre-processed by Theme Manager before being given to the browser, it cannot support
-hyperlinks to relative paths.  therefore, the CSS stylesheet is embedded. 
+hyperlinks to relative paths.  therefore, the CSS stylesheet is embedded.
 
 The following substitutions will be made by Theme Manager:
 {0} = theme name,
@@ -23,7 +23,7 @@ This file is processed as:
 
 <html>
 	<head>
-		<title>No Metadata</title>
+		<title>Metadata</title>
 		<!-- link  rel="StyleSheet" type="text/css" href="tm.css"-->
 		<style type="text/css">
 		h1
@@ -49,19 +49,20 @@ This file is processed as:
 		</style>
 	</head>
 	<body>
-		<h1>No Metadata</h1>
+		<h1>Metadata Problems</h1>
+		<p>There are problems displaying the metadata for this theme.</p>
 		<hr />
 		<dl>
-			<dt> Name:</dt>
+			<dt> Theme:</dt>
 			<dd title="{1}">{0}</dd>
-			
+
 			<dt> Metadata path:</dt>
 			<dd>{2}</dd>
-			
+
 			<dt> Error:</dt>
 			<dd>{3}</dd>
-			
-			<dt> Exception:</dt>
+
+			<dt> Error Details:</dt>
 			<dd>{4}</dd>
 		</dl>
 	</body>
