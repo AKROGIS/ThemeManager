@@ -20,7 +20,7 @@ using NPS.AKRO.ThemeManager.ArcGIS;
 
 namespace NPS.AKRO.ThemeManager.UI.Forms
 {
-     
+
     public partial class MainForm : Form
     {
         private readonly Font _activeSearchBoxFont = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -35,7 +35,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         }
 
         #region Single Instance Application functions.
-		
+
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == NativeMethods.WM_SHOWME)
@@ -194,7 +194,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             UpdateInfoDisplay();
         }
 
- 
+
         #endregion
 
         #region Misc. Events
@@ -236,7 +236,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
-        
+
         private bool InfoPanelBecameExposedSinceLastCheck
         {
             get
@@ -561,7 +561,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             copyToolStripMenuItem.Enabled = EnableCopyCommand();
             pasteToolStripMenuItem.Enabled = EnablePasteCommand();
             deleteToolStripMenuItem.Enabled = EnableDeleteCommand();
-            
+
             searchToolStripMenuItem.Visible = EnableSearchCommand();
             launchToolStripMenuItem.Visible = EnableLaunchCommand();
             addToFavoritesToolStripMenuItem.Visible = EnableAdd2FavCommand();
@@ -583,7 +583,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             pasteToolStripMenuItem1.Enabled = EnablePasteCommand();
             deleteToolStripMenuItem1.Enabled = EnableDeleteCommand();
             searchToolStripMenuItem1.Enabled = EnableSearchCommand();
-            
+
             sortToolStripMenuItem1.Enabled = EnableSortCommand();
             launchToolStripMenuItem1.Enabled = EnableLaunchCommand();
             addToFavoritesToolStripMenuItem1.Enabled = EnableAdd2FavCommand();
@@ -760,7 +760,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         internal TmTreeView CurrentTreeView
         {
             get
-            { 
+            {
                 if (_currentTV == null)
                     _currentTV = CurrentTreeViewFromIndex(listsTabControl.SelectedIndex);
                 return _currentTV;
@@ -863,7 +863,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             {
                 // This method may be called on a background thread, if so we need to us Invoke
                 // to access the UI on the primary thread.
-                Trace.TraceInformation("{0}: Start updating tree for {1}", DateTime.Now, tmNode.Name); Stopwatch time = Stopwatch.StartNew(); 
+                Trace.TraceInformation("{0}: Start updating tree for {1}", DateTime.Now, tmNode.Name); Stopwatch time = Stopwatch.StartNew();
                 TmTreeView tv = newNode.TreeView as TmTreeView;
                 if (tv != null)
                     if (tv.InvokeRequired)
@@ -871,7 +871,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     else
                         tv.UpdateNode(newNode, true);
                 time.Stop(); Trace.TraceInformation("{0}: End updating tree for {1} - Elapsed Time: {2}", DateTime.Now, tmNode.Name, time.Elapsed);
-                tmNode.ResumeUpdates(); 
+                tmNode.ResumeUpdates();
                 return true;
             }
             tmNode.ResumeUpdates();
@@ -883,7 +883,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             //FIXME - need to load as much as possible on exception.
             if (node == null)
                 return false;
-            Trace.TraceInformation("{0}: Start building node {1}", DateTime.Now, node.Name); Stopwatch time = Stopwatch.StartNew(); 
+            Trace.TraceInformation("{0}: Start building node {1}", DateTime.Now, node.Name); Stopwatch time = Stopwatch.StartNew();
             try
             {
                 //FIXME: do I need to do any locking on this node?
@@ -952,7 +952,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             searchParams.Location = "All Themes";
 
             Stopwatch time = Stopwatch.StartNew();
-            IEnumerable<TmNode> nodes = 
+            IEnumerable<TmNode> nodes =
                 themesTreeView.RootNodes.SelectMany(n => n.Recurse(node => node.Children)
                                   .Where(x => x.Matches(searchParams))
                                   );
@@ -967,7 +967,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 1: I access the enumeration to get the count, and to access the nodes.
             //    A new search is done each time the enumeration is iterated (even for counting).
             // 2: The enumeration searches the treeviews _selected nodes.
-            //    I clear the searchtrees selected node when I create the results, 
+            //    I clear the searchtrees selected node when I create the results,
             //    therefore no results are returned if the search was done on the search tree.
             IList<TmNode> nodes = results.ToList();
             if (nodes == null || nodes.Count == 0)
@@ -1039,7 +1039,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         private string _cachedSafeNoMetadataTemplate;
 
         //relative hrefs in xml or html are not honored, since the web browser has no location info.
-  
+
         private Uri _cachedStartupUri;
         private string _invalidUriText;
 
@@ -1368,7 +1368,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
         private void DisplayPropertyPanel(Control.ControlCollection controls, TmNode node)
         {
-            controls.Clear(); 
+            controls.Clear();
             if (node == null)
                 return;
             if (propertiesForm == null)
@@ -1394,7 +1394,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         {
             controls.Add(panel);
             panel.Dock = DockStyle.Fill;
-           
+
             foreach (Control item in panel.Controls)
                 if (item is TextBox)
                 {
@@ -1441,7 +1441,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
             if (node.Author != null)
             {
-                string value; 
+                string value;
                 node.Author.TryGetValue("Name", out value); form.themelistAuthorName.Text = value;
                 node.Author.TryGetValue("Title", out value); form.themelistAuthorTitle.Text = value;
                 node.Author.TryGetValue("Organization", out value); form.themelistAuthorOrg.Text = value;
@@ -1457,7 +1457,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         {
             Debug.Assert(node.Data != null, "TMNode node has no no data object");
             Debug.Assert(node.Metadata != null, "TMNode node has no metadata object");
-            
+
             form.categoryName.DataBindings.Clear();
             form.categoryMetadata.DataBindings.Clear();
             form.categoryDescription.DataBindings.Clear();
@@ -1698,7 +1698,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             //}
 
             //Debug.Assert(treeViewImageList.Images.Count == Enum.GetNames(typeof(TmNodeType)).Count(), "Count in image list does not match count in enum.tmnodetype");
-            
+
             Image overlay = Resources.new_overlay;
             string name = "new";
 
@@ -1736,8 +1736,8 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         {
             ageComboBox.BeginUpdate();
             ArrayList durations = new ArrayList();
-            durations.AddRange(new[] { 
-                                         new Duration(1, "1 Day"), 
+            durations.AddRange(new[] {
+                                         new Duration(1, "1 Day"),
                                          new Duration(7, "1 Week"),
                                          new Duration(14, "2 Weeks"),
                                          new Duration(21, "3 Weeks"),
@@ -2018,7 +2018,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 themeList = ThemeListFromDatabasePath(database);
                 //if (themeList == null)
                 //    MessageBox.Show("Favorite not loaded because database could not be found.");
-  
+
                 //If I am loading from the registry, then I need to build the themeslist,
                 //since the favorites in the registry are pointers into the themelist
                 if (themeList != null)
