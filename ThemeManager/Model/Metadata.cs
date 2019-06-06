@@ -20,37 +20,60 @@ namespace NPS.AKRO.ThemeManager.Model
         internal MetadataDisplayException(string message, Exception inner) : base(message, inner) { }
     }
 
+    /// <summary>
+    /// Defines the meaning of the string in Metadata.Path and
+    /// how it is used to find the metadata content. 
+    /// See MetadataFormat for how to interpret the content.
+    /// </summary>
     enum MetadataType
     {
         /// <summary>
-        /// The type is unknown or undefined
+        /// The meaning of the text in Path is unknown and undefined
         /// </summary>
         Undefined,
         /// <summary>
-        /// Metadata is stored directly in this metadata object
+        /// The metadata content is stored directly in the Path property (unusual)
         /// </summary>
         Inline,
         /// <summary>
-        /// Files system path to a standalone metadata file (usually in XML format)
+        /// A file system path to a file containing metadata (usually in XML format)
         /// </summary>
         FilePath,
         /// <summary>
-        /// ArcCatalog path to a data object (ArcCatalog is queried for the metadata)
+        /// A data source path (ArcGIS is used to get the metadata content from the data source)
         /// </summary>
         EsriDataPath,
         /// <summary>
-        /// Uniform Resoure Locator to a metadata file (usually in Html format)
+        /// Uniform Resource Locator to a metadata resource (assumed to return Html)
         /// </summary>
         Url
     }
 
+    /// <summary>
+    /// Defines how to interpret the metadata content.
+    /// See MetadataType for how to obtain the content from Path.
+    /// </summary>
     enum MetadataFormat
     {
+        /// <summary>
+        /// The format of the metadata content is unknown and undefined
+        /// </summary>
         Undefined,
+        /// <summary>
+        /// The metadata content is XML and can be styled for display (typical)
+        /// Note XML may come in many different styles/schemas (FGDC, ISO, ArcGIS)
+        /// and a schema may come in various different versions.
+        /// It is up to the stylesheets to differentiate by schema/version as necessary 
+        /// </summary>
         Xml,
+        /// <summary>
+        /// The metadata content is HTML that is already formatted for display
+        /// </summary>
         Html,
+        /// <summary>
+        /// The metadata content is plain text and will be displayed as is
+        /// </summary>
         Text
-        //CSDGM
     }
 
     enum MetadataState
