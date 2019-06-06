@@ -394,16 +394,18 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             HasBeenValidated = true;
             if (string.IsNullOrEmpty(Path))
+            {
+                Type = MetadataType.Undefined;
                 return false;
+            }
 
-            // try to load the metadata, if I can it is valid (return true),
-            // if I get any exceptions it is invalid
+            // Validate the Type
+            // TODO: URL, and FilePath should also be loaded to do proper validation
             try
             {
                 switch (Type)
                 {
                     case MetadataType.FilePath:
-                        //FIXME - Validate the contents against MetadataFormat ???
                         return File.Exists(Path);
                     case MetadataType.Url:
                         //if Path is not a valid URI, an exception will be thrown
@@ -411,7 +413,10 @@ namespace NPS.AKRO.ThemeManager.Model
                         //   (careful - URI may be valid, but temporarily not available)
                         var uri = new Uri(Path);
                         if (uri.IsFile)
+                        {
+                            Type = MetadataType.FilePath;
                             return File.Exists(uri.LocalPath);
+                        }
                         else
                             return true;
                     case MetadataType.EsriDataPath:
@@ -421,9 +426,10 @@ namespace NPS.AKRO.ThemeManager.Model
                     case MetadataType.Inline:
                         //FIXME - Validate the contents against MetadataFormat ???
                         return !string.IsNullOrEmpty(Path);
-                    default:
                     case MetadataType.Undefined:
-                        //Try all each type - first valid type wins, so order matters.
+                    default:
+                        // MetadataType.Undefined (or some other anomaly
+                        // Try all each type - first valid type wins, so order matters.
                         Type = MetadataType.FilePath;
                         if (Validate())
                             return true;
