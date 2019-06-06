@@ -351,28 +351,48 @@ namespace NPS.AKRO.ThemeManager.Model
                 .Any(value => Match(value, search.SearchWords, search.FindAll, search.ComparisonMethod));
         }
 
-        //FIXME - return more meaningful exception messages
-        //FIXME - do more checking of types and formats
+
+        //TODO: Replace LoadAsText() and Validate(), etc with: LoadContentAndValidate()
+        // This only needs to be called before display, or when updating KeyProperties from metadata content
+        // Validation is in two parts: 1) Validate Type (requires loading even URLs) and 2) Validate Format (may require parsing)
+        // Validation can short circuit if Content is non null.  If content is null reload will be retried
+        // Errors in Loading/Validation will be stored in ErrorMessages for display to the user.
+        //These changes will improve display robustness, as well as simplify the code.  It may result in more
+        //time spent loading or retrying, but always (and only) when the user requests it.
+
+        //FIXME - return more meaningful exception messages or create web pages on the fly
         internal void Display(WebBrowser webBrowser, StyleSheet styleSheet)
         {
             Debug.Assert(webBrowser != null, "The WebBrowser control is null");
             if (webBrowser == null)
                 throw new ArgumentNullException("webBrowser");
-            // This will not throw any exceptions, rather it returns null, and sets IsValid and ErrorMessage
+
+            // TODO: replace with LoadContentAndValidate() throw if ErrorMessage is non NULL
             string xmlString = LoadAsText();
-            //side effect of loading is that Path, Type and IsValid are validated, so we load first.
             if (!IsValid)
-                throw new MetadataDisplayException("Metadata is not valid"); //FIXME: In what way???
+                throw new MetadataDisplayException("Metadata is not valid"); //FIXME: return ErrorMessage
+
+            // Exception message for Type == Undefined
+            //  Unable to obtain the metadata content because Theme Manager doesn't know the meaning of {Path}  
+            // Exception message for Format == Undefined
+            //  Theme Manager is doesn't know the format of the metadata content, so it is presented as plain text below
+
+
 
             try
             {
+
                 if (Type == MetadataType.Url)
                     webBrowser.Url = new Uri(Path);
+                else if (Format == MetadataFormat.Xml && styleSheet != null)
+                {
+                    // Do this in two steps to avoid sending partial processing to the webBrowser
+                    string html = styleSheet.TransformText(xmlString);
+                    webBrowser.DocumentText = html;
+                }
+                //TODO: Ensure that all permutations of Format and Type have been considered
                 else
-                    if (styleSheet != null)
-                        webBrowser.DocumentText = styleSheet.TransformText(xmlString); //TODO: check Format == xml ??
-                    else
-                        webBrowser.DocumentText = xmlString;
+                    webBrowser.DocumentText = xmlString;
             }
             catch (Exception ex)
             {
@@ -452,6 +472,8 @@ namespace NPS.AKRO.ThemeManager.Model
                 Debug.Print("Exception validating metadata: " + ex);
             }
             return false;
+
+            //FIXME: Validate the Format; will require loading
         }
 
         #endregion
