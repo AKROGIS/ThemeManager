@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<themelist version="1" name="Metadata Testing">
+  <description>Theme list description</description>
+  <author />
+  <data type="tml" format="" version="" datasource="" workspace="" workspacetype="" workspaceprogid="" container="" containertype="" datasourcename="" datasetname="" datasettype="">C:\Users\RESarwas\Documents\GitHub\ThemeManager3.0\Metadata Testing.tml</data>
+  <metadata type="Url" format="Undefined" version="" schema="">https://akrgis.nps.gov/observer</metadata>
+  <category name="Category 1: No URL and no description">
+    <data type="" format="" version="" datasource="" workspace="" workspacetype="" workspaceprogid="" container="" containertype="" datasourcename="" datasetname="" datasettype="" />
+  </category>
+  <category name="Category 2: No URL but has description">
+    <description>This is the description for Category #2</description>
+    <data type="" format="" version="" datasource="" workspace="" workspacetype="" workspaceprogid="" container="" containertype="" datasourcename="" datasetname="" datasettype="" />
+  </category>
+  <category name="Category 3: Has URL but no description">
+    <data type="" format="" version="" datasource="" workspace="" workspacetype="" workspaceprogid="" container="" containertype="" datasourcename="" datasetname="" datasettype="" />
+    <metadata type="Url" format="Undefined" version="" schema="">https://akrgis.nps.gov/observer</metadata>
+  </category>
+  <category name="Category 4: Has URL and has description">
+    <description>My manual description for category #4</description>
+    <data type="" format="" version="" datasource="" workspace="" workspacetype="" workspaceprogid="" container="" containertype="" datasourcename="" datasetname="" datasettype="" />
+    <metadata type="Url" format="Undefined" version="" schema="">https://akrgis.nps.gov/observer</metadata>
+  </category>
+</themelist>
