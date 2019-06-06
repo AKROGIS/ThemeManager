@@ -1065,8 +1065,11 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             if (_cachedSafeNoMetadataTemplate == null)
                 _cachedSafeNoMetadataTemplate = GetSafeNoMetadataTemplate();
 
+            var nodeName = $"{node.Name} ({node.Type})";
             if (string.IsNullOrEmpty(node.Metadata.Path))
-                webBrowser.DocumentText = string.Format(_cachedSafeNoMetadataTemplate, node.Name, node, "&lt;empty&gt;", "No Metadata", null);
+                
+                webBrowser.DocumentText = string.Format(_cachedSafeNoMetadataTemplate, nodeName, node.Parent, "&lt;empty&gt;", "No Metadata", 
+                    "This is typical for items that are not a datasource, i.e. Categories/Folders, Group Layers, MXDs, PDFs, etc.");
             else
             {
                 try
@@ -1075,13 +1078,13 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 }
                 catch (MetadataDisplayException ex)
                 {
-                    webBrowser.DocumentText = string.Format(_cachedSafeNoMetadataTemplate, node.Name, node, node.Metadata.Path, ex.Message, ex);
+                    webBrowser.DocumentText = string.Format(_cachedSafeNoMetadataTemplate, nodeName, node.Parent, node.Metadata.Path, ex.Message, ex);
                 }
             }
         }
 
         //See the html file at Properties.Settings.Default.HTMLNoMetadata for the set of substitutions that may transform the html.
-        //This should return an html string for formatting with 5 subtitutions
+        //This should return an html string for formatting with 5 substitutions
         //This html is used whenever there are problems displaying the metadata for a theme
         private string GetSafeNoMetadataTemplate()
         {
