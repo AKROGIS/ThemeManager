@@ -62,8 +62,6 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;ARCGIS_10_1</DefineConstants>
-    <DefineConstants>TRACE;DEBUG;ARCGIS_10_1PLUS</DefineConstants>
     <DefineConstants>TRACE;DEBUG;ARCGIS_10_1PLUS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -75,8 +73,6 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;ARCGIS_10_1</DefineConstants>
-    <DefineConstants>TRACE;ARCGIS_10_1PLUS</DefineConstants>
     <DefineConstants>TRACE;ARCGIS_10_1PLUS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -465,7 +461,7 @@
       <UserProperties ESRIImportCache="ESRI.ArcGIS.Carto" />
     </VisualStudio>
   </ProjectExtensions>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
