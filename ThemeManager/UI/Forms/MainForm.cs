@@ -1047,12 +1047,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         {
             Trace.TraceInformation("Display metadata for node: " + (node == null ? "null" : node.ToString()));
 
+            // This is valid, but usually only at startup when the user has not selected an active theme.
             if (node == null)
             {
                 LoadDefaultBrowser(); //Loads a default start page
                 return;
             }
 
+            // This should never happen, and would indicate a programming error.  We will spare the user the details.
             Debug.Assert(node.Metadata != null, "Node has no metadata object to display");
             if (node.Metadata == null)
             {
@@ -1073,26 +1075,30 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 }
                 catch (MetadataDisplayException ex)
                 {
+                    // FIXME: Use a different template (or reformat the existing template)
+                    // We may actually have metadata, we just can't display it (e.g a bad stylesheet)
                     webBrowser.DocumentText = string.Format(_cachedSafeNoMetadataTemplate, node.Name, node, node.Metadata.Path, ex.Message, ex);
                 }
             }
         }
 
-        //See Properties.Settings.Default.HTMLNoMetadata for the set of substitutions that may transform the html.
+        //See the html file at Properties.Settings.Default.HTMLNoMetadata for the set of substitutions that may transform the html.
+        //This should return an html string for formatting with 5 subtitutions
         private string GetSafeNoMetadataTemplate()
         {
             string result;
             string safetyNet = "<HTML><BODY><H2>No Metadata</H2>Theme = <B>{0}</B><BR/>Metadata = <I>{2}</I><BR/>Error = {3}<BR/><I>{4}</I></BODY></HTML>";
             string noMetadataFile = Settings.Default.HTMLNoMetadata;
-            if (File.Exists(noMetadataFile))
-                result = File.ReadAllText(noMetadataFile);
-            else
-                result = safetyNet;
+            if (!File.Exists(noMetadataFile)) {
+                return safetyNet;
+            }
             try
             {
+                result = File.ReadAllText(noMetadataFile);
+                // No substitutions are made here, this is just to test that the data I got off the disk is in an acceptable format
                 string.Format(result, "Name", "Node", "Path", "Message", "Exception");
             }
-            catch (FormatException)
+            catch (Exception)
             {
                 result = safetyNet;
             }

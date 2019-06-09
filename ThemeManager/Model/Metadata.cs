@@ -335,10 +335,11 @@ namespace NPS.AKRO.ThemeManager.Model
             Debug.Assert(webBrowser != null, "The WebBrowser control is null");
             if (webBrowser == null)
                 throw new ArgumentNullException("webBrowser");
+            // This will not throw any exceptions, rather it returns null, and sets IsValid and ErrorMessage
             string xmlString = LoadAsText();
             //side effect of loading is that Path, Type and IsValid are validated, so we load first.
             if (!IsValid)
-                throw new MetadataDisplayException("Metadata is not valid"); //In what way???
+                throw new MetadataDisplayException("Metadata is not valid"); //FIXME: In what way???
 
             try
             {
@@ -346,7 +347,7 @@ namespace NPS.AKRO.ThemeManager.Model
                     webBrowser.Url = new Uri(Path);
                 else
                     if (styleSheet != null)
-                        webBrowser.DocumentText = styleSheet.XformText(xmlString); //check Format == xml ??
+                        webBrowser.DocumentText = styleSheet.XformText(xmlString); //TODO: check Format == xml ??
                     else
                         webBrowser.DocumentText = xmlString;
             }
@@ -438,6 +439,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         //!! side effect of LoadAsText() is that Path, Type and IsValid are validated (for Display()).
         //!! side effect of LoadAsText() is that Format, IsValid are validated (for LoadAsXDoc()).
+        // This will not throw any exceptions, rather it returns null, and sets ErrorMessage
         private string LoadAsText()
         {
             if (string.IsNullOrEmpty(Path))
