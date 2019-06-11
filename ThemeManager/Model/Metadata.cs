@@ -22,7 +22,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
     /// <summary>
     /// Defines the meaning of the string in Metadata.Path and
-    /// how it is used to find the metadata content. 
+    /// how it is used to find the metadata content.
     /// See MetadataFormat for how to interpret the content.
     /// </summary>
     enum MetadataType
@@ -63,7 +63,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// The metadata content is XML and can be styled for display (typical)
         /// Note XML may come in many different styles/schemas (FGDC, ISO, ArcGIS)
         /// and a schema may come in various different versions.
-        /// It is up to the stylesheets to differentiate by schema/version as necessary 
+        /// It is up to the stylesheets to differentiate by schema/version as necessary
         /// </summary>
         Xml,
         /// <summary>
@@ -87,52 +87,76 @@ namespace NPS.AKRO.ThemeManager.Model
     [Serializable]
     class Metadata : ICloneable, INotifyPropertyChanged
     {
-        #region  Public Properties
-
-        // Called in lots of places
-        internal string Path
-        {
-            get
-            {
-                return _path;
-            }
-            private set
-            {
-                if (_path != value)
-                {
-                    Reset();
-                    _path = value;
-                    Type = MetadataType.Undefined;
-                    OnPropertyChanged("Path");
-                    //FIXME - this is broken.
-                    // changing the path, or creating a new metadata object with the same path
-                    // does not revalidate - Need to cache whole metadata objects.
-                }
-            }
-        }
-        private string _path;
-
-        // Called by AdminReports.cs line 218 (ListMetadataProblems)
-        internal string ErrorMessage { get; private set; }
-
-        #endregion
-
-        #region  Private Properties
+        #region  Class Fields (Private)
 
         private static Dictionary<string, string> _cache = new Dictionary<string, string>();
 
-        // Called by TmNode.cs line 527 (Metadata_PropertyChanged, tiggerd when Path changes)
-        internal bool IsValid { get; set; }
-        private bool HasBeenValidated {get; set;}
-        private MetadataFormat Format { get; set; }
-        private MetadataType Type { get; set; }
-        private string Version { get; set; } //FIXME - use or toss
-        private string Schema { get; set; } //FIXME - use or toss
-        private MetadataState State { get; set; }
+        #endregion
+
+
+        #region  Class Methods (Public)
+
+        // Called by ThemeBuilder.cs line 83 (data added to theme list)
+        internal static Metadata Find(ThemeData data)
+        {
+            if (data == null)
+                return null;
+
+            meta myProps = ExpectedMetadataProperties(data);
+            Metadata metadata = new Metadata(myProps.path, myProps.type, myProps.format);
+            if (metadata != null && metadata.Validate())
+                return metadata;
+            return null;
+        }
+
+        //Called by TmNode.cs line 1133 (building object from themelist XML)
+        internal static Metadata Load(XElement xele)
+        {
+            if (xele == null)
+                throw new ArgumentNullException("xele");
+            if (xele.Name != "metadata")
+                throw new ArgumentException("Invalid Xelement");
+            var data = new Metadata(
+                xele.Value,
+                (MetadataType)Enum.Parse(typeof(MetadataType), (string)xele.Attribute("type")),
+                (MetadataFormat)Enum.Parse(typeof(MetadataFormat), (string)xele.Attribute("format")),
+                (string)xele.Attribute("version"),
+                (string)xele.Attribute("schema")
+                );
+            return data;
+        }
 
         #endregion
 
-        #region Public Methods
+
+        #region  Class Methods (Private)
+
+        private static bool Match(string haystack, IEnumerable<string> needles, bool findAll, StringComparison comparisonMethod)
+        {
+            bool found;
+            if (findAll)
+            {
+                found = true;
+                if (needles.Any(needle => !haystack.Contains(needle, comparisonMethod)))
+                {
+                    return false;
+                }
+            }
+            else //FindAny
+            {
+                found = false;
+                if (needles.Any(needle => haystack.Contains(needle, comparisonMethod)))
+                {
+                    return true;
+                }
+            }
+            return found;
+        }
+
+        #endregion
+
+
+        #region  Constructors
 
         // Called by TmNode.cs line 82 (TmNode default constructor)
         internal Metadata()
@@ -161,6 +185,114 @@ namespace NPS.AKRO.ThemeManager.Model
             State = MetadataState.Initialized;
         }
 
+        #endregion
+
+
+        #region  Instance Fields (All Private; Should only be accessed by Contructors or Properties)
+
+        private string _description;
+        private bool _metadataHasBeenScanned;
+        private string _path;
+        private string _pubdate;
+        private string _summary;
+        private string _tags;
+
+        #endregion
+
+
+        #region  Public Properties
+
+        // Called by TmNode.cs line 1294 (setting node properties) AdminReports.cs line 217 (ListMetadataProblems)
+        internal string Description
+        {
+            get
+            {
+                if (!_metadataHasBeenScanned)
+                    ScanMetadata();
+                return _description;
+            }
+        }
+
+        // Called by AdminReports.cs line 218 (ListMetadataProblems)
+        internal string ErrorMessage { get; private set; }
+
+        // Called by TmNode.cs line 1301 and 1317 (setting node properties)
+        internal bool HasPubDate
+        {
+            get
+            {
+                if (!_metadataHasBeenScanned)
+                    ScanMetadata();
+                return (_pubdate != null);
+            }
+        }
+
+        // Called by TmNode.cs line 527 (Metadata_PropertyChanged, tiggerd when Path changes)
+        internal bool IsValid { get; set; }
+
+        // Called in lots of places
+        internal string Path
+        {
+            get
+            {
+                return _path;
+            }
+            private set
+            {
+                if (_path != value)
+                {
+                    Reset();
+                    _path = value;
+                    Type = MetadataType.Undefined;
+                    OnPropertyChanged("Path");
+                    //FIXME - this is broken.
+                    // changing the path, or creating a new metadata object with the same path
+                    // does not revalidate - Need to cache whole metadata objects.
+                }
+            }
+        }
+
+        /// <summary>
+        /// Will throw an exception if there is no pubdate
+        /// Client should use HasPubDate first.
+        /// </summary>
+        // Called by TmNode.cs line 1319 (setting node properties)
+        internal DateTime PubDate
+        {
+            get
+            {
+                return DateTime.Parse(_pubdate);
+            }
+        }
+
+        // Called by TmNode.cs line 1286 (setting node properties)
+        internal string Summary
+        {
+            get
+            {
+                if (!_metadataHasBeenScanned)
+                    ScanMetadata();
+                return _summary;
+            }
+        }
+
+        // Called by TmNode.cs line 1278 (setting node properties)
+        internal string Tags
+        {
+            get
+            {
+                if (!_metadataHasBeenScanned)
+                    ScanMetadata();
+                return _tags;
+            }
+        }
+
+        #endregion
+
+
+        #region  Interface Implementations
+        #region IClonable Interface
+
         // Called by MainForm, TmNode, and others to copy a Metadata object
         public object Clone()
         {
@@ -168,17 +300,107 @@ namespace NPS.AKRO.ThemeManager.Model
             return obj;
         }
 
-        // Called by ThemeBuilder.cs line 83 (data added to theme list)
-        internal static Metadata Find(ThemeData data)
-        {
-            if (data == null)
-                return null;
+        #endregion
 
-            meta myProps = ExpectedMetadataProperties(data);
-            Metadata metadata = new Metadata(myProps.path, myProps.type, myProps.format);
-            if (metadata != null && metadata.Validate())
-                return metadata;
-            return null;
+        #region INotifyPropertyChanged Interface
+
+        [field: NonSerializedAttribute()]
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void OnPropertyChanged(string property)
+        {
+            PropertyChangedEventHandler handle = PropertyChanged;
+            if (handle != null)
+                handle(this, new PropertyChangedEventArgs(property));
+        }
+
+        #endregion
+        #endregion
+
+
+        #region  Public Methods
+
+        //TODO: Replace LoadAsText() and Validate(), etc with: LoadContentAndValidate()
+        // This only needs to be called before display, or when updating KeyProperties from metadata content
+        // Validation is in two parts: 1) Validate Type (requires loading even URLs) and 2) Validate Format (may require parsing)
+        // Validation can short circuit if Content is non null.  If content is null reload will be retried
+        // Errors in Loading/Validation will be stored in ErrorMessages for display to the user.
+        //These changes will improve display robustness, as well as simplify the code.  It may result in more
+        //time spent loading or retrying, but always (and only) when the user requests it.
+
+        //FIXME - return more meaningful exception messages or create web pages on the fly
+
+        // Called by MainForm.cs line 1077 (display in metadata tab (web browser))
+        internal void Display(WebBrowser webBrowser, StyleSheet styleSheet)
+        {
+            Debug.Assert(webBrowser != null, "The WebBrowser control is null");
+            if (webBrowser == null)
+                throw new ArgumentNullException("webBrowser");
+
+            // TODO: replace with LoadContentAndValidate() throw if ErrorMessage is non NULL
+            string xmlString = LoadAsText();
+            if (!IsValid)
+                throw new MetadataDisplayException("Metadata is not valid"); //FIXME: return ErrorMessage
+
+            // Exception message for Type == Undefined
+            //  Unable to obtain the metadata content because Theme Manager doesn't know the meaning of {Path}
+            // Exception message for Format == Undefined
+            //  Theme Manager is doesn't know the format of the metadata content, so it is presented as plain text below
+
+
+
+            try
+            {
+
+                if (Type == MetadataType.Url)
+                    webBrowser.Url = new Uri(Path);
+                else if (Format == MetadataFormat.Xml && styleSheet != null)
+                {
+                    // Do this in two steps to avoid sending partial processing to the webBrowser
+                    string html = styleSheet.TransformText(xmlString);
+                    webBrowser.DocumentText = html;
+                }
+                //TODO: Ensure that all permutations of Format and Type have been considered
+                else
+                    webBrowser.DocumentText = xmlString;
+            }
+            catch (Exception ex)
+            {
+                throw new MetadataDisplayException(ex.Message, ex);
+            }
+        }
+
+        // Called by TmNode.cs line 987 (advanced search option)
+        internal bool Match(SearchOptions search)
+        {
+            if (search == null)
+                return false;
+
+            Debug.Assert(!string.IsNullOrEmpty(Path), "This Metadata object does not have a path");
+            Debug.Assert(search.SearchType == SearchType.Metadata, "The search parameters are not appropriate for metadata");
+
+            if (string.IsNullOrEmpty(search.XmlElement))
+            {
+                //to search the whole document, we don't need to parse it as XML
+                string content = LoadAsText();
+                return content == null ? false:  Match(content, search.SearchWords, search.FindAll, search.ComparisonMethod);
+            }
+            XDocument xDoc = LoadAsXDoc();
+            if (xDoc == null)
+                return false;
+            return xDoc.Descendants(search.XmlElement)
+                .Select(element => element.Value)
+                .Where(value => !string.IsNullOrEmpty(value))
+                .Any(value => Match(value, search.SearchWords, search.FindAll, search.ComparisonMethod));
+        }
+
+        // Called by TmNode.cs line 1159 .. -> MainForm.designer.cs line 1058 (preload all metadata in background)
+        // TODO: consider removing this "feature"
+        internal void PreloadAsText()
+        {
+            if (Settings.Default.KeepMetaDataInMemory)
+                if (!string.IsNullOrEmpty(Path))
+                    _cache[Path] = LoadAsText();
         }
 
         // Called from TmNode.cs line 548 (data path changed) and line 1245 (reload theme)
@@ -194,11 +416,58 @@ namespace NPS.AKRO.ThemeManager.Model
             Validate();
         }
 
+        // Called by TmNode.cs line 845 (write object to themelist XML)
+        internal XElement ToXElement()
+        {
+            return new XElement("metadata",
+                                new XAttribute("type", Enum.GetName(typeof(MetadataType), Type)),
+                                new XAttribute("format", Enum.GetName(typeof(MetadataFormat), Format)),
+                                new XAttribute("version", Version ?? ""),
+                                new XAttribute("schema", Schema ?? ""),
+                                Path
+                );
+        }
+
+        #endregion
+
+
+        #region  Private Enums/Structs/Classes
+
         private struct meta
         {
             internal string path;
             internal MetadataType type;
             internal MetadataFormat format;
+        }
+
+        #endregion
+
+
+        #region  Private Properties
+
+        private MetadataFormat Format { get; set; }
+        private bool HasBeenValidated {get; set;}
+        private string Schema { get; set; } //FIXME - use or toss
+        private MetadataState State { get; set; }
+        private MetadataType Type { get; set; }
+        private string Version { get; set; } //FIXME - use or toss
+
+        #endregion
+
+
+        #region  Private Methods
+
+        private string ExpandFgdcDate(string _pubdate)
+        {
+            if (string.IsNullOrEmpty(_pubdate))
+                return null;
+            if (_pubdate.Length == 4)
+                return _pubdate + "-01-01";
+            if (_pubdate.Length == 6)
+                return _pubdate.Substring(0, 4) + "-" + _pubdate.Substring(4, 2) + "-01";
+            if (_pubdate.Length == 8)
+                return _pubdate.Substring(0, 4) + "-" + _pubdate.Substring(4, 2) + "-" + _pubdate.Substring(6, 2);
+            return null;
         }
 
         private static meta ExpectedMetadataProperties(ThemeData data)
@@ -302,206 +571,6 @@ namespace NPS.AKRO.ThemeManager.Model
             return newMeta;
         }
 
-        //Called by TmNode.cs line 1133 (building object from themelist XML)
-        internal static Metadata Load(XElement xele)
-        {
-            if (xele == null)
-                throw new ArgumentNullException("xele");
-            if (xele.Name != "metadata")
-                throw new ArgumentException("Invalid Xelement");
-            var data = new Metadata(
-                xele.Value,
-                (MetadataType)Enum.Parse(typeof(MetadataType), (string)xele.Attribute("type")),
-                (MetadataFormat)Enum.Parse(typeof(MetadataFormat), (string)xele.Attribute("format")),
-                (string)xele.Attribute("version"),
-                (string)xele.Attribute("schema")
-                );
-            return data;
-        }
-
-        // Called by TmNode.cs line 845 (write object to themelist XML)
-        internal XElement ToXElement()
-        {
-            return new XElement("metadata",
-                                new XAttribute("type", Enum.GetName(typeof(MetadataType), Type)),
-                                new XAttribute("format", Enum.GetName(typeof(MetadataFormat), Format)),
-                                new XAttribute("version", Version ?? ""),
-                                new XAttribute("schema", Schema ?? ""),
-                                Path
-                );
-        }
-
-        // Called by TmNode.cs line 1159 .. -> MainForm.designer.cs line 1058 (preload all metadata in background)
-        // TODO: consider removing this "feature"
-        internal void PreloadAsText()
-        {
-            if (Settings.Default.KeepMetaDataInMemory)
-                if (!string.IsNullOrEmpty(Path))
-                    _cache[Path] = LoadAsText();
-        }
-        // Called by TmNode.cs line 987 (advanced search option)
-        internal bool Match(SearchOptions search)
-        {
-            if (search == null)
-                return false;
-
-            Debug.Assert(!string.IsNullOrEmpty(Path), "This Metadata object does not have a path");
-            Debug.Assert(search.SearchType == SearchType.Metadata, "The search parameters are not appropriate for metadata");
-
-            if (string.IsNullOrEmpty(search.XmlElement))
-            {
-                //to search the whole document, we don't need to parse it as XML
-                string content = LoadAsText();
-                return content == null ? false:  Match(content, search.SearchWords, search.FindAll, search.ComparisonMethod);
-            }
-            XDocument xDoc = LoadAsXDoc();
-            if (xDoc == null)
-                return false;
-            return xDoc.Descendants(search.XmlElement)
-                .Select(element => element.Value)
-                .Where(value => !string.IsNullOrEmpty(value))
-                .Any(value => Match(value, search.SearchWords, search.FindAll, search.ComparisonMethod));
-        }
-
-
-        //TODO: Replace LoadAsText() and Validate(), etc with: LoadContentAndValidate()
-        // This only needs to be called before display, or when updating KeyProperties from metadata content
-        // Validation is in two parts: 1) Validate Type (requires loading even URLs) and 2) Validate Format (may require parsing)
-        // Validation can short circuit if Content is non null.  If content is null reload will be retried
-        // Errors in Loading/Validation will be stored in ErrorMessages for display to the user.
-        //These changes will improve display robustness, as well as simplify the code.  It may result in more
-        //time spent loading or retrying, but always (and only) when the user requests it.
-
-        //FIXME - return more meaningful exception messages or create web pages on the fly
-
-        // Called by MainForm.cs line 1077 (display in metadata tab (web browser))
-        internal void Display(WebBrowser webBrowser, StyleSheet styleSheet)
-        {
-            Debug.Assert(webBrowser != null, "The WebBrowser control is null");
-            if (webBrowser == null)
-                throw new ArgumentNullException("webBrowser");
-
-            // TODO: replace with LoadContentAndValidate() throw if ErrorMessage is non NULL
-            string xmlString = LoadAsText();
-            if (!IsValid)
-                throw new MetadataDisplayException("Metadata is not valid"); //FIXME: return ErrorMessage
-
-            // Exception message for Type == Undefined
-            //  Unable to obtain the metadata content because Theme Manager doesn't know the meaning of {Path}  
-            // Exception message for Format == Undefined
-            //  Theme Manager is doesn't know the format of the metadata content, so it is presented as plain text below
-
-
-
-            try
-            {
-
-                if (Type == MetadataType.Url)
-                    webBrowser.Url = new Uri(Path);
-                else if (Format == MetadataFormat.Xml && styleSheet != null)
-                {
-                    // Do this in two steps to avoid sending partial processing to the webBrowser
-                    string html = styleSheet.TransformText(xmlString);
-                    webBrowser.DocumentText = html;
-                }
-                //TODO: Ensure that all permutations of Format and Type have been considered
-                else
-                    webBrowser.DocumentText = xmlString;
-            }
-            catch (Exception ex)
-            {
-                throw new MetadataDisplayException(ex.Message, ex);
-            }
-        }
-
-        /// <summary>
-        /// Returns true if this is a Valid metadata object
-        /// </summary>
-        /// <remarks>
-        /// If the type is unknown, all valid types will be checked to determine the type
-        /// This is generally very fast, and can be called multiple times.
-        /// The exception is ESRI metadata which will do a license load, once per process
-        /// and will do some slow arcObjects calls if the metadata path has not been cached
-        /// </remarks>
-        /// <returns>True if this is a Valid metadata object, False otherwise</returns>
-        private bool Validate()
-        {
-            HasBeenValidated = true;
-            if (string.IsNullOrEmpty(Path))
-            {
-                Type = MetadataType.Undefined;
-                return false;
-            }
-
-            // Validate the Type
-            // TODO: URL, and FilePath should also be loaded to do proper validation
-            try
-            {
-                switch (Type)
-                {
-                    case MetadataType.FilePath:
-                        return File.Exists(Path);
-                    case MetadataType.Url:
-                        //if Path is not a valid URI, an exception will be thrown
-                        //FIXME - Validate that that the URI can be found ??
-                        //   (careful - URI may be valid, but temporarily not available)
-                        var uri = new Uri(Path);
-                        if (uri.IsFile)
-                        {
-                            Type = MetadataType.FilePath;
-                            return File.Exists(uri.LocalPath);
-                        }
-                        else
-                            return true;
-                    case MetadataType.EsriDataPath:
-                        // See if ArcObjects can load the metadata or throw an exception trying
-                        EsriMetadata.GetContentsAsXml(Path);
-                        return true;
-                    case MetadataType.Inline:
-                        //FIXME - Validate the contents against MetadataFormat ???
-                        return !string.IsNullOrEmpty(Path);
-                    case MetadataType.Undefined:
-                    default:
-                        // MetadataType.Undefined (or some other anomaly
-                        // Try all each type - first valid type wins, so order matters.
-                        Type = MetadataType.FilePath;
-                        if (Validate())
-                            return true;
-                        Type = MetadataType.Url;
-                        if (Validate())
-                            return true;
-                        Type = MetadataType.EsriDataPath;
-                        if (Validate())
-                            return true;
-                        Type = MetadataType.Inline;
-                        if (Validate())
-                            return true;
-                        Type = MetadataType.Undefined;
-                        return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = ex.Message;
-                Debug.Print("Exception validating metadata: " + ex);
-            }
-            return false;
-
-            //FIXME: Validate the Format; will require loading
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private void Reset()
-        {
-            HasBeenValidated = false;
-            _metadataHasBeenScanned = false;
-            if (!string.IsNullOrEmpty(Path) && _cache.ContainsKey(Path))
-                _cache.Remove(Path);
-        }
-
         //!! side effect of LoadAsText() is that Path, Type and IsValid are validated (for Display()).
         //!! side effect of LoadAsText() is that Format, IsValid are validated (for LoadAsXDoc()).
         // This will not throw any exceptions, rather it returns null, and sets ErrorMessage
@@ -588,92 +657,13 @@ namespace NPS.AKRO.ThemeManager.Model
             return contents;
         }
 
-        private static bool Match(string haystack, IEnumerable<string> needles, bool findAll, StringComparison comparisonMethod)
+        private void Reset()
         {
-            bool found;
-            if (findAll)
-            {
-                found = true;
-                if (needles.Any(needle => !haystack.Contains(needle, comparisonMethod)))
-                {
-                    return false;
-                }
-            }
-            else //FindAny
-            {
-                found = false;
-                if (needles.Any(needle => haystack.Contains(needle, comparisonMethod)))
-                {
-                    return true;
-                }
-            }
-            return found;
+            HasBeenValidated = false;
+            _metadataHasBeenScanned = false;
+            if (!string.IsNullOrEmpty(Path) && _cache.ContainsKey(Path))
+                _cache.Remove(Path);
         }
-
-        #endregion
-
-        #region key metadata elements
-        // Called by TmNode.cs line 1301 and 1317 (setting node properties)
-        internal bool HasPubDate
-        {
-            get
-            {
-                if (!_metadataHasBeenScanned)
-                    ScanMetadata();
-                return (_pubdate != null);
-            }
-        }
-        private string _pubdate;
-
-        /// <summary>
-        /// Will throw an exception if there is no pubdate
-        /// Client should use HasPubDate first.
-        /// </summary>
-        // Called by TmNode.cs line 1319 (setting node properties)
-        internal DateTime PubDate
-        {
-            get
-            {
-                return DateTime.Parse(_pubdate);
-            }
-        }
-
-        // Called by TmNode.cs line 1278 (setting node properties)
-        internal string Tags
-        {
-            get
-            {
-                if (!_metadataHasBeenScanned)
-                    ScanMetadata();
-                return _tags;
-            }
-        }
-        private bool _metadataHasBeenScanned;
-        private string _tags;
-
-        // Called by TmNode.cs line 1286 (setting node properties)
-        internal string Summary
-        {
-            get
-            {
-                if (!_metadataHasBeenScanned)
-                    ScanMetadata();
-                return _summary;
-            }
-        }
-        private string _summary;
-
-        // Called by TmNode.cs line 1294 (setting node properties) AdminReports.cs line 217 (ListMetadataProblems)
-        internal string Description
-        {
-            get
-            {
-                if (!_metadataHasBeenScanned)
-                    ScanMetadata();
-                return _description;
-            }
-        }
-        private string _description;
 
         private void ScanMetadata()
         {
@@ -734,34 +724,82 @@ namespace NPS.AKRO.ThemeManager.Model
             _metadataHasBeenScanned = true;
         }
 
-        private string ExpandFgdcDate(string _pubdate)
+        /// <summary>
+        /// Returns true if this is a Valid metadata object
+        /// </summary>
+        /// <remarks>
+        /// If the type is unknown, all valid types will be checked to determine the type
+        /// This is generally very fast, and can be called multiple times.
+        /// The exception is ESRI metadata which will do a license load, once per process
+        /// and will do some slow arcObjects calls if the metadata path has not been cached
+        /// </remarks>
+        /// <returns>True if this is a Valid metadata object, False otherwise</returns>
+        private bool Validate()
         {
-            if (string.IsNullOrEmpty(_pubdate))
-                return null;
-            if (_pubdate.Length == 4)
-                return _pubdate + "-01-01";
-            if (_pubdate.Length == 6)
-                return _pubdate.Substring(0, 4) + "-" + _pubdate.Substring(4, 2) + "-01";
-            if (_pubdate.Length == 8)
-                return _pubdate.Substring(0, 4) + "-" + _pubdate.Substring(4, 2) + "-" + _pubdate.Substring(6, 2);
-            return null;
+            HasBeenValidated = true;
+            if (string.IsNullOrEmpty(Path))
+            {
+                Type = MetadataType.Undefined;
+                return false;
+            }
+
+            // Validate the Type
+            // TODO: URL, and FilePath should also be loaded to do proper validation
+            try
+            {
+                switch (Type)
+                {
+                    case MetadataType.FilePath:
+                        return File.Exists(Path);
+                    case MetadataType.Url:
+                        //if Path is not a valid URI, an exception will be thrown
+                        //FIXME - Validate that that the URI can be found ??
+                        //   (careful - URI may be valid, but temporarily not available)
+                        var uri = new Uri(Path);
+                        if (uri.IsFile)
+                        {
+                            Type = MetadataType.FilePath;
+                            return File.Exists(uri.LocalPath);
+                        }
+                        else
+                            return true;
+                    case MetadataType.EsriDataPath:
+                        // See if ArcObjects can load the metadata or throw an exception trying
+                        EsriMetadata.GetContentsAsXml(Path);
+                        return true;
+                    case MetadataType.Inline:
+                        //FIXME - Validate the contents against MetadataFormat ???
+                        return !string.IsNullOrEmpty(Path);
+                    case MetadataType.Undefined:
+                    default:
+                        // MetadataType.Undefined (or some other anomaly
+                        // Try all each type - first valid type wins, so order matters.
+                        Type = MetadataType.FilePath;
+                        if (Validate())
+                            return true;
+                        Type = MetadataType.Url;
+                        if (Validate())
+                            return true;
+                        Type = MetadataType.EsriDataPath;
+                        if (Validate())
+                            return true;
+                        Type = MetadataType.Inline;
+                        if (Validate())
+                            return true;
+                        Type = MetadataType.Undefined;
+                        return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                Debug.Print("Exception validating metadata: " + ex);
+            }
+            return false;
+
+            //FIXME: Validate the Format; will require loading
         }
-        #endregion
-
-        #region INotifyPropertyChanged
-
-        [field: NonSerializedAttribute()]
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string property)
-        {
-            PropertyChangedEventHandler handle = PropertyChanged;
-            if (handle != null)
-                handle(this, new PropertyChangedEventArgs(property));
-        }
 
         #endregion
-
-
     }
 }
