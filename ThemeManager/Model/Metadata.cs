@@ -304,6 +304,8 @@ namespace NPS.AKRO.ThemeManager.Model
         #region  Public Properties
 
         // Called by TmNode.cs line 1294 (setting node properties) AdminReports.cs line 217 (ListMetadataProblems)
+        // Call from AdminReports should be replaced with a call to load/validate
+        // Call from TMNode should be replaced with a call to GetInfo() -> struct(pubdate?, tags, summary, description)
         internal string Description
         {
             get
@@ -318,6 +320,7 @@ namespace NPS.AKRO.ThemeManager.Model
         internal string ErrorMessage { get; private set; }
 
         // Called by TmNode.cs line 1301 and 1317 (setting node properties)
+        // Calls from TMNode should be replaced with a call to GetInfo() -> struct(pubdate?, tags, summary, description)
         internal bool HasPubDate
         {
             get
@@ -329,9 +332,11 @@ namespace NPS.AKRO.ThemeManager.Model
         }
 
         // Called by TmNode.cs line 527 (Metadata_PropertyChanged, tiggerd when Path changes)
+        // Remove this call from the caller.  They should not call this (it is pointless) until the user requests a sync (GetInfo)
         internal bool IsValid { get; set; }
 
         // Called in lots of places
+        // Verify that form binding is not a form of setting the path (how else does the user change the metadata path?)
         internal string Path
         {
             get
@@ -358,6 +363,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// Client should use HasPubDate first.
         /// </summary>
         // Called by TmNode.cs line 1319 (setting node properties)
+        // Call from TMNode should be replaced with a call to GetInfo() -> struct(pubdate?, tags, summary, description)
         internal DateTime PubDate
         {
             get
@@ -367,6 +373,7 @@ namespace NPS.AKRO.ThemeManager.Model
         }
 
         // Called by TmNode.cs line 1286 (setting node properties)
+        // Call from TMNode should be replaced with a call to GetInfo() -> struct(pubdate?, tags, summary, description)
         internal string Summary
         {
             get
@@ -378,6 +385,7 @@ namespace NPS.AKRO.ThemeManager.Model
         }
 
         // Called by TmNode.cs line 1278 (setting node properties)
+        // Call from TMNode should be replaced with a call to GetInfo() -> struct(pubdate?, tags, summary, description)
         internal string Tags
         {
             get
@@ -421,17 +429,17 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Public Methods
 
-        //TODO: Replace LoadAsText() and Validate(), etc with: LoadContentAndValidate()
-        // This only needs to be called before display, or when updating KeyProperties from metadata content
-        // Validation is in two parts: 1) Validate Type (requires loading even URLs) and 2) Validate Format (may require parsing)
-        // Validation can short circuit if Content is non null.  If content is null reload will be retried
-        // Errors in Loading/Validation will be stored in ErrorMessages for display to the user.
-        //These changes will improve display robustness, as well as simplify the code.  It may result in more
-        //time spent loading or retrying, but always (and only) when the user requests it.
+        // Add Async internal MetaInfo GetInfo() -> struct MetaInfo(pubdate?, tags, summary, description)
+        //   Called on theme's "Sync with Metadata" to get select XML Tags for storing in the theme's properties
+        // Add Async internal void LoadContentAndValidate()
+        //  Called by user who wants to check the ErrorMessage without calling Display(), GetInfo() or Match()
+        //  called internally by Display(), GetInfo(), and Match()
+        // Make Display() and Match() Async
 
         //FIXME - return more meaningful exception messages or create web pages on the fly
 
         // Called by MainForm.cs line 1077 (display in metadata tab (web browser))
+        // Caller can call Load/Validate first, and check ErrorMessage Property before calling display
         internal void Display(WebBrowser webBrowser, StyleSheet styleSheet)
         {
             Debug.Assert(webBrowser != null, "The WebBrowser control is null");
@@ -496,7 +504,7 @@ namespace NPS.AKRO.ThemeManager.Model
         }
 
         // Called by TmNode.cs line 1159 .. -> MainForm.designer.cs line 1058 (preload all metadata in background)
-        // TODO: consider removing this "feature"
+        // Removing this "feature"; Metadata will only loaded on demand.  Advanced search may require loading all metadata (user can be warned)
         internal void PreloadAsText()
         {
             if (Settings.Default.KeepMetaDataInMemory)
@@ -505,6 +513,7 @@ namespace NPS.AKRO.ThemeManager.Model
         }
 
         // Called from TmNode.cs line 548 (data path changed) and line 1245 (reload theme)
+        // Ensure this is a low cost synchronous method (the data path may or may not change); This is not a user request to Sync
         internal void Repair(ThemeData data)
         {
             //FIXME - this is a redundant load/validate/scan going on.
@@ -558,6 +567,15 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Private Methods
 
+        //TODO: Replace LoadAsText() LoadAsXDoc() and Validate(), etc with: LoadContentAndValidate()
+        // cache results on class, to speed up multiple requests, avoid duplication, and avoid cloning large blocks of text
+        // Validation is in two parts: 1) Validate Type (requires loading even URLs) and 2) Validate Format (may require parsing)
+        // Validation can short circuit if Content is non null.  If content is null reload will be retried
+        // Errors in Loading/Validation will be stored in ErrorMessages for display to the user.
+        //These changes will improve display robustness, as well as simplify the code.  It may result in more
+        //time spent loading or retrying, but always (and only) when the user requests it.
+
+        // TODO: rename private parameter (confusing with class's field name)
         private string ExpandFgdcDate(string _pubdate)
         {
             if (string.IsNullOrEmpty(_pubdate))
