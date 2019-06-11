@@ -89,13 +89,14 @@ namespace NPS.AKRO.ThemeManager.Model
     {
         #region  Public Properties
 
-        public string Path
+        // Called in lots of places
+        internal string Path
         {
             get
             {
                 return _path;
             }
-            set
+            private set
             {
                 if (_path != value)
                 {
@@ -111,6 +112,7 @@ namespace NPS.AKRO.ThemeManager.Model
         }
         private string _path;
 
+        // Called by AdminReports.cs line 218 (ListMetadataProblems)
         internal string ErrorMessage { get; private set; }
 
         #endregion
@@ -119,6 +121,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         private static Dictionary<string, string> _cache = new Dictionary<string, string>();
 
+        // Called by TmNode.cs line 527 (Metadata_PropertyChanged, tiggerd when Path changes)
         internal bool IsValid { get; set; }
         private bool HasBeenValidated {get; set;}
         private MetadataFormat Format { get; set; }
@@ -131,22 +134,24 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region Public Methods
 
+        // Called by TmNode.cs line 82 (TmNode default constructor)
         internal Metadata()
             : this(null, MetadataType.Undefined, MetadataFormat.Undefined, null, null)
         {
         }
 
-        internal Metadata(string path)
+        private Metadata(string path)
             : this(path, MetadataType.Undefined, MetadataFormat.Undefined, null, null)
         {
         }
 
+        // Called by MdbStore.cs lines 104-414 (building object form old DB format)
         internal Metadata(string path, MetadataType type, MetadataFormat format)
             : this(path, type, format, null, null)
         {
         }
 
-        internal Metadata(string path, MetadataType type, MetadataFormat format, string version, string schema)
+        private Metadata(string path, MetadataType type, MetadataFormat format, string version, string schema)
         {
             _path = path;
             Type = type;
@@ -156,12 +161,14 @@ namespace NPS.AKRO.ThemeManager.Model
             State = MetadataState.Initialized;
         }
 
+        // Called by MainForm, TmNode, and others to copy a Metadata object
         public object Clone()
         {
             var obj = (Metadata)MemberwiseClone();
             return obj;
         }
 
+        // Called by ThemeBuilder.cs line 83 (data added to theme list)
         internal static Metadata Find(ThemeData data)
         {
             if (data == null)
@@ -174,6 +181,7 @@ namespace NPS.AKRO.ThemeManager.Model
             return null;
         }
 
+        // Called from TmNode.cs line 548 (data path changed) and line 1245 (reload theme)
         internal void Repair(ThemeData data)
         {
             //FIXME - this is a redundant load/validate/scan going on.
@@ -186,14 +194,14 @@ namespace NPS.AKRO.ThemeManager.Model
             Validate();
         }
 
-        internal struct meta
+        private struct meta
         {
             internal string path;
             internal MetadataType type;
             internal MetadataFormat format;
         }
 
-        internal static meta ExpectedMetadataProperties(ThemeData data)
+        private static meta ExpectedMetadataProperties(ThemeData data)
         {
             meta newMeta = new meta()
             {
@@ -294,6 +302,7 @@ namespace NPS.AKRO.ThemeManager.Model
             return newMeta;
         }
 
+        //Called by TmNode.cs line 1133 (building object from themelist XML)
         internal static Metadata Load(XElement xele)
         {
             if (xele == null)
@@ -310,6 +319,7 @@ namespace NPS.AKRO.ThemeManager.Model
             return data;
         }
 
+        // Called by TmNode.cs line 845 (write object to themelist XML)
         internal XElement ToXElement()
         {
             return new XElement("metadata",
@@ -321,13 +331,15 @@ namespace NPS.AKRO.ThemeManager.Model
                 );
         }
 
+        // Called by TmNode.cs line 1159 .. -> MainForm.designer.cs line 1058 (preload all metadata in background)
+        // TODO: consider removing this "feature"
         internal void PreloadAsText()
         {
             if (Settings.Default.KeepMetaDataInMemory)
                 if (!string.IsNullOrEmpty(Path))
                     _cache[Path] = LoadAsText();
         }
-
+        // Called by TmNode.cs line 987 (advanced search option)
         internal bool Match(SearchOptions search)
         {
             if (search == null)
@@ -361,6 +373,8 @@ namespace NPS.AKRO.ThemeManager.Model
         //time spent loading or retrying, but always (and only) when the user requests it.
 
         //FIXME - return more meaningful exception messages or create web pages on the fly
+
+        // Called by MainForm.cs line 1077 (display in metadata tab (web browser))
         internal void Display(WebBrowser webBrowser, StyleSheet styleSheet)
         {
             Debug.Assert(webBrowser != null, "The WebBrowser control is null");
@@ -410,7 +424,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// and will do some slow arcObjects calls if the metadata path has not been cached
         /// </remarks>
         /// <returns>True if this is a Valid metadata object, False otherwise</returns>
-        internal bool Validate()
+        private bool Validate()
         {
             HasBeenValidated = true;
             if (string.IsNullOrEmpty(Path))
@@ -480,7 +494,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region Private Methods
 
-        internal void Reset()
+        private void Reset()
         {
             HasBeenValidated = false;
             _metadataHasBeenScanned = false;
@@ -599,6 +613,7 @@ namespace NPS.AKRO.ThemeManager.Model
         #endregion
 
         #region key metadata elements
+        // Called by TmNode.cs line 1301 and 1317 (setting node properties)
         internal bool HasPubDate
         {
             get
@@ -614,6 +629,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// Will throw an exception if there is no pubdate
         /// Client should use HasPubDate first.
         /// </summary>
+        // Called by TmNode.cs line 1319 (setting node properties)
         internal DateTime PubDate
         {
             get
@@ -622,6 +638,7 @@ namespace NPS.AKRO.ThemeManager.Model
             }
         }
 
+        // Called by TmNode.cs line 1278 (setting node properties)
         internal string Tags
         {
             get
@@ -634,6 +651,7 @@ namespace NPS.AKRO.ThemeManager.Model
         private bool _metadataHasBeenScanned;
         private string _tags;
 
+        // Called by TmNode.cs line 1286 (setting node properties)
         internal string Summary
         {
             get
@@ -645,6 +663,7 @@ namespace NPS.AKRO.ThemeManager.Model
         }
         private string _summary;
 
+        // Called by TmNode.cs line 1294 (setting node properties) AdminReports.cs line 217 (ListMetadataProblems)
         internal string Description
         {
             get
