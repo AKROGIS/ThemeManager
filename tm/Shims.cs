@@ -44,7 +44,7 @@ namespace NPS.AKRO.ThemeManager.Model
 {
     internal class StyleSheet
     {
-        public string XformText(string xmlString)
+        public string TransformText(string xmlString)
         {
             throw new NotImplementedException();
         }
