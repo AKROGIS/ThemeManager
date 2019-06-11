@@ -131,6 +131,107 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Class Methods (Private)
 
+        private static meta ExpectedMetadataProperties(ThemeData data)
+        {
+            meta newMeta = new meta()
+            {
+                path=null,
+                type = MetadataType.Undefined,
+                format= MetadataFormat.Undefined
+            };
+
+            if (data == null)
+                return newMeta;
+
+            newMeta.type = MetadataType.FilePath;
+            newMeta.format = MetadataFormat.Xml;
+
+            //general file based metadata
+            if (data.Path != null && File.Exists(data.Path + ".xml"))
+            {
+                newMeta.path = data.Path + ".xml";
+                return newMeta;
+            }
+
+            if (data.DataSource != null && File.Exists(data.DataSource + ".xml"))
+            {
+                newMeta.path = data.DataSource + ".xml";
+                return newMeta;
+            }
+
+            //grids & tins
+            if (data.DataSource != null
+                //&& data.WorkspacePath != null
+                && System.IO.Directory.Exists(data.DataSource))
+            {
+                string metapath = System.IO.Path.Combine(data.DataSource, "metadata.xml");
+                if (File.Exists(metapath))
+                {
+                    newMeta.path = metapath;
+                    return newMeta;
+                }
+            }
+
+            //shapefile
+            if (data.IsShapefile)
+            {
+                string metapath = data.DataSource + ".shp.xml";
+                if (File.Exists(metapath))
+                {
+                    newMeta.path = metapath;
+                    return newMeta;
+                }
+            }
+
+            //coverages
+            if (data.IsCoverage && data.WorkspacePath != null && data.Container != null)
+            {
+                string coverageDir = System.IO.Path.Combine(data.WorkspacePath, data.Container);
+                if (System.IO.Directory.Exists(coverageDir))
+                {
+                    string metapath = System.IO.Path.Combine(coverageDir, "metadata.xml");
+                    if (File.Exists(metapath))
+                    {
+                        newMeta.path = metapath;
+                        return newMeta;
+                    }
+                }
+            }
+
+            //CAD
+            if (data.IsCad && data.WorkspacePath != null && data.Container != null)
+            {
+                string cadFile = System.IO.Path.Combine(data.WorkspacePath, data.Container);
+                if (System.IO.File.Exists(cadFile))
+                {
+                    string metapath = cadFile + ".xml";
+                    if (File.Exists(metapath))
+                    {
+                        newMeta.path = metapath;
+                        return newMeta;
+                    }
+                }
+            }
+
+            newMeta.type = MetadataType.EsriDataPath;
+
+            if (data.IsInGeodatabase && !data.IsLayerFile)
+            {
+                newMeta.path = data.DataSource;
+                return newMeta;
+            }
+            if (data.IsLayerFile && !data.IsGroupLayerFile)
+            {
+                newMeta.path = data.DataSource;
+                return newMeta;
+            }
+
+            //FIXME - does not work for web services ???
+            newMeta.type = MetadataType.Undefined;
+            newMeta.format = MetadataFormat.Undefined;
+            return newMeta;
+        }
+
         private static bool Match(string haystack, IEnumerable<string> needles, bool findAll, StringComparison comparisonMethod)
         {
             bool found;
@@ -468,107 +569,6 @@ namespace NPS.AKRO.ThemeManager.Model
             if (_pubdate.Length == 8)
                 return _pubdate.Substring(0, 4) + "-" + _pubdate.Substring(4, 2) + "-" + _pubdate.Substring(6, 2);
             return null;
-        }
-
-        private static meta ExpectedMetadataProperties(ThemeData data)
-        {
-            meta newMeta = new meta()
-            {
-                path=null,
-                type = MetadataType.Undefined,
-                format= MetadataFormat.Undefined
-            };
-
-            if (data == null)
-                return newMeta;
-
-            newMeta.type = MetadataType.FilePath;
-            newMeta.format = MetadataFormat.Xml;
-
-            //general file based metadata
-            if (data.Path != null && File.Exists(data.Path + ".xml"))
-            {
-                newMeta.path = data.Path + ".xml";
-                return newMeta;
-            }
-
-            if (data.DataSource != null && File.Exists(data.DataSource + ".xml"))
-            {
-                newMeta.path = data.DataSource + ".xml";
-                return newMeta;
-            }
-
-            //grids & tins
-            if (data.DataSource != null
-                //&& data.WorkspacePath != null
-                && System.IO.Directory.Exists(data.DataSource))
-            {
-                string metapath = System.IO.Path.Combine(data.DataSource, "metadata.xml");
-                if (File.Exists(metapath))
-                {
-                    newMeta.path = metapath;
-                    return newMeta;
-                }
-            }
-
-            //shapefile
-            if (data.IsShapefile)
-            {
-                string metapath = data.DataSource + ".shp.xml";
-                if (File.Exists(metapath))
-                {
-                    newMeta.path = metapath;
-                    return newMeta;
-                }
-            }
-
-            //coverages
-            if (data.IsCoverage && data.WorkspacePath != null && data.Container != null)
-            {
-                string coverageDir = System.IO.Path.Combine(data.WorkspacePath, data.Container);
-                if (System.IO.Directory.Exists(coverageDir))
-                {
-                    string metapath = System.IO.Path.Combine(coverageDir, "metadata.xml");
-                    if (File.Exists(metapath))
-                    {
-                        newMeta.path = metapath;
-                        return newMeta;
-                    }
-                }
-            }
-
-            //CAD
-            if (data.IsCad && data.WorkspacePath != null && data.Container != null)
-            {
-                string cadFile = System.IO.Path.Combine(data.WorkspacePath, data.Container);
-                if (System.IO.File.Exists(cadFile))
-                {
-                    string metapath = cadFile + ".xml";
-                    if (File.Exists(metapath))
-                    {
-                        newMeta.path = metapath;
-                        return newMeta;
-                    }
-                }
-            }
-
-            newMeta.type = MetadataType.EsriDataPath;
-
-            if (data.IsInGeodatabase && !data.IsLayerFile)
-            {
-                newMeta.path = data.DataSource;
-                return newMeta;
-            }
-            if (data.IsLayerFile && !data.IsGroupLayerFile)
-            {
-                newMeta.path = data.DataSource;
-                return newMeta;
-            }
-
-            //FIXME - does not work for web services ???
-            newMeta.type = MetadataType.Undefined;
-            newMeta.format = MetadataFormat.Undefined;
-            return newMeta;
         }
 
         //!! side effect of LoadAsText() is that Path, Type and IsValid are validated (for Display()).
