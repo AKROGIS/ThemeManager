@@ -16,7 +16,7 @@ namespace NPS.AKRO.ThemeManager.Model
     struct GeneralInfo
     {
         string Description;
-        DateTime? PubDate;
+        DateTime? PublicationDate;
         string Summary;
         string Tags;
     }
@@ -489,14 +489,14 @@ namespace NPS.AKRO.ThemeManager.Model
 
         internal GeneralInfo GetGeneralInfo()
         {
-            DateTime? pubDate;
             string description;
+            DateTime? publicationDate = null;
             string summary;
             string tags;
 
             return new GeneralInfo {
-                pubDate,
                 description,
+                publicationDate,
                 summary,
                 tags
             };
