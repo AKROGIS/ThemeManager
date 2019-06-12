@@ -575,17 +575,16 @@ namespace NPS.AKRO.ThemeManager.Model
         //These changes will improve display robustness, as well as simplify the code.  It may result in more
         //time spent loading or retrying, but always (and only) when the user requests it.
 
-        // TODO: rename private parameter (confusing with class's field name)
-        private string ExpandFgdcDate(string _pubdate)
+        private string ExpandFgdcDate(string dateString)
         {
-            if (string.IsNullOrEmpty(_pubdate))
+            if (string.IsNullOrEmpty(dateString))
                 return null;
-            if (_pubdate.Length == 4)
-                return _pubdate + "-01-01";
-            if (_pubdate.Length == 6)
-                return _pubdate.Substring(0, 4) + "-" + _pubdate.Substring(4, 2) + "-01";
-            if (_pubdate.Length == 8)
-                return _pubdate.Substring(0, 4) + "-" + _pubdate.Substring(4, 2) + "-" + _pubdate.Substring(6, 2);
+            if (dateString.Length == 4)
+                return dateString + "-01-01";
+            if (dateString.Length == 6)
+                return dateString.Substring(0, 4) + "-" + dateString.Substring(4, 2) + "-01";
+            if (dateString.Length == 8)
+                return dateString.Substring(0, 4) + "-" + dateString.Substring(4, 2) + "-" + dateString.Substring(6, 2);
             return null;
         }
 
