@@ -598,7 +598,10 @@ namespace NPS.AKRO.ThemeManager.Model
         //These changes will improve display robustness, as well as simplify the code.  It may result in more
         //time spent loading or retrying, but always (and only) when the user requests it.
 
-        private string ExpandFgdcDate(string dateString)
+        /// <summary>
+        /// Converts a date in YYYY, YYYYMM, or YYYYMMDD format to YYYY-MM-DD
+        /// </summary>
+        private string NormalizeFgdcDateString(string dateString)
         {
             if (string.IsNullOrEmpty(dateString))
                 return null;
@@ -756,7 +759,7 @@ namespace NPS.AKRO.ThemeManager.Model
                     .Where(value => !string.IsNullOrEmpty(value) &&
                                     !value.StartsWith("REQUIRED:"))
                     .FirstOrDefault();
-                _pubdate = ExpandFgdcDate(_pubdate);
+                _pubdate = NormalizeFgdcDateString(_pubdate);
                 DateTime date;
                 if (!DateTime.TryParse(_pubdate, out date))
                     _pubdate = null;
