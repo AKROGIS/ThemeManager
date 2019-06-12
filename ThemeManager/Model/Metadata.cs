@@ -13,6 +13,14 @@ using System.ComponentModel;
 
 namespace NPS.AKRO.ThemeManager.Model
 {
+    struct GeneralInfo
+    {
+        string Description;
+        DateTime? PubDate;
+        string Summary;
+        string Tags;
+    }
+
     class MetadataDisplayException : Exception
     {
         internal MetadataDisplayException() { }
@@ -477,6 +485,21 @@ namespace NPS.AKRO.ThemeManager.Model
             {
                 throw new MetadataDisplayException(ex.Message, ex);
             }
+        }
+
+        internal GeneralInfo GetGeneralInfo()
+        {
+            DateTime? pubDate;
+            string description;
+            string summary;
+            string tags;
+
+            return new GeneralInfo {
+                pubDate,
+                description,
+                summary,
+                tags
+            };
         }
 
         // Called by TmNode.cs line 987 (advanced search option)
