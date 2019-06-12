@@ -611,7 +611,8 @@ namespace NPS.AKRO.ThemeManager.Model
                 return dateString.Substring(0, 4) + "-" + dateString.Substring(4, 2) + "-01";
             if (dateString.Length == 8)
                 return dateString.Substring(0, 4) + "-" + dateString.Substring(4, 2) + "-" + dateString.Substring(6, 2);
-            return null;
+            // Return all other formats we do not recognize
+            return dateString;
         }
 
         //!! side effect of LoadAsText() is that Path, Type and IsValid are validated (for Display()).
