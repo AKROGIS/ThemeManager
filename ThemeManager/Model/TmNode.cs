@@ -534,9 +534,6 @@ namespace NPS.AKRO.ThemeManager.Model
             }
         }
 
-        //FIXME - Data.Path changes may load arcObjects, which could cause exceptions
-        // (i.e. No license) Need to wrap this with handler code in the UI, however,
-        // these is bound to a form text box
         private void Data_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (ThemeList != null)
@@ -546,14 +543,21 @@ namespace NPS.AKRO.ThemeManager.Model
             {
                 if (IsTheme)
                 {
-                    SyncThemeDataToPath();
-                    // Get new metadata for new data path/type
-                    //replacing the metadaata object, breaks the databinding on the prperties form
-                    //Metadata = Metadata.Find(Data)
-                    //FIXME - subtheme metadata is not reloaded
-                    Metadata.Repair(Data);
-                    //resync all metadata
-                    SyncWithMetadata(true);
+                    // Changes to Data.Path may trigger exceptions
+                    try
+                    {
+                        // Update Theme properties (icons, etc) for new data path
+                        SyncThemeDataToPath();
+                        // Update the metadata object (can't replace because it breaks property binding in forms)
+                        // FIXME: May need to repair metadata paths on sub themes as well.
+                        Metadata.Repair(Data);
+                        SyncWithMetadata(true);
+                    }
+                    catch (Exception)
+                    {
+                        // FIXME: Exception checking should be done in the view not model
+                        // TODO: Figure out how to catch exceptions for form bound properties
+                    }
                 }
             }
             if (e.PropertyName == "Type")
