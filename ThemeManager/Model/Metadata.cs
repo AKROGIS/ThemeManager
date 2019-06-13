@@ -10,6 +10,7 @@ using NPS.AKRO.ThemeManager.Extensions;
 using NPS.AKRO.ThemeManager.Properties;
 using NPS.AKRO.ThemeManager.ArcGIS;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace NPS.AKRO.ThemeManager.Model
 {
