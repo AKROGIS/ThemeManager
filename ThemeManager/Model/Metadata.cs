@@ -499,15 +499,17 @@ namespace NPS.AKRO.ThemeManager.Model
             if (xmlMetadata != null)
             {
                 // The XML content may be in a number of different schemas and version
-                // 1. FGDC (CGDSM)
-                // 2. ISO (various flavors)
+                // 1. FGDC (CSGDM)
+                // 2. ISO 19139 (various flavors)
                 // 3. ArcGIS (various flavors)
 
                 // Description (aka Abstract)
                 //   FGDC: /metadata/idinfo/descript/abstract
-                //   ArcGIS 10: /metadata/dataIdInfo/idAbs
+                //   ArcGIS: /metadata/dataIdInfo/idAbs
+                //   ISO 19139: /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString
                 description = xmlMetadata.Descendants("abstract")
                     .Concat(xmlMetadata.Descendants("idAbs"))
+                    .Concat(xmlMetadata.Descendants("gmd:abstract"))
                     .Select(element => element.Value)
                     .Where(value => !string.IsNullOrEmpty(value) &&
                                     !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
@@ -516,9 +518,11 @@ namespace NPS.AKRO.ThemeManager.Model
 
                 // PublicationDate
                 //   FGDC: /metadata/idinfo/citation/citeinfo/pubdate
-                //   ArcGIS 10: /metadata/dataIdInfo/idCitation/date/pubDate
+                //   ArcGIS: /metadata/dataIdInfo/idCitation/date/pubDate
+                //   ISO 19139: gmd:dateStamp/gso:DateTime
                 pubdateString = xmlMetadata.Descendants("pubdate")
                     .Concat(xmlMetadata.Descendants("pubDate"))
+                    .Concat(xmlMetadata.Descendants("gmd:dateStamp"))
                     .Select(element => element.Value)
                     .Where(value => !string.IsNullOrEmpty(value) &&
                                     !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
@@ -532,9 +536,11 @@ namespace NPS.AKRO.ThemeManager.Model
 
                 // Summary (aka Purpose)
                 //   FGDC: /metadata/idinfo/descript/purpose
-                //   ArcGIS 10: /metadata/dataIdInfo/idPurp
+                //   ArcGIS: /metadata/dataIdInfo/idPurp
+                //   ISO 19139: /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString
                 summary = xmlMetadata.Descendants("purpose")
                     .Concat(xmlMetadata.Descendants("idPurp"))
+                    .Concat(xmlMetadata.Descendants("gmd:purpose"))
                     .Select(element => element.Value)
                     .Where(value => !string.IsNullOrEmpty(value) &&
                                     !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
@@ -544,13 +550,15 @@ namespace NPS.AKRO.ThemeManager.Model
                 // Tags (aka Keywords)
                 //   FGDC: metadata/idinfo/keywords/*/*key
                 //     Where * = theme, place, strat, temp; Each keyword is a distinct element
-                //   ArcGIS 10: metadata/dataIdInfo/*Keys/keyword
+                //   ArcGIS: metadata/dataIdInfo/*Keys/keyword
                 //     Where * = desc, other, place, temp, disc, strat, search, theme; *Keys and keyword may appear multiple times.
+                //   ISO 19139: /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode[*]/gmd:keyword
                 tags = xmlMetadata.Descendants("keyword")
                     .Concat(xmlMetadata.Descendants("themekey"))
                     .Concat(xmlMetadata.Descendants("placekey"))
                     .Concat(xmlMetadata.Descendants("stratkey"))
                     .Concat(xmlMetadata.Descendants("tempkey"))
+                    .Concat(xmlMetadata.Descendants("gmd:keyword"))
                     .Select(element => element.Value)
                     .Where(value => !string.IsNullOrEmpty(value) &&
                                     !value.StartsWith("00") &&       // keyword in otherKeys for all new ArcGIS metadata
