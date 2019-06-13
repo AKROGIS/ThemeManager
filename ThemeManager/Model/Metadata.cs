@@ -263,6 +263,39 @@ namespace NPS.AKRO.ThemeManager.Model
             return found;
         }
 
+        /// <summary>
+        /// Converts a date in YYYY, YYYYMM, or YYYYMMDD format to YYYY-MM-DD
+        /// </summary>
+        private static string NormalizeFgdcDateString(string dateString)
+        {
+            if (string.IsNullOrEmpty(dateString))
+                return null;
+            if (dateString.Length == 4)
+                return dateString + "-01-01";
+            if (dateString.Length == 6)
+                return dateString.Substring(0, 4) + "-" + dateString.Substring(4, 2) + "-01";
+            if (dateString.Length == 8)
+                return dateString.Substring(0, 4) + "-" + dateString.Substring(4, 2) + "-" + dateString.Substring(6, 2);
+            // Return all other formats we do not recognize
+            return dateString;
+        }
+
+        /// <summary>
+        /// Return the input string without HTML Tags
+        /// </summary>
+        /// <remarks>
+        /// I've read https://stackoverflow.com/a/1758162 and know that I cannot REALLY use Regex on HTML.
+        /// However, all my input will be coming from snippets in an XML document.
+        /// In order for the HTML fragment to be part of an XML document, it has to have been pre sanitized.
+        /// This solution was addapted from https://stackoverflow.com/a/19524158
+        /// </remarks>
+        private static string StripSimpleHtmlTags(string input)
+        {
+            var noTags = Regex.Replace(input, @"<[^>]+>|&nbsp;", "").Trim();
+            var minimalWhiteSpace = Regex.Replace(noTags, @"\s{2,}", " ");
+            return minimalWhiteSpace;
+        }
+
         #endregion
 
 
@@ -599,23 +632,6 @@ namespace NPS.AKRO.ThemeManager.Model
         //These changes will improve display robustness, as well as simplify the code.  It may result in more
         //time spent loading or retrying, but always (and only) when the user requests it.
 
-        /// <summary>
-        /// Converts a date in YYYY, YYYYMM, or YYYYMMDD format to YYYY-MM-DD
-        /// </summary>
-        private string NormalizeFgdcDateString(string dateString)
-        {
-            if (string.IsNullOrEmpty(dateString))
-                return null;
-            if (dateString.Length == 4)
-                return dateString + "-01-01";
-            if (dateString.Length == 6)
-                return dateString.Substring(0, 4) + "-" + dateString.Substring(4, 2) + "-01";
-            if (dateString.Length == 8)
-                return dateString.Substring(0, 4) + "-" + dateString.Substring(4, 2) + "-" + dateString.Substring(6, 2);
-            // Return all other formats we do not recognize
-            return dateString;
-        }
-
         //!! side effect of LoadAsText() is that Path, Type and IsValid are validated (for Display()).
         //!! side effect of LoadAsText() is that Format, IsValid are validated (for LoadAsXDoc()).
         // This will not throw any exceptions, rather it returns null, and sets ErrorMessage
@@ -707,22 +723,6 @@ namespace NPS.AKRO.ThemeManager.Model
             HasBeenValidated = false;
             if (!string.IsNullOrEmpty(Path) && _cache.ContainsKey(Path))
                 _cache.Remove(Path);
-        }
-
-        /// <summary>
-        /// Return the input string without HTML Tags
-        /// </summary>
-        /// <remarks>
-        /// I've read https://stackoverflow.com/a/1758162 and know that I cannot REALLY use Regex on HTML.
-        /// However, all my input will be coming from snippets in an XML document.
-        /// In order for the HTML fragment to be part of an XML document, it has to have been pre sanitized.
-        /// This solution was addapted from https://stackoverflow.com/a/19524158
-        /// </remarks>
-        private static string StripSimpleHtmlTags(string input)
-        {
-            var noTags = Regex.Replace(input, @"<[^>]+>|&nbsp;", "").Trim();
-            var minimalWhiteSpace = Regex.Replace(noTags, @"\s{2,}", " ");
-            return minimalWhiteSpace;
         }
 
         /// <summary>
