@@ -300,12 +300,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Instance Fields (All Private; Should only be accessed by Contructors or Properties)
 
-        private string _description;
-        private bool _metadataHasBeenScanned;
         private string _path;
-        private string _pubdate;
-        private string _summary;
-        private string _tags;
 
         #endregion
 
@@ -319,9 +314,7 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             get
             {
-                if (!_metadataHasBeenScanned)
-                    ScanMetadata();
-                return _description;
+                return GetGeneralInfo().Description;
             }
         }
 
@@ -334,9 +327,7 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             get
             {
-                if (!_metadataHasBeenScanned)
-                    ScanMetadata();
-                return (_pubdate != null);
+                return GetGeneralInfo().PublicationDate.HasValue;
             }
         }
 
@@ -377,7 +368,7 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             get
             {
-                return DateTime.Parse(_pubdate);
+                return GetGeneralInfo().PublicationDate.Value;
             }
         }
 
@@ -387,9 +378,7 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             get
             {
-                if (!_metadataHasBeenScanned)
-                    ScanMetadata();
-                return _summary;
+                return GetGeneralInfo().Summary;
             }
         }
 
@@ -399,9 +388,7 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             get
             {
-                if (!_metadataHasBeenScanned)
-                    ScanMetadata();
-                return _tags;
+                return GetGeneralInfo().Tags;
             }
         }
 
@@ -776,68 +763,8 @@ namespace NPS.AKRO.ThemeManager.Model
         private void Reset()
         {
             HasBeenValidated = false;
-            _metadataHasBeenScanned = false;
             if (!string.IsNullOrEmpty(Path) && _cache.ContainsKey(Path))
                 _cache.Remove(Path);
-        }
-
-        private void ScanMetadata()
-        {
-            XDocument xDoc = LoadAsXDoc();
-            if (xDoc == null)
-            {
-                _tags = null;
-                _summary = null;
-                _description = null;
-                _pubdate = null;
-            }
-            else
-            {
-                // ArcGIS 9.3 XML metadata will have only FGDC elements
-                // ArcGIS 10 XML metadata may have both ArcGIS and FGDC elements
-
-                // Description(Abstract) - FGDC: /metadata/idinfo/descript/abstract
-                // Description(Abstract) - ArcGIS 10: /metadata/dataIdInfo/idAbs
-                _description = xDoc.Descendants("abstract")
-                    .Concat(xDoc.Descendants("idAbs"))
-                    .Select(element => element.Value)
-                    .Where(value => !string.IsNullOrEmpty(value) &&
-                                    !value.StartsWith("REQUIRED:"))
-                    .FirstOrDefault();
-                // Summary (Purpose) - FGDC: /metadata/idinfo/descript/purpose
-                // Summary (Purpose) - ArcGIS 10: /metadata/dataIdInfo/idPurp
-                _summary = xDoc.Descendants("purpose")
-                    .Concat(xDoc.Descendants("idPurp"))
-                    .Select(element => element.Value)
-                    .Where(value => !string.IsNullOrEmpty(value) &&
-                                    !value.StartsWith("REQUIRED:"))
-                    .FirstOrDefault();
-                // Tags (keywords) - FGDC: metadata/idinfo/keywords/*/*key (where * = theme, place, strat, temp); each keyword in a separate element
-                // Tags (keywords) - ArcGIS 10: metadata/dataIdInfo/*Keys/keyword (where * = desc, other, place, temp, disc, strat, search, theme) *Keys and keyword may appear multiple times.
-                _tags = xDoc.Descendants("keyword")
-                    .Concat(xDoc.Descendants("themekey"))
-                    .Concat(xDoc.Descendants("placekey"))
-                    .Concat(xDoc.Descendants("stratkey"))
-                    .Concat(xDoc.Descendants("tempkey"))
-                    .Select(element => element.Value)
-                    .Where(value => !string.IsNullOrEmpty(value) &&
-                                    !value.StartsWith("00") &&           // keyword in otherKeys for all new ArcGIS metadata
-                                    !value.StartsWith("REQUIRED:"))
-                    .Distinct().Concat(", ");
-                // PubDate - FGDC: /metadata/idinfo/citation/citeinfo/pubdate
-                // PubDate - ArcGIS 10: /metadata/dataIdInfo/idCitation/date/pubDate
-                _pubdate = xDoc.Descendants("pubdate")
-                    .Concat(xDoc.Descendants("pubDate"))
-                    .Select(element => element.Value)
-                    .Where(value => !string.IsNullOrEmpty(value) &&
-                                    !value.StartsWith("REQUIRED:"))
-                    .FirstOrDefault();
-                _pubdate = NormalizeFgdcDateString(_pubdate);
-                DateTime date;
-                if (!DateTime.TryParse(_pubdate, out date))
-                    _pubdate = null;
-            }
-            _metadataHasBeenScanned = true;
         }
 
         /// <summary>
