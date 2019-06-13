@@ -15,10 +15,10 @@ namespace NPS.AKRO.ThemeManager.Model
 {
     struct GeneralInfo
     {
-        string Description;
-        DateTime? PublicationDate;
-        string Summary;
-        string Tags;
+        internal string Description;
+        internal DateTime? PublicationDate;
+        internal string Summary;
+        internal string Tags;
     }
 
     class MetadataDisplayException : Exception
@@ -489,10 +489,10 @@ namespace NPS.AKRO.ThemeManager.Model
 
         internal GeneralInfo GetGeneralInfo()
         {
-            string description;
-            DateTime? publicationDate;
-            string summary;
-            string tags;
+            string description = null;
+            DateTime? publicationDate = null;
+            string summary = null;
+            string tags = null;
 
             // We can only extract meaningful data from metadata content is an XML document.
             XDocument xmlMetadata = LoadAsXDoc();
@@ -520,7 +520,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 //   FGDC: /metadata/idinfo/citation/citeinfo/pubdate
                 //   ArcGIS: /metadata/dataIdInfo/idCitation/date/pubDate
                 //   ISO 19139: gmd:dateStamp/gso:DateTime
-                pubdateString = xmlMetadata.Descendants("pubdate")
+                var pubdateString = xmlMetadata.Descendants("pubdate")
                     .Concat(xmlMetadata.Descendants("pubDate"))
                     .Concat(xmlMetadata.Descendants("gmd:dateStamp"))
                     .Select(element => element.Value)
@@ -530,7 +530,6 @@ namespace NPS.AKRO.ThemeManager.Model
                 // Normalize date string and convert to optional datetime
                 pubdateString = NormalizeFgdcDateString(pubdateString);
                 DateTime date;
-                publicationDate = null;
                 if (DateTime.TryParse(pubdateString, out date))
                     publicationDate = date;
 
@@ -567,10 +566,10 @@ namespace NPS.AKRO.ThemeManager.Model
             }
 
             return new GeneralInfo {
-                description,
-                publicationDate,
-                summary,
-                tags
+                Description = description,
+                PublicationDate = publicationDate,
+                Summary = summary,
+                Tags = tags
             };
         }
 
