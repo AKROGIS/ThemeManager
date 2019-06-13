@@ -74,7 +74,7 @@ namespace tm
             {
                 try
                 {
-                    node.SyncWithMetadata();
+                    node.SyncWithMetadata(false);
                 }
                 catch (Exception ex)
                 {
