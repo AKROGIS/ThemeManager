@@ -512,6 +512,7 @@ namespace NPS.AKRO.ThemeManager.Model
                     .Where(value => !string.IsNullOrEmpty(value) &&
                                     !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
                     .FirstOrDefault();
+                description = StripSimpleHtmlTags(description);
 
                 // PublicationDate
                 //   FGDC: /metadata/idinfo/citation/citeinfo/pubdate
@@ -538,6 +539,7 @@ namespace NPS.AKRO.ThemeManager.Model
                     .Where(value => !string.IsNullOrEmpty(value) &&
                                     !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
                     .FirstOrDefault();
+                summary = StripSimpleHtmlTags(summary);
 
                 // Tags (aka Keywords)
                 //   FGDC: metadata/idinfo/keywords/*/*key
@@ -828,6 +830,22 @@ namespace NPS.AKRO.ThemeManager.Model
                     _pubdate = null;
             }
             _metadataHasBeenScanned = true;
+        }
+
+        /// <summary>
+        /// Return the input string without HTML Tags
+        /// </summary>
+        /// <remarks>
+        /// I've read https://stackoverflow.com/a/1758162 and know that I cannot REALLY use Regex on HTML.
+        /// However, all my input will be coming from snippets in an XML document.
+        /// In order for the HTML fragment to be part of an XML document, it has to have been pre sanitized.
+        /// This solution was addapted from https://stackoverflow.com/a/19524158
+        /// </remarks>
+        private static string StripSimpleHtmlTags(string input)
+        {
+            var noTags = Regex.Replace(input, @"<[^>]+>|&nbsp;", "").Trim();
+            var minimalWhiteSpace = Regex.Replace(noTags, @"\s{2,}", " ");
+            return minimalWhiteSpace;
         }
 
         /// <summary>
