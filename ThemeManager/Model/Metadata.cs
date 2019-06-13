@@ -84,14 +84,6 @@ namespace NPS.AKRO.ThemeManager.Model
         Text
     }
 
-    enum MetadataState
-    {
-        Initialized,
-        Loading,
-        Loaded,
-        Invalid
-    }
-
     [Serializable]
     class Metadata : ICloneable, INotifyPropertyChanged
     {
@@ -324,7 +316,6 @@ namespace NPS.AKRO.ThemeManager.Model
             Format = format;
             Version = version;
             Schema = schema;
-            State = MetadataState.Initialized;
         }
 
         #endregion
@@ -615,7 +606,6 @@ namespace NPS.AKRO.ThemeManager.Model
         private MetadataFormat Format { get; set; }
         private bool IsValid { get; set; }
         private string Schema { get; } // TODO - use or toss
-        private MetadataState State { get; set; }
         private MetadataType Type { get; set; }
         private string Version { get; } // TODO - use or toss
 
