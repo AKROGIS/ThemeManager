@@ -122,19 +122,16 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 SyncThemes(node);
             else
             {
-                // Use node.Sync(true) is we don't care about the messages
-                string message = node.SyncPubDate(true);
-                string nextMessage = node.SyncSummary();
-                if (nextMessage != null)
-                    message = message == null ? nextMessage : message + "\n" + nextMessage;
-                nextMessage = node.SyncDescription();
-                if (nextMessage != null)
-                    message = message == null ? nextMessage : message + "\n" + nextMessage;
-                nextMessage = node.SyncTags();
-                if (nextMessage != null)
-                    message = message == null ? nextMessage : message + "\n" + nextMessage;
-                if (message != null)
-                    MessageBox.Show(message);
+                try
+                {
+                    // May need to load/verify metadata which could throw.
+                    // No need to recurse, since we just checked that we have no children.
+                    node.SyncWithMetadata(false); 
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Metadata Error: {ex.Message}.");
+                 }
             }
         }
 
