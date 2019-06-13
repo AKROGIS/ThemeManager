@@ -524,8 +524,14 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             if (ThemeList != null)
                 ThemeList.IsDirty = true;
-            if (Metadata.IsValid)
+            try
+            {
                 SyncWithMetadata(false);
+            }
+            catch (Exception)
+            {
+                // Ignore, The metadata isn't valid
+            }
         }
 
         //FIXME - Data.Path changes may load arcObjects, which could cause exceptions

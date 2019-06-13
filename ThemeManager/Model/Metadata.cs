@@ -310,10 +310,6 @@ namespace NPS.AKRO.ThemeManager.Model
         // Called by AdminReports.cs line 218 (ListMetadataProblems)
         internal string ErrorMessage { get; private set; }
 
-        // Called by TmNode.cs line 527 (Metadata_PropertyChanged, tiggerd when Path changes)
-        // Remove this call from the caller.  They should not call this (it is pointless) until the user requests a sync (GetInfo)
-        internal bool IsValid { get; set; }
-
         // Called in lots of places
         // Verify that form binding is not a form of setting the path (how else does the user change the metadata path?)
         internal string Path
@@ -584,6 +580,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         private MetadataFormat Format { get; set; }
         private bool HasBeenValidated {get; set;}
+        private bool IsValid { get; set; }
         private string Schema { get; set; } //FIXME - use or toss
         private MetadataState State { get; set; }
         private MetadataType Type { get; set; }
