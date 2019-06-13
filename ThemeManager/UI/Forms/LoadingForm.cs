@@ -143,9 +143,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 bw.ReportProgress((int)(100 * (float)index / count));
                 try
                 {
-                    // node.SyncWithMetadata() will load/verify metadata
-                    // which could throw any number of exceptions.
-                    node.SyncWithMetadata();
+                    // May need to load/verify metadata which could throw.
+                    // No need to recurse because we already have a list of all nodes in this tree
+                    node.SyncWithMetadata(false);
                 }
                 catch (Exception ex)
                 {

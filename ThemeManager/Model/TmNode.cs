@@ -1255,11 +1255,6 @@ namespace NPS.AKRO.ThemeManager.Model
             OnReloadNode();
         }
 
-        public void SyncWithMetadata()
-        {
-            SyncWithMetadata(false);
-        }
-
         public void SyncWithMetadata(bool recurse)
         {
             SyncTags();
