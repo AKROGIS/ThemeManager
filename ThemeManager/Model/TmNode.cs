@@ -1257,11 +1257,12 @@ namespace NPS.AKRO.ThemeManager.Model
 
         public void SyncWithMetadata(bool recurse)
         {
-            Tags = Metadata.Tags ?? "";
-            Summary = Metadata.Summary ?? "";
-            Description = Metadata.Description ?? "";
-            if (Metadata.HasPubDate)
-                PubDate = Metadata.PubDate;
+            var info = Metadata.GetGeneralInfo();
+            Tags = info.Tags ?? "";
+            Summary = info.Summary ?? "";
+            Description = info.Description ?? "";
+            if (info.PublicationDate.HasValue)
+                PubDate = info.PublicationDate.Value;
             else
             {
                 if (!File.Exists(Data.Path))

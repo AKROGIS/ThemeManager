@@ -214,7 +214,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             {
                 string error;
                 try {
-                    error = theme.Metadata.Description;
+                    theme.Metadata.GetGeneralInfo();
                     error = theme.Metadata.ErrorMessage;
                 }
                 catch (Exception ex)

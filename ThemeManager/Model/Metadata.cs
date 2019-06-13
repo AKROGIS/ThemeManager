@@ -307,29 +307,8 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Public Properties
 
-        // Called by TmNode.cs line 1294 (setting node properties) AdminReports.cs line 217 (ListMetadataProblems)
-        // Call from AdminReports should be replaced with a call to load/validate
-        // Call from TMNode should be replaced with a call to GetInfo() -> struct(pubdate?, tags, summary, description)
-        internal string Description
-        {
-            get
-            {
-                return GetGeneralInfo().Description;
-            }
-        }
-
         // Called by AdminReports.cs line 218 (ListMetadataProblems)
         internal string ErrorMessage { get; private set; }
-
-        // Called by TmNode.cs line 1301 and 1317 (setting node properties)
-        // Calls from TMNode should be replaced with a call to GetInfo() -> struct(pubdate?, tags, summary, description)
-        internal bool HasPubDate
-        {
-            get
-            {
-                return GetGeneralInfo().PublicationDate.HasValue;
-            }
-        }
 
         // Called by TmNode.cs line 527 (Metadata_PropertyChanged, tiggerd when Path changes)
         // Remove this call from the caller.  They should not call this (it is pointless) until the user requests a sync (GetInfo)
@@ -355,40 +334,6 @@ namespace NPS.AKRO.ThemeManager.Model
                     // changing the path, or creating a new metadata object with the same path
                     // does not revalidate - Need to cache whole metadata objects.
                 }
-            }
-        }
-
-        /// <summary>
-        /// Will throw an exception if there is no pubdate
-        /// Client should use HasPubDate first.
-        /// </summary>
-        // Called by TmNode.cs line 1319 (setting node properties)
-        // Call from TMNode should be replaced with a call to GetInfo() -> struct(pubdate?, tags, summary, description)
-        internal DateTime PubDate
-        {
-            get
-            {
-                return GetGeneralInfo().PublicationDate.Value;
-            }
-        }
-
-        // Called by TmNode.cs line 1286 (setting node properties)
-        // Call from TMNode should be replaced with a call to GetInfo() -> struct(pubdate?, tags, summary, description)
-        internal string Summary
-        {
-            get
-            {
-                return GetGeneralInfo().Summary;
-            }
-        }
-
-        // Called by TmNode.cs line 1278 (setting node properties)
-        // Call from TMNode should be replaced with a call to GetInfo() -> struct(pubdate?, tags, summary, description)
-        internal string Tags
-        {
-            get
-            {
-                return GetGeneralInfo().Tags;
             }
         }
 
