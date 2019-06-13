@@ -1257,81 +1257,23 @@ namespace NPS.AKRO.ThemeManager.Model
 
         public void SyncWithMetadata(bool recurse)
         {
-            SyncTags();
-            SyncSummary();
-            SyncDescription();
-            SyncPubDate(true);
+            Tags = Metadata.Tags ?? "";
+            Summary = Metadata.Summary ?? "";
+            Description = Metadata.Description ?? "";
+            if (Metadata.HasPubDate)
+                PubDate = Metadata.PubDate;
+            else
+            {
+                if (!File.Exists(Data.Path))
+                {
+                    PubDate = new DateTime(1900, 1, 1);
+                }
+                else
+                    PubDate = File.GetLastWriteTime(Data.Path);
+            }
             if (recurse)
                 foreach (TmNode child in Children)
                     child.SyncWithMetadata(true);
-        }
-
-        public string SyncTags()
-        {
-            //if (string.IsNullOrEmpty(Metadata.Tags))
-            //    return "Metadata has no tags (keywords).";
-            Tags = Metadata.Tags ?? "";
-            return null;
-        }
-
-        public string SyncSummary()
-        {
-            //if (string.IsNullOrEmpty(Metadata.Summary))
-            //    return "Metadata has no summary (purpose).";
-            Summary = Metadata.Summary ?? "";
-            return null;
-        }
-
-        public string SyncDescription()
-        {
-            //if (string.IsNullOrEmpty(Metadata.Description))
-            //    return "Metadata has no description (abstract).";
-            Description = Metadata.Description ?? "";
-            return null;
-        }
-
-        public string SyncPubDate(bool preferMetadata)
-        {
-            if (preferMetadata)
-                if (Metadata.HasPubDate)
-                    return SyncPubDateWithMetaData();
-                else
-                {
-                    string ret = SyncPubDateWithFileProps();
-                    if (ret == null)
-                        return null;
-                    else
-                        return "Metadata has no Publication Date. " + ret;
-                }
-            else
-                return SyncPubDateWithFileProps();
-        }
-
-        public string SyncPubDateWithMetaData()
-        {
-            if (!Metadata.HasPubDate)
-                return "Metadata has no Publication Date.";
-            PubDate = Metadata.PubDate;
-            return null;
-        }
-
-        /// <summary>
-        /// Reset the PubData based on the file modification time
-        /// </summary>
-        /// <remarks>
-        /// This does not do anything is the data objects is stored in a geodatabase.
-        /// </remarks>
-        public string SyncPubDateWithFileProps()
-        {
-            if (!File.Exists(Data.Path))
-            {
-                PubDate = new DateTime(1900, 1, 1); 
-                return "Cannot determine file modification date of the data.";
-            }
-            else
-                PubDate = File.GetLastWriteTime(Data.Path);
-            return null;
-            //TODO - See if ESRI supports an API to query the modification date of a data object
         }
 
         #region ICloneable Members
