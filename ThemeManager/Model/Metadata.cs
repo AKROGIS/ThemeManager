@@ -24,7 +24,6 @@ namespace NPS.AKRO.ThemeManager.Model
 
     class MetadataDisplayException : Exception
     {
-        internal MetadataDisplayException() { }
         internal MetadataDisplayException(string message) : base(message) { }
         internal MetadataDisplayException(string message, Exception inner) : base(message, inner) { }
     }
@@ -98,7 +97,7 @@ namespace NPS.AKRO.ThemeManager.Model
     {
         #region  Class Fields (Private)
 
-        private static Dictionary<string, string> _cache = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> ContentCache = new Dictionary<string, string>();
 
         #endregion
 
@@ -111,26 +110,26 @@ namespace NPS.AKRO.ThemeManager.Model
             if (data == null)
                 return null;
 
-            meta myProps = ExpectedMetadataProperties(data);
-            Metadata metadata = new Metadata(myProps.path, myProps.type, myProps.format);
-            if (metadata != null && metadata.Validate())
+            Meta myProps = ExpectedMetadataProperties(data);
+            Metadata metadata = new Metadata(myProps.Path, myProps.Type, myProps.Format);
+            if (metadata.Validate())
                 return metadata;
             return null;
         }
 
-        //Called by TmNode.cs line 1133 (building object from themelist XML)
-        internal static Metadata Load(XElement xele)
+        //Called by TmNode.cs line 1133 (building object from theme list XML)
+        internal static Metadata Load(XElement element)
         {
-            if (xele == null)
-                throw new ArgumentNullException("xele");
-            if (xele.Name != "metadata")
-                throw new ArgumentException("Invalid Xelement");
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+            if (element.Name != "metadata")
+                throw new ArgumentException("Invalid XElement");
             var data = new Metadata(
-                xele.Value,
-                (MetadataType)Enum.Parse(typeof(MetadataType), (string)xele.Attribute("type")),
-                (MetadataFormat)Enum.Parse(typeof(MetadataFormat), (string)xele.Attribute("format")),
-                (string)xele.Attribute("version"),
-                (string)xele.Attribute("schema")
+                element.Value,
+                (MetadataType)Enum.Parse(typeof(MetadataType), (string)element.Attribute("type")),
+                (MetadataFormat)Enum.Parse(typeof(MetadataFormat), (string)element.Attribute("format")),
+                (string)element.Attribute("version"),
+                (string)element.Attribute("schema")
                 );
             return data;
         }
@@ -140,54 +139,54 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Class Methods (Private)
 
-        private static meta ExpectedMetadataProperties(ThemeData data)
+        private static Meta ExpectedMetadataProperties(ThemeData data)
         {
-            meta newMeta = new meta()
+            Meta newMeta = new Meta()
             {
-                path=null,
-                type = MetadataType.Undefined,
-                format= MetadataFormat.Undefined
+                Path=null,
+                Type = MetadataType.Undefined,
+                Format= MetadataFormat.Undefined
             };
 
             if (data == null)
                 return newMeta;
 
-            newMeta.type = MetadataType.FilePath;
-            newMeta.format = MetadataFormat.Xml;
+            newMeta.Type = MetadataType.FilePath;
+            newMeta.Format = MetadataFormat.Xml;
 
             //general file based metadata
             if (data.Path != null && File.Exists(data.Path + ".xml"))
             {
-                newMeta.path = data.Path + ".xml";
+                newMeta.Path = data.Path + ".xml";
                 return newMeta;
             }
 
             if (data.DataSource != null && File.Exists(data.DataSource + ".xml"))
             {
-                newMeta.path = data.DataSource + ".xml";
+                newMeta.Path = data.DataSource + ".xml";
                 return newMeta;
             }
 
             //grids & tins
             if (data.DataSource != null
                 //&& data.WorkspacePath != null
-                && System.IO.Directory.Exists(data.DataSource))
+                && Directory.Exists(data.DataSource))
             {
                 string metapath = System.IO.Path.Combine(data.DataSource, "metadata.xml");
                 if (File.Exists(metapath))
                 {
-                    newMeta.path = metapath;
+                    newMeta.Path = metapath;
                     return newMeta;
                 }
             }
 
-            //shapefile
+            //Shapefile
             if (data.IsShapefile)
             {
                 string metapath = data.DataSource + ".shp.xml";
                 if (File.Exists(metapath))
                 {
-                    newMeta.path = metapath;
+                    newMeta.Path = metapath;
                     return newMeta;
                 }
             }
@@ -196,12 +195,12 @@ namespace NPS.AKRO.ThemeManager.Model
             if (data.IsCoverage && data.WorkspacePath != null && data.Container != null)
             {
                 string coverageDir = System.IO.Path.Combine(data.WorkspacePath, data.Container);
-                if (System.IO.Directory.Exists(coverageDir))
+                if (Directory.Exists(coverageDir))
                 {
                     string metapath = System.IO.Path.Combine(coverageDir, "metadata.xml");
                     if (File.Exists(metapath))
                     {
-                        newMeta.path = metapath;
+                        newMeta.Path = metapath;
                         return newMeta;
                     }
                 }
@@ -211,33 +210,33 @@ namespace NPS.AKRO.ThemeManager.Model
             if (data.IsCad && data.WorkspacePath != null && data.Container != null)
             {
                 string cadFile = System.IO.Path.Combine(data.WorkspacePath, data.Container);
-                if (System.IO.File.Exists(cadFile))
+                if (File.Exists(cadFile))
                 {
                     string metapath = cadFile + ".xml";
                     if (File.Exists(metapath))
                     {
-                        newMeta.path = metapath;
+                        newMeta.Path = metapath;
                         return newMeta;
                     }
                 }
             }
 
-            newMeta.type = MetadataType.EsriDataPath;
+            newMeta.Type = MetadataType.EsriDataPath;
 
             if (data.IsInGeodatabase && !data.IsLayerFile)
             {
-                newMeta.path = data.DataSource;
+                newMeta.Path = data.DataSource;
                 return newMeta;
             }
             if (data.IsLayerFile && !data.IsGroupLayerFile)
             {
-                newMeta.path = data.DataSource;
+                newMeta.Path = data.DataSource;
                 return newMeta;
             }
 
             //FIXME - does not work for web services ???
-            newMeta.type = MetadataType.Undefined;
-            newMeta.format = MetadataFormat.Undefined;
+            newMeta.Type = MetadataType.Undefined;
+            newMeta.Format = MetadataFormat.Undefined;
             return newMeta;
         }
 
@@ -287,7 +286,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// I've read https://stackoverflow.com/a/1758162 and know that I cannot REALLY use Regex on HTML.
         /// However, all my input will be coming from snippets in an XML document.
         /// In order for the HTML fragment to be part of an XML document, it has to have been pre sanitized.
-        /// This solution was addapted from https://stackoverflow.com/a/19524158
+        /// This solution was adapted from https://stackoverflow.com/a/19524158
         /// </remarks>
         private static string StripSimpleHtmlTags(string input)
         {
@@ -414,7 +413,7 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             Debug.Assert(webBrowser != null, "The WebBrowser control is null");
             if (webBrowser == null)
-                throw new ArgumentNullException("webBrowser");
+                throw new ArgumentNullException(nameof(webBrowser));
 
             // TODO: replace with LoadContentAndValidate() throw if ErrorMessage is non NULL
             string xmlString = LoadAsText();
@@ -550,7 +549,7 @@ namespace NPS.AKRO.ThemeManager.Model
             {
                 //to search the whole document, we don't need to parse it as XML
                 string content = LoadAsText();
-                return content == null ? false:  Match(content, search.SearchWords, search.FindAll, search.ComparisonMethod);
+                return content != null && Match(content, search.SearchWords, search.FindAll, search.ComparisonMethod);
             }
             XDocument xDoc = LoadAsXDoc();
             if (xDoc == null)
@@ -567,7 +566,7 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             if (Settings.Default.KeepMetaDataInMemory)
                 if (!string.IsNullOrEmpty(Path))
-                    _cache[Path] = LoadAsText();
+                    ContentCache[Path] = LoadAsText();
         }
 
         // Called from TmNode.cs line 548 (data path changed) and line 1245 (reload theme)
@@ -575,12 +574,12 @@ namespace NPS.AKRO.ThemeManager.Model
         internal void Repair(ThemeData data)
         {
             //FIXME - this is a redundant load/validate/scan going on.
-            meta myNewProps = Metadata.ExpectedMetadataProperties(data);
-            if (myNewProps.path == null)
+            Meta myNewProps = ExpectedMetadataProperties(data);
+            if (myNewProps.Path == null)
                 return;  //exception or error ???
-            Type = myNewProps.type;
-            Format = myNewProps.format;
-            Path = myNewProps.path;  //will revalidation only if path changes
+            Type = myNewProps.Type;
+            Format = myNewProps.Format;
+            Path = myNewProps.Path;  //will revalidation only if path changes
             Validate();
         }
 
@@ -588,8 +587,8 @@ namespace NPS.AKRO.ThemeManager.Model
         internal XElement ToXElement()
         {
             return new XElement("metadata",
-                                new XAttribute("type", Enum.GetName(typeof(MetadataType), Type)),
-                                new XAttribute("format", Enum.GetName(typeof(MetadataFormat), Format)),
+                                new XAttribute("type", Enum.GetName(typeof(MetadataType), Type) ?? ""),
+                                new XAttribute("format", Enum.GetName(typeof(MetadataFormat), Format) ?? ""),
                                 new XAttribute("version", Version ?? ""),
                                 new XAttribute("schema", Schema ?? ""),
                                 Path
@@ -601,11 +600,11 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Private Enums/Structs/Classes
 
-        private struct meta
+        private struct Meta
         {
-            internal string path;
-            internal MetadataType type;
-            internal MetadataFormat format;
+            internal string Path;
+            internal MetadataType Type;
+            internal MetadataFormat Format;
         }
 
         #endregion
@@ -614,12 +613,11 @@ namespace NPS.AKRO.ThemeManager.Model
         #region  Private Properties
 
         private MetadataFormat Format { get; set; }
-        private bool HasBeenValidated {get; set;}
         private bool IsValid { get; set; }
-        private string Schema { get; set; } //FIXME - use or toss
+        private string Schema { get; } // TODO - use or toss
         private MetadataState State { get; set; }
         private MetadataType Type { get; set; }
-        private string Version { get; set; } //FIXME - use or toss
+        private string Version { get; } // TODO - use or toss
 
         #endregion
 
@@ -641,8 +639,8 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             if (string.IsNullOrEmpty(Path))
                 return null;
-            if (_cache.ContainsKey(Path))
-                return _cache[Path];
+            if (ContentCache.ContainsKey(Path))
+                return ContentCache[Path];
 
             string contents = null;
 
@@ -652,10 +650,8 @@ namespace NPS.AKRO.ThemeManager.Model
             // we lock the whole routine.
             lock (this)
             {
-                //if (!HasBeenValidated)
-                //Validate is now fast enough that we will always do it.
-                //eliminates false positives
-                    IsValid = Validate();
+                //Validate is now fast enough that we will always do it. Eliminates false positives
+                IsValid = Validate();
                 if (IsValid)
                 {
                     try
@@ -685,7 +681,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 else
                     if (Settings.Default.KeepMetaDataInMemory)
                         if (!string.IsNullOrEmpty(Path))
-                            _cache[Path] = LoadAsText();
+                            ContentCache[Path] = LoadAsText();
             }
             time.Stop(); Trace.TraceInformation("{0}: End of Metadata.LoadASText() - Elapsed Time: {1}", DateTime.Now, time.Elapsed);
 
@@ -722,9 +718,8 @@ namespace NPS.AKRO.ThemeManager.Model
 
         private void Reset()
         {
-            HasBeenValidated = false;
-            if (!string.IsNullOrEmpty(Path) && _cache.ContainsKey(Path))
-                _cache.Remove(Path);
+            if (!string.IsNullOrEmpty(Path) && ContentCache.ContainsKey(Path))
+                ContentCache.Remove(Path);
         }
 
         /// <summary>
@@ -739,7 +734,6 @@ namespace NPS.AKRO.ThemeManager.Model
         /// <returns>True if this is a Valid metadata object, False otherwise</returns>
         private bool Validate()
         {
-            HasBeenValidated = true;
             if (string.IsNullOrEmpty(Path))
             {
                 Type = MetadataType.Undefined;
@@ -774,7 +768,6 @@ namespace NPS.AKRO.ThemeManager.Model
                         //FIXME - Validate the contents against MetadataFormat ???
                         return !string.IsNullOrEmpty(Path);
                     case MetadataType.Undefined:
-                    default:
                         // MetadataType.Undefined (or some other anomaly
                         // Try all each type - first valid type wins, so order matters.
                         Type = MetadataType.FilePath;
