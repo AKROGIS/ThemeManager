@@ -490,9 +490,71 @@ namespace NPS.AKRO.ThemeManager.Model
         internal GeneralInfo GetGeneralInfo()
         {
             string description;
-            DateTime? publicationDate = null;
+            DateTime? publicationDate;
             string summary;
             string tags;
+
+            // We can only extract meaningful data from metadata content is an XML document.
+            XDocument xmlMetadata = LoadAsXDoc();
+            if (xmlMetadata != null)
+            {
+                // The XML content may be in a number of different schemas and version
+                // 1. FGDC (CGDSM)
+                // 2. ISO (various flavors)
+                // 3. ArcGIS (various flavors)
+
+                // Description (aka Abstract)
+                //   FGDC: /metadata/idinfo/descript/abstract
+                //   ArcGIS 10: /metadata/dataIdInfo/idAbs
+                description = xmlMetadata.Descendants("abstract")
+                    .Concat(xmlMetadata.Descendants("idAbs"))
+                    .Select(element => element.Value)
+                    .Where(value => !string.IsNullOrEmpty(value) &&
+                                    !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
+                    .FirstOrDefault();
+
+                // PublicationDate
+                //   FGDC: /metadata/idinfo/citation/citeinfo/pubdate
+                //   ArcGIS 10: /metadata/dataIdInfo/idCitation/date/pubDate
+                pubdateString = xmlMetadata.Descendants("pubdate")
+                    .Concat(xmlMetadata.Descendants("pubDate"))
+                    .Select(element => element.Value)
+                    .Where(value => !string.IsNullOrEmpty(value) &&
+                                    !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
+                    .FirstOrDefault();
+                // Normalize date string and convert to optional datetime
+                pubdateString = NormalizeFgdcDateString(pubdateString);
+                DateTime date;
+                publicationDate = null;
+                if (DateTime.TryParse(pubdateString, out date))
+                    publicationDate = date;
+
+                // Summary (aka Purpose)
+                //   FGDC: /metadata/idinfo/descript/purpose
+                //   ArcGIS 10: /metadata/dataIdInfo/idPurp
+                summary = xmlMetadata.Descendants("purpose")
+                    .Concat(xmlMetadata.Descendants("idPurp"))
+                    .Select(element => element.Value)
+                    .Where(value => !string.IsNullOrEmpty(value) &&
+                                    !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
+                    .FirstOrDefault();
+
+                // Tags (aka Keywords)
+                //   FGDC: metadata/idinfo/keywords/*/*key
+                //     Where * = theme, place, strat, temp; Each keyword is a distinct element
+                //   ArcGIS 10: metadata/dataIdInfo/*Keys/keyword
+                //     Where * = desc, other, place, temp, disc, strat, search, theme; *Keys and keyword may appear multiple times.
+                tags = xmlMetadata.Descendants("keyword")
+                    .Concat(xmlMetadata.Descendants("themekey"))
+                    .Concat(xmlMetadata.Descendants("placekey"))
+                    .Concat(xmlMetadata.Descendants("stratkey"))
+                    .Concat(xmlMetadata.Descendants("tempkey"))
+                    .Select(element => element.Value)
+                    .Where(value => !string.IsNullOrEmpty(value) &&
+                                    !value.StartsWith("00") &&       // keyword in otherKeys for all new ArcGIS metadata
+                                    !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
+                    .Distinct().Concat(", ");
+            }
 
             return new GeneralInfo {
                 description,
