@@ -289,10 +289,8 @@
       <DependentUpon>WarningForm.cs</DependentUpon>
     </Compile>
     <None Include="app.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="Docs\Change Log.docx" />
     <None Include="Docs\Help.docx" />
-    <None Include="Model\ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -409,9 +407,7 @@
     <Content Include="Stylesheets\Xml.xsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="UI\How To Compile for ArcGIS9.3.txt" />
     <None Include="Properties\app.manifest" />
-    <None Include="thememanager.dtd" />
     <None Include="Images\category.png" />
     <None Include="Images\copy.png" />
     <None Include="Images\cut.png" />
@@ -431,7 +427,6 @@
     <None Include="Images\tools.png" />
     <None Include="Images\open.png" />
     <None Include="Images\print.png" />
-    <None Include="themelist.dtd" />
     <Content Include="Html\NoInitialData.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -452,8 +447,6 @@
     <Content Include="Images\NPSLogo.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="ThemeManager_TemporaryKey.pfx" />
-    <None Include="_TaskList.txt" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="MSXML2">
