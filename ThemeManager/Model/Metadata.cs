@@ -449,6 +449,8 @@ namespace NPS.AKRO.ThemeManager.Model
             }
         }
 
+        // Called by AdminReports.cs line 217 and TmNode.cs line 1270
+        // This method may throw exceptions; it may load content from disk or network; it may stall while loading a license.
         internal GeneralInfo GetGeneralInfo()
         {
             string description = null;
