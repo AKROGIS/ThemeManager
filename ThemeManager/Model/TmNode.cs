@@ -1166,7 +1166,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         public void PreloadMetadata()
         {
-            Metadata.PreloadAsText();
+            Metadata.PreLoadAsText();
             foreach (TmNode child in Children)
                 child.PreloadMetadata();
         }

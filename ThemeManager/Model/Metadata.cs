@@ -10,6 +10,7 @@ using NPS.AKRO.ThemeManager.Extensions;
 using NPS.AKRO.ThemeManager.Properties;
 using NPS.AKRO.ThemeManager.ArcGIS;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace NPS.AKRO.ThemeManager.Model
@@ -164,10 +165,10 @@ namespace NPS.AKRO.ThemeManager.Model
                 //&& data.WorkspacePath != null
                 && Directory.Exists(data.DataSource))
             {
-                string metapath = System.IO.Path.Combine(data.DataSource, "metadata.xml");
-                if (File.Exists(metapath))
+                string metaPath = System.IO.Path.Combine(data.DataSource, "metadata.xml");
+                if (File.Exists(metaPath))
                 {
-                    newMeta.Path = metapath;
+                    newMeta.Path = metaPath;
                     return newMeta;
                 }
             }
@@ -175,10 +176,10 @@ namespace NPS.AKRO.ThemeManager.Model
             //Shapefile
             if (data.IsShapefile)
             {
-                string metapath = data.DataSource + ".shp.xml";
-                if (File.Exists(metapath))
+                string metaPath = data.DataSource + ".shp.xml";
+                if (File.Exists(metaPath))
                 {
-                    newMeta.Path = metapath;
+                    newMeta.Path = metaPath;
                     return newMeta;
                 }
             }
@@ -189,10 +190,10 @@ namespace NPS.AKRO.ThemeManager.Model
                 string coverageDir = System.IO.Path.Combine(data.WorkspacePath, data.Container);
                 if (Directory.Exists(coverageDir))
                 {
-                    string metapath = System.IO.Path.Combine(coverageDir, "metadata.xml");
-                    if (File.Exists(metapath))
+                    string metaPath = System.IO.Path.Combine(coverageDir, "metadata.xml");
+                    if (File.Exists(metaPath))
                     {
-                        newMeta.Path = metapath;
+                        newMeta.Path = metaPath;
                         return newMeta;
                     }
                 }
@@ -204,10 +205,10 @@ namespace NPS.AKRO.ThemeManager.Model
                 string cadFile = System.IO.Path.Combine(data.WorkspacePath, data.Container);
                 if (File.Exists(cadFile))
                 {
-                    string metapath = cadFile + ".xml";
-                    if (File.Exists(metapath))
+                    string metaPath = cadFile + ".xml";
+                    if (File.Exists(metaPath))
                     {
-                        newMeta.Path = metapath;
+                        newMeta.Path = metaPath;
                         return newMeta;
                     }
                 }
@@ -376,11 +377,9 @@ namespace NPS.AKRO.ThemeManager.Model
         [field: NonSerializedAttribute()]
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
+        private void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handle = PropertyChanged;
-            if (handle != null)
-                handle(this, new PropertyChangedEventArgs(property));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion
@@ -389,7 +388,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Public Methods
 
-        // Add Async internal MetaInfo GetInfo() -> struct MetaInfo(pubdate?, tags, summary, description)
+        // Add Async internal MetaInfo GetInfo() -> struct MetaInfo(publicationDate?, tags, summary, description)
         //   Called on theme's "Sync with Metadata" to get select XML Tags for storing in the theme's properties
         // Add Async internal void LoadContentAndValidate()
         //  Called by user who wants to check the ErrorMessage without calling Display(), GetInfo() or Match()
@@ -441,6 +440,8 @@ namespace NPS.AKRO.ThemeManager.Model
 
         // Called by AdminReports.cs line 217 and TmNode.cs line 1270
         // This method may throw exceptions; it may load content from disk or network; it may stall while loading a license.
+        [SuppressMessage("ReSharper", "CommentTypo")]
+        [SuppressMessage("ReSharper", "StringLiteralTypo")]
         internal GeneralInfo GetGeneralInfo()
         {
             string description = null;
@@ -461,43 +462,43 @@ namespace NPS.AKRO.ThemeManager.Model
                 //   FGDC: /metadata/idinfo/descript/abstract
                 //   ArcGIS: /metadata/dataIdInfo/idAbs
                 //   ISO 19139: /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString
-                description = xmlMetadata.Descendants("abstract")
+                description = xmlMetadata
+                    .Descendants("abstract")
                     .Concat(xmlMetadata.Descendants("idAbs"))
                     .Concat(xmlMetadata.Descendants("gmd:abstract"))
                     .Select(element => element.Value)
-                    .Where(value => !string.IsNullOrEmpty(value) &&
-                                    !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
-                    .FirstOrDefault();
+                    .FirstOrDefault(value => !string.IsNullOrEmpty(value) &&
+                                             !value.StartsWith("REQUIRED:"));  // Unpopulated data from FGDC template
                 description = StripSimpleHtmlTags(description);
 
                 // PublicationDate
                 //   FGDC: /metadata/idinfo/citation/citeinfo/pubdate
                 //   ArcGIS: /metadata/dataIdInfo/idCitation/date/pubDate
                 //   ISO 19139: gmd:dateStamp/gso:DateTime
-                var pubdateString = xmlMetadata.Descendants("pubdate")
+                var pubDateString = xmlMetadata
+                    .Descendants("pubdate")
                     .Concat(xmlMetadata.Descendants("pubDate"))
                     .Concat(xmlMetadata.Descendants("gmd:dateStamp"))
                     .Select(element => element.Value)
-                    .Where(value => !string.IsNullOrEmpty(value) &&
-                                    !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
-                    .FirstOrDefault();
+                    .FirstOrDefault(value => !string.IsNullOrEmpty(value) &&
+                                             !value.StartsWith("REQUIRED:"));  // Unpopulated data from FGDC template
                 // Normalize date string and convert to optional datetime
-                pubdateString = NormalizeFgdcDateString(pubdateString);
+                pubDateString = NormalizeFgdcDateString(pubDateString);
                 DateTime date;
-                if (DateTime.TryParse(pubdateString, out date))
+                if (DateTime.TryParse(pubDateString, out date))
                     publicationDate = date;
 
                 // Summary (aka Purpose)
                 //   FGDC: /metadata/idinfo/descript/purpose
                 //   ArcGIS: /metadata/dataIdInfo/idPurp
                 //   ISO 19139: /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString
-                summary = xmlMetadata.Descendants("purpose")
+                summary = xmlMetadata
+                    .Descendants("purpose")
                     .Concat(xmlMetadata.Descendants("idPurp"))
                     .Concat(xmlMetadata.Descendants("gmd:purpose"))
-                    .Select(element => element.Value)
-                    .Where(value => !string.IsNullOrEmpty(value) &&
-                                    !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
-                    .FirstOrDefault();
+                    .Select(element => element.Value)  // Unpopulated data from FGDC template
+                    .FirstOrDefault(value => !string.IsNullOrEmpty(value) &&
+                                             !value.StartsWith("REQUIRED:"));
                 summary = StripSimpleHtmlTags(summary);
 
                 // Tags (aka Keywords)
@@ -551,9 +552,9 @@ namespace NPS.AKRO.ThemeManager.Model
                 .Any(value => Match(value, search.SearchWords, search.FindAll, search.ComparisonMethod));
         }
 
-        // Called by TmNode.cs line 1159 .. -> MainForm.designer.cs line 1058 (preload all metadata in background)
+        // Called by TmNode.cs line 1159 .. -> MainForm.designer.cs line 1058 (pre load all metadata in background)
         // Removing this "feature"; Metadata will only loaded on demand.  Advanced search may require loading all metadata (user can be warned)
-        internal void PreloadAsText()
+        internal void PreLoadAsText()
         {
             if (Settings.Default.KeepMetaDataInMemory)
                 if (!string.IsNullOrEmpty(Path))
@@ -570,11 +571,11 @@ namespace NPS.AKRO.ThemeManager.Model
                 return;  //exception or error ???
             Type = myNewProps.Type;
             Format = myNewProps.Format;
-            Path = myNewProps.Path;  //will revalidation only if path changes
+            Path = myNewProps.Path;  //will re validate only if path changes
             Validate();
         }
 
-        // Called by TmNode.cs line 845 (write object to themelist XML)
+        // Called by TmNode.cs line 845 (write object to theme list XML)
         internal XElement ToXElement()
         {
             return new XElement("metadata",
