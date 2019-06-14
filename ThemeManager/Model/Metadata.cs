@@ -336,13 +336,13 @@ namespace NPS.AKRO.ThemeManager.Model
 
         // Called in lots of places
         // Verify that form binding is not a form of setting the path (how else does the user change the metadata path?)
-        internal string Path
+        public string Path
         {
             get
             {
                 return _path;
             }
-            private set
+            set
             {
                 if (_path != value)
                 {
