@@ -912,7 +912,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     case 0:
                         if (node == null || node != _previousMetadataNode || newStyleSheetIndex != _previousStyleSheetIndex)
                         {
+                            ShowMetadataSpinner();
                             DisplayMetadata(node);
+                            HideMetadataSpinner();
                             _previousMetadataNode = node;
                             _previousStyleSheetIndex = newStyleSheetIndex;
                         }
@@ -920,7 +922,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     case 1:
                         if (node == null || node != _previousPreviewNode)
                         {
+                            ShowPreviewSpinner();
                             DisplayPreview(node);
+                            HidePreviewSpinner();
                             _previousPreviewNode = node;
                         }
                         break;
@@ -1067,8 +1071,8 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
             var nodeName = $"{node.Name} ({node.Type})";
             if (string.IsNullOrEmpty(node.Metadata.Path))
-                
-                webBrowser.DocumentText = string.Format(_cachedSafeNoMetadataTemplate, nodeName, node.Parent, "&lt;empty&gt;", "No Metadata", 
+
+                webBrowser.DocumentText = string.Format(_cachedSafeNoMetadataTemplate, nodeName, node.Parent, "&lt;empty&gt;", "No Metadata",
                     "This is typical for items that are not a datasource, i.e. Categories/Folders, Group Layers, MXDs, PDFs, etc.");
             else
             {
