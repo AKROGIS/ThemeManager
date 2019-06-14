@@ -12,6 +12,7 @@ using NPS.AKRO.ThemeManager.ArcGIS;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using System.Xml.XPath;
 
 namespace NPS.AKRO.ThemeManager.Model
 {
@@ -455,17 +456,29 @@ namespace NPS.AKRO.ThemeManager.Model
             {
                 // The XML content may be in a number of different schemas and version
                 // 1. FGDC (CSGDM)
-                // 2. ISO 19139 (various flavors)
-                // 3. ArcGIS (various flavors)
+                // 2. ArcGIS (various flavors)
+                // 3. ISO 19115 content standard (19139 XML encoding)
+
+                // Note that since I don't have a copy of the ISO specs,
+                // the XPaths are based on reviewing metadata documents, currently with a sample size of 2
+                // Note the ISO 19115-2 has a different root element (gmi:MI_Metadata)
+                // The root for ISO 19115 and 19115-1 is gmd:MD_Metadata
+
+                // 19139 Namespaces (relevant to searches below)
+                XmlNamespaceManager namespaceManager = new XmlNamespaceManager(new NameTable());
+                namespaceManager.AddNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+                namespaceManager.AddNamespace("gmi", "http://www.isotc211.org/2005/gmi");
+                namespaceManager.AddNamespace("gco", "http://www.isotc211.org/2005/gco");
 
                 // Description (aka Abstract)
                 //   FGDC: /metadata/idinfo/descript/abstract
                 //   ArcGIS: /metadata/dataIdInfo/idAbs
-                //   ISO 19139: /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString
+                //   ISO 19139: {root}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString
                 description = xmlMetadata
                     .Descendants("abstract")
                     .Concat(xmlMetadata.Descendants("idAbs"))
-                    .Concat(xmlMetadata.Descendants("gmd:abstract"))
+                    .Concat(xmlMetadata.XPathSelectElements("/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString", namespaceManager))
+                    .Concat(xmlMetadata.XPathSelectElements("/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString", namespaceManager))
                     .Select(element => element.Value)
                     .FirstOrDefault(value => !string.IsNullOrEmpty(value) &&
                                              !value.StartsWith("REQUIRED:"));  // Unpopulated data from FGDC template
@@ -474,11 +487,17 @@ namespace NPS.AKRO.ThemeManager.Model
                 // PublicationDate
                 //   FGDC: /metadata/idinfo/citation/citeinfo/pubdate
                 //   ArcGIS: /metadata/dataIdInfo/idCitation/date/pubDate
-                //   ISO 19139: gmd:dateStamp/gso:DateTime
+                //   ISO 19139: {root}/gmd:dateStamp/gco:DateTime (or {root}/gmd:dateStamp/gco:Date if just a date is provided)
+                //       that is actually the date of the metadata.  The actual publication date will be in 
+                //       publication date: {root}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date
+                //       where the ../../gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode = "publication; publication" (actual values may vary based on codelist used)
                 var pubDateString = xmlMetadata
                     .Descendants("pubdate")
                     .Concat(xmlMetadata.Descendants("pubDate"))
-                    .Concat(xmlMetadata.Descendants("gmd:dateStamp"))
+                    .Concat(xmlMetadata.XPathSelectElements("/gmd:MD_Metadata/gmd:dateStamp/gco:DateTime", namespaceManager))
+                    .Concat(xmlMetadata.XPathSelectElements("/gmd:MD_Metadata/gmd:dateStamp/gco:Date", namespaceManager))
+                    .Concat(xmlMetadata.XPathSelectElements("/gmi:MI_Metadata/gmd:dateStamp/gco:DateTime", namespaceManager))
+                    .Concat(xmlMetadata.XPathSelectElements("/gmi:MI_Metadata/gmd:dateStamp/gco:Date", namespaceManager))
                     .Select(element => element.Value)
                     .FirstOrDefault(value => !string.IsNullOrEmpty(value) &&
                                              !value.StartsWith("REQUIRED:"));  // Unpopulated data from FGDC template
@@ -491,14 +510,15 @@ namespace NPS.AKRO.ThemeManager.Model
                 // Summary (aka Purpose)
                 //   FGDC: /metadata/idinfo/descript/purpose
                 //   ArcGIS: /metadata/dataIdInfo/idPurp
-                //   ISO 19139: /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString
+                //   ISO 19139: {root}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString
                 summary = xmlMetadata
                     .Descendants("purpose")
                     .Concat(xmlMetadata.Descendants("idPurp"))
-                    .Concat(xmlMetadata.Descendants("gmd:purpose"))
-                    .Select(element => element.Value)  // Unpopulated data from FGDC template
+                    .Concat(xmlMetadata.XPathSelectElements("/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString", namespaceManager))
+                    .Concat(xmlMetadata.XPathSelectElements("/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString", namespaceManager))
+                    .Select(element => element.Value)
                     .FirstOrDefault(value => !string.IsNullOrEmpty(value) &&
-                                             !value.StartsWith("REQUIRED:"));
+                                             !value.StartsWith("REQUIRED:"));   // Unpopulated data from FGDC template
                 summary = StripSimpleHtmlTags(summary);
 
                 // Tags (aka Keywords)
@@ -506,18 +526,20 @@ namespace NPS.AKRO.ThemeManager.Model
                 //     Where * = theme, place, strat, temp; Each keyword is a distinct element
                 //   ArcGIS: metadata/dataIdInfo/*Keys/keyword
                 //     Where * = desc, other, place, temp, disc, strat, search, theme; *Keys and keyword may appear multiple times.
-                //   ISO 19139: /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode[*]/gmd:keyword
+                //   ISO 19139: /gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString
                 tags = xmlMetadata.Descendants("keyword")
                     .Concat(xmlMetadata.Descendants("themekey"))
                     .Concat(xmlMetadata.Descendants("placekey"))
                     .Concat(xmlMetadata.Descendants("stratkey"))
                     .Concat(xmlMetadata.Descendants("tempkey"))
-                    .Concat(xmlMetadata.Descendants("gmd:keyword"))
+                    .Concat(xmlMetadata.XPathSelectElements("/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString", namespaceManager))
+                    .Concat(xmlMetadata.XPathSelectElements("/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString", namespaceManager))
                     .Select(element => element.Value)
                     .Where(value => !string.IsNullOrEmpty(value) &&
                                     !value.StartsWith("00") &&       // keyword in otherKeys for all new ArcGIS metadata
                                     !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
                     .Distinct().Concat(", ");
+                tags = StripSimpleHtmlTags(tags);  // Also condenses whitespace
             }
 
             return new GeneralInfo {
