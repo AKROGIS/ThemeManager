@@ -912,9 +912,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     case 0:
                         if (node == null || node != _previousMetadataNode || newStyleSheetIndex != _previousStyleSheetIndex)
                         {
-                            ShowMetadataSpinner();
+                            //ShowMetadataSpinner();
                             DisplayMetadata(node);
-                            HideMetadataSpinner();
+                            //HideMetadataSpinner();
                             _previousMetadataNode = node;
                             _previousStyleSheetIndex = newStyleSheetIndex;
                         }
@@ -922,9 +922,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     case 1:
                         if (node == null || node != _previousPreviewNode)
                         {
-                            ShowPreviewSpinner();
+                            //ShowPreviewSpinner();
                             DisplayPreview(node);
-                            HidePreviewSpinner();
+                            //HidePreviewSpinner();
                             _previousPreviewNode = node;
                         }
                         break;
@@ -941,6 +941,20 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             }
         }
 
+        /*
+         * Showing/Hiding a spinner in the tab title box (ala a web browser) is trickier than I hoped.
+         * I can set an imageList for the tabControl and add an animated gif to an imageList
+         * and then dynamically set the imageIndex in the tab page to -1 for no image, or 0 (first
+         * image in the image list) to display or hide the image.  However  the image does not animate
+         * because the tapPage control doesn't know how to do this.
+         * I can add a pictureBox to the form, and that will correctly display the animated gif,
+         * but I cannot put the pictureBox where I would like.
+         * I could swap the pictureBox in/out of the content area of the tab control.
+         * It also works to add the gif to a label in the statusBar control.  However the status bar
+         * is hidden by default, so not as obvious as putting it in the tab title.
+         * I did find a solution that uses owner drawing to do exactly what I want, but it is more
+         * complicated than I would like at this point. https://stackoverflow.com/a/30307224/542911
+         */
 
         private void ShowSearchForm()
         {
