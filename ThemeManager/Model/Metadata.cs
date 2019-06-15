@@ -451,7 +451,7 @@ namespace NPS.AKRO.ThemeManager.Model
             string tags = null;
 
             // We can only extract meaningful data from metadata content is an XML document.
-            XDocument xmlMetadata = LoadAsXDoc();
+            XDocument xmlMetadata = ContentAsXDocument();
             if (xmlMetadata != null)
             {
                 // The XML content may be in a number of different schemas and version
@@ -565,10 +565,10 @@ namespace NPS.AKRO.ThemeManager.Model
                 string content = LoadAsText();
                 return content != null && Match(content, search.SearchWords, search.FindAll, search.ComparisonMethod);
             }
-            XDocument xDoc = LoadAsXDoc();
-            if (xDoc == null)
+            XDocument xmlMetadata = ContentAsXDocument();
+            if (xmlMetadata == null)
                 return false;
-            return xDoc.Descendants(search.XmlElement)
+            return xmlMetadata.Descendants(search.XmlElement)
                 .Select(element => element.Value)
                 .Where(value => !string.IsNullOrEmpty(value))
                 .Any(value => Match(value, search.SearchWords, search.FindAll, search.ComparisonMethod));
@@ -637,7 +637,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Private Methods
 
-        //TODO: Replace LoadAsText() LoadAsXDoc() and Validate(), etc with: LoadContentAndValidate()
+        //TODO: Replace LoadAsText() ContentAsXDocument() and Validate(), etc with: LoadContentAndValidate()
         // cache results on class, to speed up multiple requests, avoid duplication, and avoid cloning large blocks of text
         // Validation is in two parts: 1) Validate Type (requires loading even URLs) and 2) Validate Format (may require parsing)
         // Validation can short circuit if Content is non null.  If content is null reload will be retried
@@ -646,7 +646,7 @@ namespace NPS.AKRO.ThemeManager.Model
         //time spent loading or retrying, but always (and only) when the user requests it.
 
         //!! side effect of LoadAsText() is that Path, Type and IsValid are validated (for Display()).
-        //!! side effect of LoadAsText() is that Format, IsValid are validated (for LoadAsXDoc()).
+        //!! side effect of LoadAsText() is that Format, IsValid are validated (for ContentAsXDocument()).
         // This will not throw any exceptions, rather it returns null, and sets ErrorMessage
         private string LoadAsText()
         {
@@ -702,29 +702,32 @@ namespace NPS.AKRO.ThemeManager.Model
         }
 
         // !!! side effect is that IsValid and Format may be changed if found to be incorrect.
-        private XDocument LoadAsXDoc()
+        /// <summary>
+        /// Returns the contents of the metadata at Path as an XDocument
+        /// </summary>
+        /// <remarks>
+        /// This method will not throw an exception.
+        /// It will set ErrorMessage to an exception message (if encountered) 
+        /// It may change the Format if it is wrong.
+        /// </remarks>
+        /// <returns>An XDocument or null</returns>
+        private XDocument ContentAsXDocument()
         {
-            // LoadAsText() will have the side effect of validating the Format, IsValid, ... so we do it first.
             string xmlString = LoadAsText();
-
-            if (Format != MetadataFormat.Xml && Format != MetadataFormat.Undefined)
-                return null;
-
-            XDocument contents = null;
-            if (IsValid)
+            if (xmlString == null)
             {
-                try
-                {
-                    contents = XDocument.Parse(xmlString);
-                    Format = MetadataFormat.Xml;
-                }
-                catch (XmlException ex)
-                {
-                    ErrorMessage = ex.Message;
-                    IsValid = false;
-                    contents = null;
-                    Format = MetadataFormat.Undefined;
-                }
+                return null;
+            }
+            XDocument contents = null;
+            try
+            {
+                contents = XDocument.Parse(xmlString);
+                Format = MetadataFormat.Xml;
+            }
+            catch (XmlException ex)
+            {
+                ErrorMessage = ex.Message;
+                Format = MetadataFormat.Undefined;
             }
             return contents;
         }
