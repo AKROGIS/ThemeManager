@@ -694,7 +694,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 else
                     if (Settings.Default.KeepMetaDataInMemory)
                         if (!string.IsNullOrEmpty(Path))
-                            ContentCache[Path] = LoadAsText();
+                            ContentCache[Path] = contents;
             }
             time.Stop(); Trace.TraceInformation("{0}: End of Metadata.LoadASText() - Elapsed Time: {1}", DateTime.Now, time.Elapsed);
 
