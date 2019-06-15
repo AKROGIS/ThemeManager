@@ -719,6 +719,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 return null;
             }
             XDocument contents = null;
+            // Don't trust what we think the format is, just try parsing it.
             try
             {
                 contents = XDocument.Parse(xmlString);
@@ -727,7 +728,8 @@ namespace NPS.AKRO.ThemeManager.Model
             catch (XmlException ex)
             {
                 ErrorMessage = ex.Message;
-                Format = MetadataFormat.Undefined;
+                if (Format == MetadataFormat.Xml)
+                    Format = MetadataFormat.Undefined;
             }
             return contents;
         }
