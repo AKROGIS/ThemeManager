@@ -93,7 +93,7 @@ namespace NPS.AKRO.ThemeManager.Model
     /// 1) Serializing (loading from and saving to) to an XML representation.  This only converts
     ///    a few instance properties to/from an XML representation and does not load or validate
     ///    the referenced resource.
-    /// 2) Cloning by memberwise copy
+    /// 2) Cloning by memberwise copy to support copying Theme list items in WinForms.
     /// 3) INotifyPropertyChanged to support binding the Path property to a WinForm.
     /// 4) Creating a new instance (for a new empty Theme, for a new theme with datasource, or
     ///    while loading an XML or MDB theme list), Updating the Path property either directly, or
@@ -122,7 +122,21 @@ namespace NPS.AKRO.ThemeManager.Model
     {
         #region  Class Methods (Public)
 
-        // Called by ThemeBuilder.cs line 83 (data added to theme list)
+        /// <summary>
+        /// Creates a Metadata reference appropriate for the data source.   
+        /// </summary>
+        /// <remarks>
+        /// This method will guess the metadata Path, Type and Format based on Esri conventions
+        /// and file existence. It will check the file system for a file which will block,
+        /// and could take significant time in unusual circumstances: missing drive, network
+        /// connection problems, drive asleep, etc.  I wish it could be non-blocking, but there
+        /// is no Async version of this wrapper on a system call, and we need to check several
+        /// different paths to ensure we do not miss existing metadata for a datasource.
+        /// In general it will be quite fast and has not ben shown to be a problem yet.
+        /// This method is only called by ThemeBuilder.cs when the user adds a new data source.
+        /// </remarks>
+        /// <param name="data">The theme's data source</param>
+        /// <returns>a new Metadata object for a theme</returns>
         internal static Metadata FromDataSource(ThemeData data)
         {
             Metadata newMeta = new Metadata();
@@ -219,7 +233,19 @@ namespace NPS.AKRO.ThemeManager.Model
             return newMeta;
         }
 
-        //Called by TmNode.cs line 1133 (building object from theme list XML)
+        /// <summary>
+        /// Reconstitutes an archived Metadata object from XML
+        /// </summary>
+        /// <remarks>
+        /// This is called for each node when loading a theme list from a TML file.
+        /// This will not load the metadata resource at the path, nor validate
+        /// the properties.  This method is non-blocking and very fast.
+        /// It may throw the following exceptions:
+        ///   ArgumentNullException - XML not provided, or expected attributes in XML are missing
+        ///   ArgumentException - XML contains unexpected values
+        /// </remarks>
+        /// <param name="element">The XML representation of a metadata object</param>
+        /// <returns>a new Metadata object for a theme</returns>
         internal static Metadata FromXElement(XElement element)
         {
             if (element == null)
@@ -241,6 +267,15 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Class Methods (Private)
 
+        /// <summary>
+        /// Search a large text string for a number of small text strings
+        /// </summary>
+        /// <param name="haystack">The text string to search</param>
+        /// <param name="needles">a list of text strings to look for</param>
+        /// <param name="findAll">true => only return true if all needles are found, otherwise
+        /// return true if any needle is found</param>
+        /// <param name="comparisonMethod">How the strings should be compared, i.e. case sensitive, locale aware, ...</param>
+        /// <returns>true if all (or any) needles were found in the haystack</returns>
         private static bool Match(string haystack, IEnumerable<string> needles, bool findAll, StringComparison comparisonMethod)
         {
             bool found;
@@ -301,18 +336,44 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Constructors
 
-        // Called by TmNode.cs line 82 (TmNode default constructor)
+        /// <summary>
+        /// Create a new 'empty' Metadata object to be fleshed out later (maybe).
+        /// </summary>
+        /// <remarks>
+        /// Called internally, and by the user when clicking the menu item: add new theme/category
+        /// </remarks>
         internal Metadata()
             : this(null, MetadataType.Undefined, MetadataFormat.Undefined, null, null)
         {
         }
 
-        // Called by MdbStore.cs lines 104-414 (building object form old DB format)
+        /// <summary>
+        /// Create a new Metadata object with a few common properties.
+        /// </summary>
+        /// <remarks>
+        /// None of the properties are checked for correctness.  This is used externally when
+        /// building a theme list stored in a Microsoft Access database (version 2.0 theme list)
+        /// </remarks>
+        /// <param name="path">String to the metadata resource</param>
+        /// <param name="type">See Metadata.Type</param>
+        /// <param name="format">See Metadata.Format</param>
         internal Metadata(string path, MetadataType type, MetadataFormat format)
             : this(path, type, format, null, null)
         {
         }
 
+        /// <summary>
+        /// Create a new Metadata object with all properties stored in the XML format.
+        /// </summary>
+        /// <remarks>
+        /// None of the properties are checked for correctness.  This is the "master"
+        /// constructor that all other constructors call
+        /// </remarks>
+        /// <param name="path">String to the metadata resource</param>
+        /// <param name="type">See Metadata.Type</param>
+        /// <param name="format">See Metadata.Format</param>
+        /// <param name="version">string documenting the version of the xml schema</param>
+        /// <param name="schema">string documenting the xml schema</param>
         private Metadata(string path, MetadataType type, MetadataFormat format, string version, string schema)
         {
             _path = path;
@@ -327,6 +388,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Instance Fields (All Private; Should only be accessed by Contructors or Properties)
 
+        // backing for Path property
         private string _path;
 
         #endregion
@@ -334,23 +396,40 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Public Properties
 
-        // Called by AdminReports.cs line 218 (ListMetadataProblems)
+        /// <summary>
+        /// A text string documenting any problems reading/using the metadata content at Path
+        /// </summary>
+        /// <remarks>
+        /// This is an option to throwing an exception.  If a method GetInfo() returns null, the
+        /// caller can check this property for an possible explanation.
+        /// This property will usually be null, and is not guaranteed to have a value. 
+        /// </remarks>
         internal string ErrorMessage { get; private set; }
 
-        // Called in lots of places
-        // Verify that form binding is not a form of setting the path (how else does the user change the metadata path?)
+        /// <summary>
+        /// The path to the metadata resource.
+        /// </summary>
+        /// <remarks>
+        /// See Metadata.Type for the meaning of the value in the string.
+        /// The getter and setter needs to be public so that it can be bound to a WinForm control.
+        /// That is the only location (except internally) that will change the path.
+        /// The property must support INotifyPropertyChanged for WinForm binding.
+        /// The setter is a noop if the value isn't different.
+        /// </remarks>
         public string Path
         {
             get
             {
                 return _path;
             }
+            // ReSharper disable once MemberCanBePrivate.Global
             set
             {
                 if (_path != value)
                 {
                     _path = value;
                     Type = MetadataType.Undefined;
+                    Format = MetadataFormat.Undefined;
                     OnPropertyChanged("Path");
                 }
             }
@@ -362,7 +441,6 @@ namespace NPS.AKRO.ThemeManager.Model
         #region  Interface Implementations
         #region IClonable Interface
 
-        // Called by MainForm, TmNode, and others to copy a Metadata object
         public object Clone()
         {
             var obj = (Metadata)MemberwiseClone();
@@ -387,17 +465,26 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Public Methods
 
-        // Add Async internal MetaInfo GetInfo() -> struct MetaInfo(publicationDate?, tags, summary, description)
-        //   Called on theme's "Sync with Metadata" to get select XML Tags for storing in the theme's properties
-        // Add Async internal void LoadContentAndValidate()
-        //  Called by user who wants to check the ErrorMessage without calling Display(), GetInfo() or Match()
-        //  called internally by Display(), GetInfo(), and Match()
-        // Make Display() and Match() Async
-
-        //FIXME - return more meaningful exception messages or create web pages on the fly
-
-        // Called by MainForm.cs line 1077 (display in metadata tab (web browser))
-        // Caller can call Load/Validate first, and check ErrorMessage Property before calling display
+        /// <summary>
+        /// Displays formatted metadata content in an web browser control
+        /// </summary>
+        /// <remarks>
+        /// If the metadata content is XML, then it the provided stylesheet
+        /// will be used to convert it to styled html.  If the content is html or text
+        /// then it will be provided to the browser control as is.  In the case of
+        /// online html (Type == URL and Format == html), then the URL is given to the
+        /// browser so that it can also load any external javascript, css, etc.
+        /// This may throw a MetadataDisplayException if it can't obtain or style the
+        /// content.  The browser control shouldn't throw any exceptions and will handle
+        /// http error and html render problems by altering the browser window display as
+        /// appropriate.
+        /// This method will block while content is loaded from disk or network.
+        /// The first time an XSL stylesheet is used, the content must be loaded from disk,
+        /// and then compiled before the transformation can be applied to the XML.
+        /// This method may also stall while an Esri license is obtained.
+        /// </remarks>
+        /// <param name="webBrowser"></param>
+        /// <param name="styleSheet"></param>
         internal void Display(WebBrowser webBrowser, StyleSheet styleSheet)
         {
             Debug.Assert(webBrowser != null, "The WebBrowser control is null");
@@ -407,6 +494,7 @@ namespace NPS.AKRO.ThemeManager.Model
             // TODO: replace with LoadContentAndValidate() throw if ErrorMessage is non NULL
             string xmlString = LoadAsText();
 
+            //FIXME - return more meaningful exception messages or create web pages on the fly
             // Exception message for Type == Undefined
             //  Unable to obtain the metadata content because Theme Manager doesn't know the meaning of {Path}
             // Exception message for Format == Undefined
@@ -433,8 +521,19 @@ namespace NPS.AKRO.ThemeManager.Model
             }
         }
 
-        // Called by AdminReports.cs line 217 and TmNode.cs line 1270
-        // This method may throw exceptions; it may load content from disk or network; it may stall while loading a license.
+        /// <summary>
+        /// Get selected attributes from known XML metadata formats
+        /// </summary>
+        /// <remarks>
+        /// If there are any problems reading the content at Path as XML, then all the
+        /// attributes will be null and ErrorMessage will be set to an explanation.
+        /// If the metadata is in an unknown XML schema, then some or all of the attributes
+        /// may be null. This method should be able to parse ArcGIS, CSGDM and ISO 19139 schemas.
+        /// This method will not throw any exceptions.
+        /// This method will block while content is loaded from disk or network.
+        /// This method may stall while an Esri license is obtained.
+        /// </remarks>
+        /// <returns>A tuple with Summary, Description, Tags and a Publication date</returns>
         [SuppressMessage("ReSharper", "CommentTypo")]
         [SuppressMessage("ReSharper", "StringLiteralTypo")]
         internal GeneralInfo GetGeneralInfo()
@@ -544,7 +643,19 @@ namespace NPS.AKRO.ThemeManager.Model
             };
         }
 
-        // Called by TmNode.cs line 987 (advanced search option)
+        /// <summary>
+        /// Search the metadata content for text strings. 
+        /// </summary>
+        /// <remarks>
+        /// This method is required to load and possibly parse the metadata content.
+        /// It can be slow, and is only used by the advanced search interface.
+        /// It will not throw any exceptions, but will instead set the result to false
+        /// and set the ErrorMessage property.
+        /// This method will block while content is loaded from disk or network.
+        /// This method may stall while an Esri license is obtained.
+        /// </remarks>
+        /// <param name="search">the text and searching constraints to use.</param>
+        /// <returns>true if the metadata satisfies the search options</returns>
         internal bool Match(SearchOptions search)
         {
             if (search == null)
@@ -568,18 +679,36 @@ namespace NPS.AKRO.ThemeManager.Model
                 .Any(value => Match(value, search.SearchWords, search.FindAll, search.ComparisonMethod));
         }
 
-        // Called from TmNode.cs line 548 (data path changed) and line 1245 (reload theme)
-        // Ensure this is a low cost synchronous method (the data path may or may not change); This is not a user request to Sync
+        /// <summary>
+        /// Updates the Path, Type and Format based on a new data source
+        /// </summary>
+        /// <remarks>
+        /// This is called when the user changes the data source of a theme either by editing the path
+        /// directly, or by reloading the theme.  It does not load the content or validate the properties.
+        /// This method will not throw any exceptions.
+        /// This should be a fast non-blocking method, but it isn't quite, see the docs on FromDataSource()
+        /// for details on why.
+        /// This method is required because WinForm binding is difficult to manage if an object is replaced
+        /// by a new one. It is much easier to update the existing bound object.
+        /// </remarks>
+        /// <param name="data">The theme's data source</param>
         internal void UpdateWithDataSource(ThemeData data)
         {
-            // I can't return a new metadata object because that may break Property binding with WinForms
             Metadata newMetadata = FromDataSource(data);
             Path = newMetadata.Path;
             Type = newMetadata.Type;
             Format = newMetadata.Format;
         }
 
-        // Called by TmNode.cs line 845 (write object to theme list XML)
+        /// <summary>
+        /// Serializes the major properties as an XElement.
+        /// </summary>
+        /// <remarks>
+        /// Called by TMNode.cs when the object is written to a TML file.
+        /// This method is fast and non-blocking
+        /// It will not throw any exceptions.
+        /// </remarks>
+        /// <returns>an XElement representation of the Metadata object</returns>
         internal XElement ToXElement()
         {
             return new XElement("metadata",
@@ -597,34 +726,40 @@ namespace NPS.AKRO.ThemeManager.Model
         #region  Private Properties
 
         private MetadataFormat Format { get; set; }
-        private string Schema { get; } // TODO - use or toss
+        private string Schema { get; }  // Unused but supported as part of the TML file
         private MetadataType Type { get; set; }
-        private string Version { get; } // TODO - use or toss
+        private string Version { get; }  // Unused but supported as part of the TML file
 
         #endregion
 
 
         #region  Private Methods
 
-        //TODO: Replace LoadAsText() ContentAsXDocument() and Validate(), etc with: LoadContentAndValidate()
-        // cache results on class, to speed up multiple requests, avoid duplication, and avoid cloning large blocks of text
-        // Validation is in two parts: 1) Validate Type (requires loading even URLs) and 2) Validate Format (may require parsing)
-        // Validation can short circuit if Content is non null.  If content is null reload will be retried
-        // Errors in Loading/Validation will be stored in ErrorMessages for display to the user.
-        //These changes will improve display robustness, as well as simplify the code.  It may result in more
-        //time spent loading or retrying, but always (and only) when the user requests it.
-
-        //!! side effect of LoadAsText() is that Path, Type and IsValid are validated (for Display()).
-        //!! side effect of LoadAsText() is that Format, IsValid are validated (for ContentAsXDocument()).
-        // This will not throw any exceptions, rather it returns null, and sets ErrorMessage
+        /// <summary>
+        /// Tries to load the metadata resource at Path as a text string
+        /// </summary>
+        /// <remarks>
+        /// This method will not throw an exception.
+        /// Side effects:
+        /// It will set ErrorMessage to an error message (if any are encountered) 
+        /// It may change the Type and Format if they are wrong.
+        /// </remarks>
+        /// <returns>a text string of the metadata if available or null</returns>
         private string LoadAsText()
         {
             if (string.IsNullOrEmpty(Path))
+                //TODO: Set error message
                 return null;
 
             string contents = null;
 
             Trace.TraceInformation("{0}: Start of Metadata.LoadASText({1})", DateTime.Now, Path); Stopwatch time = Stopwatch.StartNew();
+
+            // TODO: Remove lock, this is not an issue any longer
+            // TODO: Check MetadataType.Url starts with http
+            // TODO: return text at URL, not the path.
+            // TODO: set Format to Text if not null and not XML or HTML
+            // 
             // If another thread is loading the text, wait for it to finish.
             // because of side effects, including changing state of CachedContentsAsText,
             // we lock the whole routine.
@@ -656,14 +791,14 @@ namespace NPS.AKRO.ThemeManager.Model
             return contents;
         }
 
-        // !!! side effect is that IsValid and Format may be changed if found to be incorrect.
         /// <summary>
         /// Returns the contents of the metadata at Path as an XDocument
         /// </summary>
         /// <remarks>
         /// This method will not throw an exception.
+        /// Side effects:
         /// It will set ErrorMessage to an exception message (if encountered) 
-        /// It may change the Format if it is wrong.
+        /// It may change the Type and Format if they are wrong.
         /// </remarks>
         /// <returns>An XDocument or null</returns>
         private XDocument ContentAsXDocument()
