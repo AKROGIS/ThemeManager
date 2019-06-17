@@ -31,7 +31,7 @@ namespace NPS.AKRO.ThemeManager.Model
     /// <summary>
     /// Defines the meaning of the string in Metadata.Path and
     /// how it is used to find the metadata content.
-    /// See MetadataFormat for how to interpret the content.
+    /// See Metadata.Format for how to interpret the content.
     /// </summary>
     enum MetadataType
     {
@@ -125,11 +125,7 @@ namespace NPS.AKRO.ThemeManager.Model
         // Called by ThemeBuilder.cs line 83 (data added to theme list)
         internal static Metadata Find(ThemeData data)
         {
-            if (data == null)
-                return null;
-
-            Meta myProps = ExpectedMetadataProperties(data);
-            return new Metadata(myProps.Path, myProps.Type, myProps.Format);
+            return FromDataSource(data);
         }
 
         //Called by TmNode.cs line 1133 (building object from theme list XML)
@@ -154,14 +150,9 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Class Methods (Private)
 
-        private static Meta ExpectedMetadataProperties(ThemeData data)
+        private static Metadata FromDataSource(ThemeData data)
         {
-            Meta newMeta = new Meta()
-            {
-                Path=null,
-                Type = MetadataType.Undefined,
-                Format= MetadataFormat.Undefined
-            };
+            Metadata newMeta = new Metadata();
 
             if (data == null)
                 return newMeta;
@@ -586,13 +577,11 @@ namespace NPS.AKRO.ThemeManager.Model
         // Ensure this is a low cost synchronous method (the data path may or may not change); This is not a user request to Sync
         internal void Repair(ThemeData data)
         {
-            //FIXME - this is a redundant load/validate/scan going on.
-            Meta myNewProps = ExpectedMetadataProperties(data);
-            if (myNewProps.Path == null)
-                return;  //exception or error ???
-            Type = myNewProps.Type;
-            Format = myNewProps.Format;
-            Path = myNewProps.Path;  //will re validate only if path changes
+            // I can't return a new metadata object because that may break Property binding with WinForms
+            Metadata newMetadata = FromDataSource(data);
+            Path = newMetadata.Path;
+            Type = newMetadata.Type;
+            Format = newMetadata.Format;
         }
 
         // Called by TmNode.cs line 845 (write object to theme list XML)
@@ -605,18 +594,6 @@ namespace NPS.AKRO.ThemeManager.Model
                                 new XAttribute("schema", Schema ?? ""),
                                 Path
                 );
-        }
-
-        #endregion
-
-
-        #region  Private Enums/Structs/Classes
-
-        private struct Meta
-        {
-            internal string Path;
-            internal MetadataType Type;
-            internal MetadataFormat Format;
         }
 
         #endregion
