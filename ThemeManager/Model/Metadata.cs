@@ -121,13 +121,6 @@ namespace NPS.AKRO.ThemeManager.Model
     [Serializable]
     class Metadata : ICloneable, INotifyPropertyChanged
     {
-        #region  Class Fields (Private)
-
-        private static readonly Dictionary<string, string> ContentCache = new Dictionary<string, string>();
-
-        #endregion
-
-
         #region  Class Methods (Public)
 
         // Called by ThemeBuilder.cs line 83 (data added to theme list)
@@ -374,13 +367,9 @@ namespace NPS.AKRO.ThemeManager.Model
             {
                 if (_path != value)
                 {
-                    Reset();
                     _path = value;
                     Type = MetadataType.Undefined;
                     OnPropertyChanged("Path");
-                    //FIXME - this is broken.
-                    // changing the path, or creating a new metadata object with the same path
-                    // does not revalidate - Need to cache whole metadata objects.
                 }
             }
         }
@@ -670,8 +659,6 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             if (string.IsNullOrEmpty(Path))
                 return null;
-            if (ContentCache.ContainsKey(Path))
-                return ContentCache[Path];
 
             string contents = null;
 
@@ -707,9 +694,6 @@ namespace NPS.AKRO.ThemeManager.Model
                     contents = null;
                     Format = MetadataFormat.Undefined;
                 }
-                else
-                    if (!string.IsNullOrEmpty(Path))
-                        ContentCache[Path] = contents;
             }
             time.Stop(); Trace.TraceInformation("{0}: End of Metadata.LoadASText() - Elapsed Time: {1}", DateTime.Now, time.Elapsed);
 
@@ -747,12 +731,6 @@ namespace NPS.AKRO.ThemeManager.Model
                     Format = MetadataFormat.Undefined;
             }
             return contents;
-        }
-
-        private void Reset()
-        {
-            if (!string.IsNullOrEmpty(Path) && ContentCache.ContainsKey(Path))
-                ContentCache.Remove(Path);
         }
 
         /// <summary>
