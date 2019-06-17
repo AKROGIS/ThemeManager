@@ -41,10 +41,6 @@ namespace NPS.AKRO.ThemeManager.Model
         /// </summary>
         Undefined,
         /// <summary>
-        /// The metadata content is stored directly in the Path property (unusual)
-        /// </summary>
-        Inline,
-        /// <summary>
         /// A file system path to a file containing metadata (usually in XML format)
         /// </summary>
         FilePath,
@@ -654,8 +650,6 @@ namespace NPS.AKRO.ThemeManager.Model
                 {
                     try
                     {
-                        if (Type == MetadataType.Inline)
-                            contents = Path;
                         if (Type == MetadataType.FilePath)
                             contents = File.ReadAllText(Path);
                         if (Type == MetadataType.EsriDataPath)
@@ -766,9 +760,6 @@ namespace NPS.AKRO.ThemeManager.Model
                         // See if ArcObjects can load the metadata or throw an exception trying
                         EsriMetadata.GetContentsAsXml(Path);
                         return true;
-                    case MetadataType.Inline:
-                        //FIXME - Validate the contents against MetadataFormat ???
-                        return !string.IsNullOrEmpty(Path);
                     case MetadataType.Undefined:
                         // MetadataType.Undefined (or some other anomaly
                         // Try all each type - first valid type wins, so order matters.
@@ -779,9 +770,6 @@ namespace NPS.AKRO.ThemeManager.Model
                         if (Validate())
                             return true;
                         Type = MetadataType.EsriDataPath;
-                        if (Validate())
-                            return true;
-                        Type = MetadataType.Inline;
                         if (Validate())
                             return true;
                         Type = MetadataType.Undefined;
