@@ -524,14 +524,9 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             if (ThemeList != null)
                 ThemeList.IsDirty = true;
-            try
-            {
-                SyncWithMetadata(false);
-            }
-            catch (Exception)
-            {
-                // Ignore, The metadata isn't valid
-            }
+            // Do not sync the theme properties with the changed metadata path
+            // User may have manually set those properties.
+            // After Node/metadata is created, a sync should only be done by user.
         }
 
         private void Data_PropertyChanged(object sender, PropertyChangedEventArgs e)
