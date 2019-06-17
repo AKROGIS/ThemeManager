@@ -123,33 +123,6 @@ namespace NPS.AKRO.ThemeManager.Model
         #region  Class Methods (Public)
 
         // Called by ThemeBuilder.cs line 83 (data added to theme list)
-        internal static Metadata Find(ThemeData data)
-        {
-            return FromDataSource(data);
-        }
-
-        //Called by TmNode.cs line 1133 (building object from theme list XML)
-        internal static Metadata FromXElement(XElement element)
-        {
-            if (element == null)
-                throw new ArgumentNullException(nameof(element));
-            if (element.Name != "metadata")
-                throw new ArgumentException("Invalid XElement");
-            var data = new Metadata(
-                element.Value,
-                (MetadataType)Enum.Parse(typeof(MetadataType), (string)element.Attribute("type")),
-                (MetadataFormat)Enum.Parse(typeof(MetadataFormat), (string)element.Attribute("format")),
-                (string)element.Attribute("version"),
-                (string)element.Attribute("schema")
-                );
-            return data;
-        }
-
-        #endregion
-
-
-        #region  Class Methods (Private)
-
         internal static Metadata FromDataSource(ThemeData data)
         {
             Metadata newMeta = new Metadata();
@@ -245,6 +218,28 @@ namespace NPS.AKRO.ThemeManager.Model
             newMeta.Format = MetadataFormat.Undefined;
             return newMeta;
         }
+
+        //Called by TmNode.cs line 1133 (building object from theme list XML)
+        internal static Metadata FromXElement(XElement element)
+        {
+            if (element == null)
+                throw new ArgumentNullException(nameof(element));
+            if (element.Name != "metadata")
+                throw new ArgumentException("Invalid XElement");
+            var data = new Metadata(
+                element.Value,
+                (MetadataType)Enum.Parse(typeof(MetadataType), (string)element.Attribute("type")),
+                (MetadataFormat)Enum.Parse(typeof(MetadataFormat), (string)element.Attribute("format")),
+                (string)element.Attribute("version"),
+                (string)element.Attribute("schema")
+                );
+            return data;
+        }
+
+        #endregion
+
+
+        #region  Class Methods (Private)
 
         private static bool Match(string haystack, IEnumerable<string> needles, bool findAll, StringComparison comparisonMethod)
         {
