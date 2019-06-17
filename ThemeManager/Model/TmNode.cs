@@ -990,7 +990,7 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             if (!HasMetadata)
                 return false;
-            return Metadata.Match(search);
+            return Metadata.SearchContent(search);
         }
 
         public void Launch()

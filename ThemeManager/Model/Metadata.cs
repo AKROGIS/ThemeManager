@@ -492,7 +492,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 throw new ArgumentNullException(nameof(webBrowser));
 
             // TODO: replace with LoadContentAndValidate() throw if ErrorMessage is non NULL
-            string xmlString = LoadAsText();
+            string xmlString = GetContentAsText();
 
             //FIXME - return more meaningful exception messages or create web pages on the fly
             // Exception message for Type == Undefined
@@ -656,7 +656,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// </remarks>
         /// <param name="search">the text and searching constraints to use.</param>
         /// <returns>true if the metadata satisfies the search options</returns>
-        internal bool Match(SearchOptions search)
+        internal bool SearchContent(SearchOptions search)
         {
             if (search == null)
                 return false;
@@ -667,7 +667,7 @@ namespace NPS.AKRO.ThemeManager.Model
             if (string.IsNullOrEmpty(search.XmlElement))
             {
                 //to search the whole document, we don't need to parse it as XML
-                string content = LoadAsText();
+                string content = GetContentAsText();
                 return content != null && Match(content, search.SearchWords, search.FindAll, search.ComparisonMethod);
             }
             XDocument xmlMetadata = ContentAsXDocument();
@@ -745,7 +745,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// It may change the Type and Format if they are wrong.
         /// </remarks>
         /// <returns>a text string of the metadata if available or null</returns>
-        private string LoadAsText()
+        private string GetContentAsText()
         {
             if (string.IsNullOrEmpty(Path))
                 //TODO: Set error message
@@ -803,7 +803,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// <returns>An XDocument or null</returns>
         private XDocument ContentAsXDocument()
         {
-            string xmlString = LoadAsText();
+            string xmlString = GetContentAsText();
             if (xmlString == null)
             {
                 return null;
