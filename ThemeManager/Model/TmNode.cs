@@ -545,8 +545,9 @@ namespace NPS.AKRO.ThemeManager.Model
                         SyncThemeDataToPath();
                         // Update the metadata object (can't replace because it breaks property binding in forms)
                         // FIXME: May need to repair metadata paths on sub themes as well.
-                        Metadata.Repair(Data);
-                        SyncWithMetadata(true);
+                        Metadata.UpdateWithDataSource(Data);
+                        // Don't automatically sync metadata attributes.  It may overwrite manually edited Theme data.
+                        // User can explicitly ask for a metadata sync if they want it.
                     }
                     catch (Exception)
                     {
@@ -1135,7 +1136,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
             data = xele.Element("metadata");
             if (data != null)
-                Metadata = Metadata.Load(data);
+                Metadata = Metadata.FromXElement(data);
 
             if (recurse)
             {
@@ -1240,8 +1241,9 @@ namespace NPS.AKRO.ThemeManager.Model
             if (IsTheme)
             {
                 SyncThemeDataToPath();
-                Metadata.Repair(Data);
-                //Don't bother syncing ;  User can ask for this later.
+                Metadata.UpdateWithDataSource(Data);
+                // Don't automatically sync metadata attributes.  It may overwrite manually edited Theme data.
+                // User can explicitly ask for a metadata sync if they want it.
             }
             if (recurse)
                 foreach (TmNode child in Children)

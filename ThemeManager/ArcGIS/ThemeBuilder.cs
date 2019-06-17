@@ -80,7 +80,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
                 BuildThemeDataForLayer(data, subLayer);
 
-                Metadata md = Metadata.Find(data);
+                Metadata md = Metadata.FromDataSource(data);
                 TmNode newNode = new TmNode(TmNodeType.Theme, subLayer.Name, node, data, md, null, null);
                 node.Add(newNode);
             }

@@ -95,7 +95,7 @@ namespace NPS.AKRO.ThemeManager.Model
     ///    the referenced resource.
     /// 2) Cloning by memberwise copy
     /// 3) INotifyPropertyChanged to support binding the Path property to a WinForm.
-    /// 4) Creating a new instance (with a new empty Theme, for a new theme with datasource, or
+    /// 4) Creating a new instance (for a new empty Theme, for a new theme with datasource, or
     ///    while loading an XML or MDB theme list), Updating the Path property either directly, or
     ///    as the result of a change to the node's datasource.  These operations may guess at the
     ///    Type and Format properties, but they do not load the resource or validate the properties.
@@ -129,7 +129,7 @@ namespace NPS.AKRO.ThemeManager.Model
         }
 
         //Called by TmNode.cs line 1133 (building object from theme list XML)
-        internal static Metadata Load(XElement element)
+        internal static Metadata FromXElement(XElement element)
         {
             if (element == null)
                 throw new ArgumentNullException(nameof(element));
@@ -150,7 +150,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Class Methods (Private)
 
-        private static Metadata FromDataSource(ThemeData data)
+        internal static Metadata FromDataSource(ThemeData data)
         {
             Metadata newMeta = new Metadata();
 
@@ -575,7 +575,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         // Called from TmNode.cs line 548 (data path changed) and line 1245 (reload theme)
         // Ensure this is a low cost synchronous method (the data path may or may not change); This is not a user request to Sync
-        internal void Repair(ThemeData data)
+        internal void UpdateWithDataSource(ThemeData data)
         {
             // I can't return a new metadata object because that may break Property binding with WinForms
             Metadata newMetadata = FromDataSource(data);
