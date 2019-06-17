@@ -25,7 +25,6 @@ namespace NPS.AKRO.ThemeManager.Model
 
     class MetadataDisplayException : Exception
     {
-        internal MetadataDisplayException(string message) : base(message) { }
         internal MetadataDisplayException(string message, Exception inner) : base(message, inner) { }
     }
 
@@ -424,15 +423,11 @@ namespace NPS.AKRO.ThemeManager.Model
 
             // TODO: replace with LoadContentAndValidate() throw if ErrorMessage is non NULL
             string xmlString = LoadAsText();
-            if (!IsValid)
-                throw new MetadataDisplayException("Metadata is not valid"); //FIXME: return ErrorMessage
 
             // Exception message for Type == Undefined
             //  Unable to obtain the metadata content because Theme Manager doesn't know the meaning of {Path}
             // Exception message for Format == Undefined
             //  Theme Manager is doesn't know the format of the metadata content, so it is presented as plain text below
-
-
 
             try
             {
@@ -634,7 +629,6 @@ namespace NPS.AKRO.ThemeManager.Model
         #region  Private Properties
 
         private MetadataFormat Format { get; set; }
-        private bool IsValid { get; set; }
         private string Schema { get; } // TODO - use or toss
         private MetadataType Type { get; set; }
         private string Version { get; } // TODO - use or toss
@@ -668,29 +662,23 @@ namespace NPS.AKRO.ThemeManager.Model
             // we lock the whole routine.
             lock (this)
             {
-                //Validate is now fast enough that we will always do it. Eliminates false positives
-                IsValid = Validate();
-                if (IsValid)
+                try
                 {
-                    try
-                    {
-                        if (Type == MetadataType.FilePath)
-                            contents = File.ReadAllText(Path);
-                        if (Type == MetadataType.EsriDataPath)
-                            contents = EsriMetadata.GetContentsAsXml(Path);
-                        if (Type == MetadataType.Url)
-                            contents = Path;
-                    }
-                    catch (Exception ex)
-                    {
-                        ErrorMessage = ex.Message;
-                        Debug.Print("Exception thrown trying to load Metadata.\n" + ex);
-                        contents = null;
-                    }
+                    if (Type == MetadataType.FilePath)
+                        contents = File.ReadAllText(Path);
+                    if (Type == MetadataType.EsriDataPath)
+                        contents = EsriMetadata.GetContentsAsXml(Path);
+                    if (Type == MetadataType.Url)
+                        contents = Path;
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessage = ex.Message;
+                    Debug.Print("Exception thrown trying to load Metadata.\n" + ex);
+                    contents = null;
                 }
                 if (string.IsNullOrEmpty(contents))
                 {
-                    IsValid = false;
                     contents = null;
                     Format = MetadataFormat.Undefined;
                 }
