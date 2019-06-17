@@ -15,6 +15,10 @@ using System.Xml.XPath;
 
 namespace NPS.AKRO.ThemeManager.Model
 {
+    /// <summary>
+    /// Selected key attributes of the metadata content.  These attributes are harvested
+    /// from the metadata content so they can be stored with the theme node to speed up searching.
+    /// </summary>
     struct GeneralInfo
     {
         internal string Description;
@@ -23,6 +27,9 @@ namespace NPS.AKRO.ThemeManager.Model
         internal string Tags;
     }
 
+    /// <summary>
+    /// The content at Path cannot be displayed
+    /// </summary>
     class MetadataDisplayException : Exception
     {
         internal MetadataDisplayException(string message, Exception inner) : base(message, inner) { }
@@ -252,9 +259,25 @@ namespace NPS.AKRO.ThemeManager.Model
                 throw new ArgumentNullException(nameof(element));
             if (element.Name != "metadata")
                 throw new ArgumentException("Invalid XElement");
+
+            // 'Inline' was formerly a valid value for the type.  Do not reject a formerly valid TML file,
+            // rather quietly convert the Inline value to Undefined.  Any other unexpected value is an exception.
+            var type = MetadataType.Undefined;
+            try
+            {
+                type = (MetadataType)Enum.Parse(typeof(MetadataType), (string)element.Attribute("type"));
+            }
+            catch (ArgumentException ex)
+            {
+                if (!ex.Message.Contains("'Inline'", StringComparison.Ordinal))
+                {
+                    throw;
+                }
+            }
+
             var data = new Metadata(
                 element.Value,
-                (MetadataType)Enum.Parse(typeof(MetadataType), (string)element.Attribute("type")),
+                type,
                 (MetadataFormat)Enum.Parse(typeof(MetadataFormat), (string)element.Attribute("format")),
                 (string)element.Attribute("version"),
                 (string)element.Attribute("schema")
