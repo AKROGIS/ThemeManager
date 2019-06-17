@@ -37,19 +37,21 @@ namespace NPS.AKRO.ThemeManager.Model
     enum MetadataType
     {
         /// <summary>
-        /// The meaning of the text in Path is unknown and undefined
+        /// The meaning of the text in Path is unknown and undefined.
         /// </summary>
         Undefined,
         /// <summary>
-        /// A file system path to a file containing metadata (usually in XML format)
+        /// A file system path to a file containing metadata (XML, HTML or plain text).
         /// </summary>
         FilePath,
         /// <summary>
-        /// A data source path (ArcGIS is used to get the metadata content from the data source)
+        /// A data source path (ArcGIS is used to get the metadata content from the data source).
+        /// Always in XML format.
         /// </summary>
         EsriDataPath,
         /// <summary>
-        /// Uniform Resource Locator to a metadata resource (assumed to return Html)
+        /// Uniform Resource Locator to an online metadata resource.
+        /// While the file:// schema is a valid URL, those will be treated as a FilePath.  
         /// </summary>
         Url
     }
@@ -72,15 +74,50 @@ namespace NPS.AKRO.ThemeManager.Model
         /// </summary>
         Xml,
         /// <summary>
-        /// The metadata content is HTML that is already formatted for display
+        /// The metadata content is HTML that is already formatted for display.
+        /// Attribute info (GetInfo()), and attribute search is not supported.
         /// </summary>
         Html,
         /// <summary>
-        /// The metadata content is plain text and will be displayed as is
+        /// The metadata content is not XML or HTML, so it is assumed to be plain text and will be displayed as is.
+        /// Attribute info (GetInfo()), and attribute search is not supported.
         /// </summary>
         Text
     }
 
+    /// <summary>
+    /// Provides a path to a metadata resource and methods to display, search and get attributes
+    /// from that resource.
+    /// </summary>
+    /// <remarks>
+    /// This class supports
+    /// 1) Serializing (loading from and saving to) to an XML representation.  This only converts
+    ///    a few instance properties to/from an XML representation and does not load or validate
+    ///    the referenced resource.
+    /// 2) Cloning by memberwise copy
+    /// 3) INotifyPropertyChanged to support binding the Path property to a WinForm.
+    /// 4) Creating a new instance (with a new empty Theme, for a new theme with datasource, or
+    ///    while loading an XML or MDB theme list), Updating the Path property either directly, or
+    ///    as the result of a change to the node's datasource.  These operations may guess at the
+    ///    Type and Format properties, but they do not load the resource or validate the properties.
+    ///    These operation should be fast and non-blocking.  They should not throw exceptions.
+    /// 5) Displaying, searching or getting attributes from the metadata resource.  These
+    ///    operation will block waiting for I/O and may fail.  They will verify/adjust the
+    ///    Type and Format properties to match the state of the resource when it is used.
+    ///    They may throw an exception or return null and set the ErrorMessage property.
+    ///    They may need to load the Esri License Manager to read metadata in a geo-database
+    ///
+    /// The contents of the metadata resource are not cached since 1) it may change between operations,
+    /// 2) these operations are generally pretty fast, and 3) they are only done at the user's request.
+    ///
+    /// The metadata object is never validated.  If it cannot be used as requested, an exception
+    /// will be thrown, or null will be returned and the ErrorMessage property set.
+    /// 
+    /// The Type and Format Properties are informational and may be wrong. They will be assumed at
+    /// object creation and path/datasource changes.  They will be verified when the resource is
+    /// used (display, search, get attributes).  Even then the contents of an external file or
+    /// online resource may change before the resource is used again.
+    /// </remarks>
     [Serializable]
     class Metadata : ICloneable, INotifyPropertyChanged
     {
