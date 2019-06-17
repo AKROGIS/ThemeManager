@@ -126,7 +126,6 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.searchToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.backgroundMetadataLoader = new System.ComponentModel.BackgroundWorker();
             this.listsTabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -138,6 +137,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
             this.statusStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
@@ -159,17 +159,17 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.listsTabControl.Location = new System.Drawing.Point(0, 0);
             this.listsTabControl.Name = "listsTabControl";
             this.listsTabControl.SelectedIndex = global::NPS.AKRO.ThemeManager.Properties.Settings.Default.mainFormTabpage1;
-            this.listsTabControl.Size = new System.Drawing.Size(232, 517);
+            this.listsTabControl.Size = new System.Drawing.Size(232, 486);
             this.listsTabControl.TabIndex = 11;
             this.toolTip1.SetToolTip(this.listsTabControl, "A list of all themes in your databases");
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.themesTreeView);
-            this.tabPage1.Location = new System.Drawing.Point(4, 24);
+            this.tabPage1.Location = new System.Drawing.Point(4, 34);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(224, 489);
+            this.tabPage1.Size = new System.Drawing.Size(224, 448);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Themes";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -186,7 +186,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.themesTreeView.Location = new System.Drawing.Point(3, 3);
             this.themesTreeView.Name = "themesTreeView";
             this.themesTreeView.SelectedImageIndex = 0;
-            this.themesTreeView.Size = new System.Drawing.Size(218, 483);
+            this.themesTreeView.Size = new System.Drawing.Size(218, 442);
             this.themesTreeView.Sorted = true;
             this.themesTreeView.TabIndex = 8;
             this.themesTreeView.Tag = "Themes";
@@ -194,6 +194,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             // contextMenuStrip1
             // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newCategoryToolStripMenuItem,
             this.newThemeToolStripMenuItem,
@@ -209,14 +210,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.addToFavoritesToolStripMenuItem,
             this.preferencesToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(161, 258);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(224, 346);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // newCategoryToolStripMenuItem
             // 
             this.newCategoryToolStripMenuItem.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.newCategory;
             this.newCategoryToolStripMenuItem.Name = "newCategoryToolStripMenuItem";
-            this.newCategoryToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.newCategoryToolStripMenuItem.Size = new System.Drawing.Size(223, 30);
             this.newCategoryToolStripMenuItem.Text = "New Category";
             this.newCategoryToolStripMenuItem.Click += new System.EventHandler(this.newCategoryToolStripMenuItem_Click);
             // 
@@ -224,7 +225,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.newThemeToolStripMenuItem.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.newTheme;
             this.newThemeToolStripMenuItem.Name = "newThemeToolStripMenuItem";
-            this.newThemeToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.newThemeToolStripMenuItem.Size = new System.Drawing.Size(223, 30);
             this.newThemeToolStripMenuItem.Text = "New Theme";
             this.newThemeToolStripMenuItem.Click += new System.EventHandler(this.newThemeToolStripMenuItem_Click);
             // 
@@ -232,7 +233,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.saveAsToolStripMenuItem.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.save;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(223, 30);
             this.saveAsToolStripMenuItem.Text = "Save As...";
             this.saveAsToolStripMenuItem.ToolTipText = "Saves selected item as a new theme list";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
@@ -240,14 +241,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(157, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(220, 6);
             // 
             // cutToolStripMenuItem
             // 
             this.cutToolStripMenuItem.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.cut;
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(223, 30);
             this.cutToolStripMenuItem.Text = "Cut";
             this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
             // 
@@ -256,7 +257,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.copyToolStripMenuItem.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.copy;
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(223, 30);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
@@ -265,7 +266,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.pasteToolStripMenuItem.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.paste;
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(223, 30);
             this.pasteToolStripMenuItem.Text = "Paste";
             this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
             // 
@@ -274,28 +275,28 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.deleteToolStripMenuItem.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.delete;
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(223, 30);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(157, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(220, 6);
             // 
             // searchToolStripMenuItem
             // 
             this.searchToolStripMenuItem.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.search;
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
             this.searchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.searchToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.searchToolStripMenuItem.Size = new System.Drawing.Size(223, 30);
             this.searchToolStripMenuItem.Text = "Search";
             this.searchToolStripMenuItem.Click += new System.EventHandler(this.advancedSearchToolStripMenuItem_Click);
             // 
             // launchToolStripMenuItem
             // 
             this.launchToolStripMenuItem.Name = "launchToolStripMenuItem";
-            this.launchToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.launchToolStripMenuItem.Size = new System.Drawing.Size(223, 30);
             this.launchToolStripMenuItem.Text = "Open Theme(s)";
             this.launchToolStripMenuItem.Click += new System.EventHandler(this.launchToolStripMenuItem_Click);
             // 
@@ -303,7 +304,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.addToFavoritesToolStripMenuItem.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.Favorites;
             this.addToFavoritesToolStripMenuItem.Name = "addToFavoritesToolStripMenuItem";
-            this.addToFavoritesToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.addToFavoritesToolStripMenuItem.Size = new System.Drawing.Size(223, 30);
             this.addToFavoritesToolStripMenuItem.Text = "Add to Favorites";
             this.addToFavoritesToolStripMenuItem.Click += new System.EventHandler(this.add2FavToolStripMenuItem_Click);
             // 
@@ -311,7 +312,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.preferencesToolStripMenuItem.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.tools;
             this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(223, 30);
             this.preferencesToolStripMenuItem.Text = "Options...";
             this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripButton_Click);
             // 
@@ -349,10 +350,10 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.favoritesTreeView);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 29);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(224, 489);
+            this.tabPage2.Size = new System.Drawing.Size(224, 453);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Favorites";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -369,7 +370,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.favoritesTreeView.Location = new System.Drawing.Point(3, 3);
             this.favoritesTreeView.Name = "favoritesTreeView";
             this.favoritesTreeView.SelectedImageIndex = 0;
-            this.favoritesTreeView.Size = new System.Drawing.Size(218, 483);
+            this.favoritesTreeView.Size = new System.Drawing.Size(218, 447);
             this.favoritesTreeView.Sorted = true;
             this.favoritesTreeView.TabIndex = 0;
             this.favoritesTreeView.Tag = "Favorites";
@@ -378,10 +379,10 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.searchTreeView);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Location = new System.Drawing.Point(4, 29);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(224, 489);
+            this.tabPage3.Size = new System.Drawing.Size(224, 453);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Search Results";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -398,7 +399,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.searchTreeView.Location = new System.Drawing.Point(3, 3);
             this.searchTreeView.Name = "searchTreeView";
             this.searchTreeView.SelectedImageIndex = 0;
-            this.searchTreeView.Size = new System.Drawing.Size(218, 483);
+            this.searchTreeView.Size = new System.Drawing.Size(218, 447);
             this.searchTreeView.Sorted = true;
             this.searchTreeView.TabIndex = 10;
             this.searchTreeView.Tag = "Search Results";
@@ -408,6 +409,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.toolStrip1.BackColor = System.Drawing.SystemColors.Control;
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripButton,
             this.openToolStripButton,
@@ -424,10 +426,10 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.preferencesToolStripButton,
             this.toolStripSeparator3,
             this.viewHelpToolStripButton});
-            this.toolStrip1.Location = new System.Drawing.Point(3, 24);
+            this.toolStrip1.Location = new System.Drawing.Point(3, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip1.Size = new System.Drawing.Size(312, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(380, 31);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -440,14 +442,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.newThemeToolStripButton});
             this.newToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.newDocument;
             this.newToolStripButton.Name = "newToolStripButton";
-            this.newToolStripButton.Size = new System.Drawing.Size(29, 22);
+            this.newToolStripButton.Size = new System.Drawing.Size(42, 28);
             this.newToolStripButton.Text = "&New";
             // 
             // newThemeListToolStripButton
             // 
             this.newThemeListToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.newDB;
             this.newThemeListToolStripButton.Name = "newThemeListToolStripButton";
-            this.newThemeListToolStripButton.Size = new System.Drawing.Size(159, 22);
+            this.newThemeListToolStripButton.Size = new System.Drawing.Size(220, 30);
             this.newThemeListToolStripButton.Text = "New Theme List";
             this.newThemeListToolStripButton.Click += new System.EventHandler(this.newThemeListToolStripMenuItem_Click);
             // 
@@ -455,7 +457,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.newCategoryToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.newCategory;
             this.newCategoryToolStripButton.Name = "newCategoryToolStripButton";
-            this.newCategoryToolStripButton.Size = new System.Drawing.Size(159, 22);
+            this.newCategoryToolStripButton.Size = new System.Drawing.Size(220, 30);
             this.newCategoryToolStripButton.Text = "New Category";
             this.newCategoryToolStripButton.Click += new System.EventHandler(this.newCategoryToolStripMenuItem_Click);
             // 
@@ -463,7 +465,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.newThemeToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.newTheme;
             this.newThemeToolStripButton.Name = "newThemeToolStripButton";
-            this.newThemeToolStripButton.Size = new System.Drawing.Size(159, 22);
+            this.newThemeToolStripButton.Size = new System.Drawing.Size(220, 30);
             this.newThemeToolStripButton.Text = "New Theme";
             this.newThemeToolStripButton.Click += new System.EventHandler(this.newThemeToolStripMenuItem_Click);
             // 
@@ -472,7 +474,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.openToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.openToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.open;
             this.openToolStripButton.Name = "openToolStripButton";
-            this.openToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.openToolStripButton.Size = new System.Drawing.Size(28, 28);
             this.openToolStripButton.Text = "&Open";
             this.openToolStripButton.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -481,7 +483,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.saveToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.saveToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.save;
             this.saveToolStripButton.Name = "saveToolStripButton";
-            this.saveToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.saveToolStripButton.Size = new System.Drawing.Size(28, 28);
             this.saveToolStripButton.Text = "&Save";
             this.saveToolStripButton.ToolTipText = "Saves all modified theme lists";
             this.saveToolStripButton.Click += new System.EventHandler(this.saveToolStripButton_Click);
@@ -491,21 +493,21 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.printToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.printToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.print;
             this.printToolStripButton.Name = "printToolStripButton";
-            this.printToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.printToolStripButton.Size = new System.Drawing.Size(28, 28);
             this.printToolStripButton.Text = "&Print";
             this.printToolStripButton.Click += new System.EventHandler(this.printToolStripButton_Click);
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator.Size = new System.Drawing.Size(6, 31);
             // 
             // cutToolStripButton
             // 
             this.cutToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.cutToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.cut;
             this.cutToolStripButton.Name = "cutToolStripButton";
-            this.cutToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.cutToolStripButton.Size = new System.Drawing.Size(28, 28);
             this.cutToolStripButton.Text = "C&ut";
             this.cutToolStripButton.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
             // 
@@ -514,7 +516,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.copyToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.copyToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.copy;
             this.copyToolStripButton.Name = "copyToolStripButton";
-            this.copyToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.copyToolStripButton.Size = new System.Drawing.Size(28, 28);
             this.copyToolStripButton.Text = "&Copy";
             this.copyToolStripButton.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
@@ -523,7 +525,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.pasteToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.pasteToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.paste;
             this.pasteToolStripButton.Name = "pasteToolStripButton";
-            this.pasteToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.pasteToolStripButton.Size = new System.Drawing.Size(28, 28);
             this.pasteToolStripButton.Text = "&Paste";
             this.pasteToolStripButton.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
             // 
@@ -533,14 +535,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.deleteToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.delete;
             this.deleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.deleteToolStripButton.Name = "deleteToolStripButton";
-            this.deleteToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.deleteToolStripButton.Size = new System.Drawing.Size(28, 28);
             this.deleteToolStripButton.Text = "Delete";
             this.deleteToolStripButton.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 31);
             // 
             // addToFavoritesToolStripButton
             // 
@@ -548,7 +550,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.addToFavoritesToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.Favorites;
             this.addToFavoritesToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.addToFavoritesToolStripButton.Name = "addToFavoritesToolStripButton";
-            this.addToFavoritesToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.addToFavoritesToolStripButton.Size = new System.Drawing.Size(28, 28);
             this.addToFavoritesToolStripButton.Text = "Add to Favorites";
             this.addToFavoritesToolStripButton.Click += new System.EventHandler(this.add2FavToolStripMenuItem_Click);
             // 
@@ -557,7 +559,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.sortToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.sortToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.SortAZ;
             this.sortToolStripButton.Name = "sortToolStripButton";
-            this.sortToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.sortToolStripButton.Size = new System.Drawing.Size(28, 28);
             this.sortToolStripButton.Text = "toolStripButton1";
             this.sortToolStripButton.ToolTipText = "Sort";
             this.sortToolStripButton.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
@@ -567,7 +569,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.preferencesToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.preferencesToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.tools;
             this.preferencesToolStripButton.Name = "preferencesToolStripButton";
-            this.preferencesToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.preferencesToolStripButton.Size = new System.Drawing.Size(28, 28);
             this.preferencesToolStripButton.Text = "toolStripButton1";
             this.preferencesToolStripButton.ToolTipText = "Options";
             this.preferencesToolStripButton.Click += new System.EventHandler(this.preferencesToolStripButton_Click);
@@ -575,7 +577,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 31);
             // 
             // viewHelpToolStripButton
             // 
@@ -583,7 +585,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.viewHelpToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.viewHelpToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.help;
             this.viewHelpToolStripButton.Name = "viewHelpToolStripButton";
-            this.viewHelpToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.viewHelpToolStripButton.Size = new System.Drawing.Size(28, 28);
             this.viewHelpToolStripButton.Text = "&Help";
             this.viewHelpToolStripButton.Click += new System.EventHandler(this.helpToolStripButton_Click);
             // 
@@ -597,7 +599,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(807, 521);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(807, 490);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
@@ -614,24 +616,25 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // statusStrip
             // 
             this.statusStrip.Dock = System.Windows.Forms.DockStyle.None;
+            this.statusStrip.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.progressBar,
             this.statusBar});
             this.statusStrip.Location = new System.Drawing.Point(0, 0);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(807, 22);
+            this.statusStrip.Size = new System.Drawing.Size(807, 30);
             this.statusStrip.TabIndex = 0;
             // 
             // progressBar
             // 
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(100, 16);
+            this.progressBar.Size = new System.Drawing.Size(100, 24);
             this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             // 
             // statusBar
             // 
             this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(94, 17);
+            this.statusBar.Size = new System.Drawing.Size(140, 25);
             this.statusBar.Text = "Theme Manager";
             // 
             // splitContainer
@@ -650,16 +653,16 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.splitContainer.Panel2.Controls.Add(this.infoTabControl);
             this.splitContainer.Panel2MinSize = 0;
-            this.splitContainer.Size = new System.Drawing.Size(807, 521);
+            this.splitContainer.Size = new System.Drawing.Size(807, 490);
             this.splitContainer.SplitterDistance = 236;
             this.splitContainer.SplitterWidth = 5;
             this.splitContainer.TabIndex = 12;
             // 
             // infoTabControl
             // 
-            this.infoTabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.infoTabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.infoTabControl.Controls.Add(this.tabPage4);
             this.infoTabControl.Controls.Add(this.tabPage5);
             this.infoTabControl.Controls.Add(this.tabPage6);
@@ -667,16 +670,16 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.infoTabControl.Location = new System.Drawing.Point(0, 0);
             this.infoTabControl.Name = "infoTabControl";
             this.infoTabControl.SelectedIndex = global::NPS.AKRO.ThemeManager.Properties.Settings.Default.mainFormTabpage2;
-            this.infoTabControl.Size = new System.Drawing.Size(562, 517);
+            this.infoTabControl.Size = new System.Drawing.Size(562, 486);
             this.infoTabControl.TabIndex = 0;
             // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.webBrowser);
-            this.tabPage4.Location = new System.Drawing.Point(4, 24);
+            this.tabPage4.Location = new System.Drawing.Point(4, 34);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(554, 489);
+            this.tabPage4.Size = new System.Drawing.Size(554, 448);
             this.tabPage4.TabIndex = 0;
             this.tabPage4.Text = "Metadata";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -687,17 +690,17 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.webBrowser.Location = new System.Drawing.Point(3, 3);
             this.webBrowser.MinimumSize = new System.Drawing.Size(23, 23);
             this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(548, 483);
+            this.webBrowser.Size = new System.Drawing.Size(548, 442);
             this.webBrowser.TabIndex = 0;
             // 
             // tabPage5
             // 
             this.tabPage5.BackColor = System.Drawing.SystemColors.Control;
             this.tabPage5.Controls.Add(this.previewLabel);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Location = new System.Drawing.Point(4, 29);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(554, 489);
+            this.tabPage5.Size = new System.Drawing.Size(554, 453);
             this.tabPage5.TabIndex = 1;
             this.tabPage5.Text = "Preview";
             // 
@@ -709,7 +712,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.previewLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.previewLabel.Location = new System.Drawing.Point(3, 3);
             this.previewLabel.Name = "previewLabel";
-            this.previewLabel.Size = new System.Drawing.Size(548, 485);
+            this.previewLabel.Size = new System.Drawing.Size(548, 447);
             this.previewLabel.TabIndex = 0;
             this.previewLabel.Text = "Select a theme";
             this.previewLabel.UseVisualStyleBackColor = false;
@@ -717,10 +720,10 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // tabPage6
             // 
             this.tabPage6.Controls.Add(this.propertiesLabel);
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Location = new System.Drawing.Point(4, 29);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(554, 489);
+            this.tabPage6.Size = new System.Drawing.Size(554, 453);
             this.tabPage6.TabIndex = 2;
             this.tabPage6.Text = "Properties";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -733,7 +736,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.propertiesLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.propertiesLabel.Location = new System.Drawing.Point(3, 3);
             this.propertiesLabel.Name = "propertiesLabel";
-            this.propertiesLabel.Size = new System.Drawing.Size(548, 485);
+            this.propertiesLabel.Size = new System.Drawing.Size(548, 447);
             this.propertiesLabel.TabIndex = 1;
             this.propertiesLabel.Text = "Select a theme";
             this.propertiesLabel.UseVisualStyleBackColor = false;
@@ -741,14 +744,15 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // menuStrip1
             // 
             this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Location = new System.Drawing.Point(0, 64);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(807, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(807, 33);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -765,14 +769,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.saveAsToolStripMenuItem1,
             this.printToolStripMenuItem1});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(50, 29);
             this.fileToolStripMenuItem.Text = "&File";
             // 
             // newThemeListToolStripMenuItem1
             // 
             this.newThemeListToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.newDB;
             this.newThemeListToolStripMenuItem1.Name = "newThemeListToolStripMenuItem1";
-            this.newThemeListToolStripMenuItem1.Size = new System.Drawing.Size(207, 22);
+            this.newThemeListToolStripMenuItem1.Size = new System.Drawing.Size(294, 30);
             this.newThemeListToolStripMenuItem1.Text = "New Theme &List";
             this.newThemeListToolStripMenuItem1.Click += new System.EventHandler(this.newThemeListToolStripMenuItem_Click);
             // 
@@ -780,7 +784,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.newCategoryToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.newCategory;
             this.newCategoryToolStripMenuItem1.Name = "newCategoryToolStripMenuItem1";
-            this.newCategoryToolStripMenuItem1.Size = new System.Drawing.Size(207, 22);
+            this.newCategoryToolStripMenuItem1.Size = new System.Drawing.Size(294, 30);
             this.newCategoryToolStripMenuItem1.Text = "New &Category";
             this.newCategoryToolStripMenuItem1.Click += new System.EventHandler(this.newCategoryToolStripMenuItem_Click);
             // 
@@ -788,42 +792,42 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.newThemeToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.newTheme;
             this.newThemeToolStripMenuItem1.Name = "newThemeToolStripMenuItem1";
-            this.newThemeToolStripMenuItem1.Size = new System.Drawing.Size(207, 22);
+            this.newThemeToolStripMenuItem1.Size = new System.Drawing.Size(294, 30);
             this.newThemeToolStripMenuItem1.Text = "New &Theme";
             this.newThemeToolStripMenuItem1.Click += new System.EventHandler(this.newThemeToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(204, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(291, 6);
             // 
             // openToolStripMenuItem1
             // 
             this.openToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.open;
             this.openToolStripMenuItem1.Name = "openToolStripMenuItem1";
             this.openToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem1.Size = new System.Drawing.Size(207, 22);
+            this.openToolStripMenuItem1.Size = new System.Drawing.Size(294, 30);
             this.openToolStripMenuItem1.Text = "&Open Theme List";
             this.openToolStripMenuItem1.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(204, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(291, 6);
             // 
             // saveToolStripMenuItem1
             // 
             this.saveToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.save;
             this.saveToolStripMenuItem1.Name = "saveToolStripMenuItem1";
             this.saveToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(207, 22);
+            this.saveToolStripMenuItem1.Size = new System.Drawing.Size(294, 30);
             this.saveToolStripMenuItem1.Text = "&Save";
             this.saveToolStripMenuItem1.Click += new System.EventHandler(this.saveToolStripButton_Click);
             // 
             // saveAsToolStripMenuItem1
             // 
             this.saveAsToolStripMenuItem1.Name = "saveAsToolStripMenuItem1";
-            this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(207, 22);
+            this.saveAsToolStripMenuItem1.Size = new System.Drawing.Size(294, 30);
             this.saveAsToolStripMenuItem1.Text = "Save &As...";
             this.saveAsToolStripMenuItem1.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -832,7 +836,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.printToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.print;
             this.printToolStripMenuItem1.Name = "printToolStripMenuItem1";
             this.printToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
-            this.printToolStripMenuItem1.Size = new System.Drawing.Size(207, 22);
+            this.printToolStripMenuItem1.Size = new System.Drawing.Size(294, 30);
             this.printToolStripMenuItem1.Text = "&Print";
             this.printToolStripMenuItem1.Click += new System.EventHandler(this.printToolStripButton_Click);
             // 
@@ -846,7 +850,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.toolStripMenuItem3,
             this.searchToolStripMenuItem1});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(54, 29);
             this.editToolStripMenuItem.Text = "&Edit";
             // 
             // cutToolStripMenuItem1
@@ -854,7 +858,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.cutToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.cut;
             this.cutToolStripMenuItem1.Name = "cutToolStripMenuItem1";
             this.cutToolStripMenuItem1.ShortcutKeyDisplayString = "Ctrl+X";
-            this.cutToolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
+            this.cutToolStripMenuItem1.Size = new System.Drawing.Size(200, 30);
             this.cutToolStripMenuItem1.Text = "Cu&t";
             this.cutToolStripMenuItem1.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
             // 
@@ -863,7 +867,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.copyToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.copy;
             this.copyToolStripMenuItem1.Name = "copyToolStripMenuItem1";
             this.copyToolStripMenuItem1.ShortcutKeyDisplayString = "Ctrl+C";
-            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
+            this.copyToolStripMenuItem1.Size = new System.Drawing.Size(200, 30);
             this.copyToolStripMenuItem1.Text = "&Copy";
             this.copyToolStripMenuItem1.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
@@ -872,7 +876,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.pasteToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.paste;
             this.pasteToolStripMenuItem1.Name = "pasteToolStripMenuItem1";
             this.pasteToolStripMenuItem1.ShortcutKeyDisplayString = "Ctrl+V";
-            this.pasteToolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
+            this.pasteToolStripMenuItem1.Size = new System.Drawing.Size(200, 30);
             this.pasteToolStripMenuItem1.Text = "&Paste";
             this.pasteToolStripMenuItem1.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
             // 
@@ -881,21 +885,21 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.deleteToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.delete;
             this.deleteToolStripMenuItem1.Name = "deleteToolStripMenuItem1";
             this.deleteToolStripMenuItem1.ShortcutKeyDisplayString = "Del";
-            this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
+            this.deleteToolStripMenuItem1.Size = new System.Drawing.Size(200, 30);
             this.deleteToolStripMenuItem1.Text = "&Delete";
             this.deleteToolStripMenuItem1.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(141, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(197, 6);
             // 
             // searchToolStripMenuItem1
             // 
             this.searchToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.search;
             this.searchToolStripMenuItem1.Name = "searchToolStripMenuItem1";
             this.searchToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.searchToolStripMenuItem1.Size = new System.Drawing.Size(144, 22);
+            this.searchToolStripMenuItem1.Size = new System.Drawing.Size(200, 30);
             this.searchToolStripMenuItem1.Text = "&Find";
             this.searchToolStripMenuItem1.Click += new System.EventHandler(this.fastSearchToolStripMenuItem_Click);
             // 
@@ -908,14 +912,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.preferencesToolStripMenuItem1,
             this.administrativeToolsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(65, 29);
             this.toolsToolStripMenuItem.Text = "&Tools";
             // 
             // addToFavoritesToolStripMenuItem1
             // 
             this.addToFavoritesToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.Favorites;
             this.addToFavoritesToolStripMenuItem1.Name = "addToFavoritesToolStripMenuItem1";
-            this.addToFavoritesToolStripMenuItem1.Size = new System.Drawing.Size(203, 22);
+            this.addToFavoritesToolStripMenuItem1.Size = new System.Drawing.Size(288, 30);
             this.addToFavoritesToolStripMenuItem1.Text = "&Add to Favorites";
             this.addToFavoritesToolStripMenuItem1.Click += new System.EventHandler(this.add2FavToolStripMenuItem_Click);
             // 
@@ -923,14 +927,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.sortToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.SortAZ;
             this.sortToolStripMenuItem1.Name = "sortToolStripMenuItem1";
-            this.sortToolStripMenuItem1.Size = new System.Drawing.Size(203, 22);
+            this.sortToolStripMenuItem1.Size = new System.Drawing.Size(288, 30);
             this.sortToolStripMenuItem1.Text = "&Sort";
             this.sortToolStripMenuItem1.Click += new System.EventHandler(this.sortToolStripMenuItem_Click);
             // 
             // launchToolStripMenuItem1
             // 
             this.launchToolStripMenuItem1.Name = "launchToolStripMenuItem1";
-            this.launchToolStripMenuItem1.Size = new System.Drawing.Size(203, 22);
+            this.launchToolStripMenuItem1.Size = new System.Drawing.Size(288, 30);
             this.launchToolStripMenuItem1.Text = "Open &Theme(s)";
             this.launchToolStripMenuItem1.Click += new System.EventHandler(this.launchToolStripMenuItem_Click);
             // 
@@ -938,14 +942,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.preferencesToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.tools;
             this.preferencesToolStripMenuItem1.Name = "preferencesToolStripMenuItem1";
-            this.preferencesToolStripMenuItem1.Size = new System.Drawing.Size(203, 22);
+            this.preferencesToolStripMenuItem1.Size = new System.Drawing.Size(288, 30);
             this.preferencesToolStripMenuItem1.Text = "&Options...";
             this.preferencesToolStripMenuItem1.Click += new System.EventHandler(this.preferencesToolStripButton_Click);
             // 
             // administrativeToolsToolStripMenuItem
             // 
             this.administrativeToolsToolStripMenuItem.Name = "administrativeToolsToolStripMenuItem";
-            this.administrativeToolsToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.administrativeToolsToolStripMenuItem.Size = new System.Drawing.Size(288, 30);
             this.administrativeToolsToolStripMenuItem.Text = "Administrative &Reports...";
             this.administrativeToolsToolStripMenuItem.Click += new System.EventHandler(this.administrativeToolsToolStripMenuItem_Click);
             // 
@@ -957,13 +961,13 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.aboutToolStripMenuItem1});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(61, 29);
             this.helpToolStripMenuItem.Text = "&Help";
             // 
             // quickStartTutorialToolStripMenuItem
             // 
             this.quickStartTutorialToolStripMenuItem.Name = "quickStartTutorialToolStripMenuItem";
-            this.quickStartTutorialToolStripMenuItem.Size = new System.Drawing.Size(197, 22);
+            this.quickStartTutorialToolStripMenuItem.Size = new System.Drawing.Size(279, 30);
             this.quickStartTutorialToolStripMenuItem.Text = "&Quick Start Tutorial";
             this.quickStartTutorialToolStripMenuItem.Click += new System.EventHandler(this.quickStartTutorialToolStripMenuItem_Click);
             // 
@@ -971,14 +975,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.viewHelpToolStripMenuItem1.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.help;
             this.viewHelpToolStripMenuItem1.Name = "viewHelpToolStripMenuItem1";
-            this.viewHelpToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
+            this.viewHelpToolStripMenuItem1.Size = new System.Drawing.Size(279, 30);
             this.viewHelpToolStripMenuItem1.Text = "View &Help";
             this.viewHelpToolStripMenuItem1.Click += new System.EventHandler(this.helpToolStripButton_Click);
             // 
             // aboutToolStripMenuItem1
             // 
             this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(197, 22);
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(279, 30);
             this.aboutToolStripMenuItem1.Text = "&About Theme Manager";
             this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -986,15 +990,16 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.toolStrip2.BackColor = System.Drawing.SystemColors.Control;
             this.toolStrip2.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip2.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.styleSheetComboBox,
             this.ageComboBox,
             this.toolStripSeparator4,
             this.searchTextBox,
             this.searchToolStripButton});
-            this.toolStrip2.Location = new System.Drawing.Point(3, 49);
+            this.toolStrip2.Location = new System.Drawing.Point(3, 31);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(435, 25);
+            this.toolStrip2.Size = new System.Drawing.Size(440, 33);
             this.toolStrip2.TabIndex = 2;
             // 
             // styleSheetComboBox
@@ -1003,7 +1008,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.styleSheetComboBox.DropDownWidth = 180;
             this.styleSheetComboBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.styleSheetComboBox.Name = "styleSheetComboBox";
-            this.styleSheetComboBox.Size = new System.Drawing.Size(163, 25);
+            this.styleSheetComboBox.Size = new System.Drawing.Size(163, 33);
             this.styleSheetComboBox.ToolTipText = "Metadata Format";
             // 
             // ageComboBox
@@ -1011,21 +1016,21 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.ageComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ageComboBox.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.ageComboBox.Name = "ageComboBox";
-            this.ageComboBox.Size = new System.Drawing.Size(75, 25);
+            this.ageComboBox.Size = new System.Drawing.Size(75, 33);
             this.ageComboBox.ToolTipText = "Highlight themes newer than this";
             this.ageComboBox.SelectedIndexChanged += new System.EventHandler(this.ageComboBox_SelectedIndexChanged);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 33);
             // 
             // searchTextBox
             // 
             this.searchTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.searchTextBox.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Size = new System.Drawing.Size(150, 25);
+            this.searchTextBox.Size = new System.Drawing.Size(150, 33);
             this.searchTextBox.Text = "Search";
             this.searchTextBox.ToolTipText = "Search Text";
             this.searchTextBox.Enter += new System.EventHandler(this.searchToolStripTextBox_Enter);
@@ -1037,7 +1042,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.searchToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.searchToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.search;
             this.searchToolStripButton.Name = "searchToolStripButton";
-            this.searchToolStripButton.Size = new System.Drawing.Size(23, 22);
+            this.searchToolStripButton.Size = new System.Drawing.Size(28, 30);
             this.searchToolStripButton.Text = "Search";
             this.searchToolStripButton.ToolTipText = "Search";
             this.searchToolStripButton.Click += new System.EventHandler(this.fastSearchToolStripMenuItem_Click);
@@ -1052,15 +1057,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.openFileDialog1.DefaultExt = "tml";
             this.openFileDialog1.Filter = "ThemeLists (*.tml, *.xml, *.mdb)|*.tml;*.xml;*.mdb";
             // 
-            // backgroundMetadataLoader
-            // 
-            this.backgroundMetadataLoader.WorkerSupportsCancellation = true;
-            this.backgroundMetadataLoader.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundMetadataLoader_DoWork);
-            this.backgroundMetadataLoader.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundMetadataLoader_RunWorkerCompleted);
-            // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(807, 617);
             this.Controls.Add(this.toolStripContainer1);
@@ -1091,6 +1090,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.statusStrip.PerformLayout();
             this.splitContainer.Panel1.ResumeLayout(false);
             this.splitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
             this.splitContainer.ResumeLayout(false);
             this.infoTabControl.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
@@ -1160,7 +1160,6 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         private System.Windows.Forms.ToolStripComboBox ageComboBox;
         private System.Windows.Forms.ToolStripStatusLabel statusBar;
         private System.Windows.Forms.ToolStripProgressBar progressBar;
-        private System.ComponentModel.BackgroundWorker backgroundMetadataLoader;
         private System.Windows.Forms.Button previewLabel;
         private System.Windows.Forms.Button propertiesLabel;
         private System.Windows.Forms.ToolStripButton addToFavoritesToolStripButton;

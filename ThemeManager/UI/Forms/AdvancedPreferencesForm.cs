@@ -34,14 +34,6 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             (Owner).TopMost = onTopCheckBox.Checked;
         }
 
-        private void MemoryCheckBox_CheckedChanged(object sender, EventArgs e)
-        {
-            if (memoryCheckBox.Checked)
-                ((MainForm)Owner).StartMetadataLoad();
-            else
-                ((MainForm)Owner).StopMetadataLoad();
-        }
-
         private void restoreButton_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.Reset();

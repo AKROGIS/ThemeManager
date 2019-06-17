@@ -1164,13 +1164,6 @@ namespace NPS.AKRO.ThemeManager.Model
             }
         }
 
-        public void PreloadMetadata()
-        {
-            Metadata.PreLoadAsText();
-            foreach (TmNode child in Children)
-                child.PreloadMetadata();
-        }
-
         private Store TryToGetDataStore()
         {
             if (_type != TmNodeType.ThemeList)

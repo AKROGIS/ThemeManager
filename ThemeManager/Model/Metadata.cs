@@ -574,15 +574,6 @@ namespace NPS.AKRO.ThemeManager.Model
                 .Any(value => Match(value, search.SearchWords, search.FindAll, search.ComparisonMethod));
         }
 
-        // Called by TmNode.cs line 1159 .. -> MainForm.designer.cs line 1058 (pre load all metadata in background)
-        // Removing this "feature"; Metadata will only loaded on demand.  Advanced search may require loading all metadata (user can be warned)
-        internal void PreLoadAsText()
-        {
-            if (Settings.Default.KeepMetaDataInMemory)
-                if (!string.IsNullOrEmpty(Path))
-                    ContentCache[Path] = LoadAsText();
-        }
-
         // Called from TmNode.cs line 548 (data path changed) and line 1245 (reload theme)
         // Ensure this is a low cost synchronous method (the data path may or may not change); This is not a user request to Sync
         internal void Repair(ThemeData data)
@@ -692,9 +683,8 @@ namespace NPS.AKRO.ThemeManager.Model
                     Format = MetadataFormat.Undefined;
                 }
                 else
-                    if (Settings.Default.KeepMetaDataInMemory)
-                        if (!string.IsNullOrEmpty(Path))
-                            ContentCache[Path] = contents;
+                    if (!string.IsNullOrEmpty(Path))
+                        ContentCache[Path] = contents;
             }
             time.Stop(); Trace.TraceInformation("{0}: End of Metadata.LoadASText() - Elapsed Time: {1}", DateTime.Now, time.Elapsed);
 

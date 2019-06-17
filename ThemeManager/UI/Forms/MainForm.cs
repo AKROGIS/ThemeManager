@@ -114,73 +114,6 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
         #endregion
 
-        #region background worker events
-
-        //private void backgroundThemeListLoader_DoWork(object sender, DoWorkEventArgs e)
-        //{
-        //    BackgroundWorker worker = sender as BackgroundWorker;
-        //    RestoreThemeListsInBackground(worker, e);
-        //}
-
-        //private void backgroundThemeListLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        //{
-        //    statusBar.Text = "";
-        //    progressBar.Visible = false;
-        //    if (e.Error != null)
-        //    {
-        //        Trace.TraceError("backgroundThemeListLoader failed with error: " + e.Error);
-        //    }
-        //    else
-        //    {
-        //        Trace.TraceInformation("backgroundThemeListLoader finished.");
-        //        if (Settings.Default.KeepMetaDataInMemory)
-        //            StartMetadataLoad();
-        //    }
-        //}
-
-        internal void StartMetadataLoad()
-        {
-            if (!backgroundMetadataLoader.IsBusy)
-            {
-                //statusBar.Text = "Loading Metadata in Background ...";
-                //progressBar.Visible = true;
-                //backgroundMetadataLoader.RunWorkerAsync();
-            }
-        }
-
-        internal void StopMetadataLoad()
-        {
-            if (backgroundMetadataLoader.IsBusy && !backgroundMetadataLoader.CancellationPending)
-            {
-                statusBar.Text = "";
-                progressBar.Visible = false;
-                backgroundMetadataLoader.CancelAsync();
-            }
-        }
-
-        private void backgroundMetadataLoader_DoWork(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
-            PreLoadThemeListMetadata(worker, e);
-        }
-
-        private void backgroundMetadataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-                Trace.TraceError("backgroundMetadataLoader failed with error: " + e.Error);
-            }
-            else
-            {
-                Trace.TraceInformation("backgroundMetadataLoader finished.");
-                if (statusBar.Text == "Loading Metadata in Background ...")
-                    statusBar.Text = "";
-            }
-        }
-
-
-        #endregion
-
         #region Treeview Events
 
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
@@ -1630,14 +1563,6 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 LoadIfNodeIsUnloadedThemeList(_node);
                 if (_func != null)
                     _func();
-            }
-        }
-
-        private void PreLoadThemeListMetadata(BackgroundWorker worker, DoWorkEventArgs e)
-        {
-            foreach (TmTreeNode treeNode in themesTreeView.Nodes.OfType<TmTreeNode>())
-            {
-                treeNode.TmNode.PreloadMetadata();
             }
         }
 
