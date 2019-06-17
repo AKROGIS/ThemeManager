@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using NPS.AKRO.ThemeManager.Extensions;
-using NPS.AKRO.ThemeManager.Properties;
 using NPS.AKRO.ThemeManager.ArcGIS;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -297,11 +296,6 @@ namespace NPS.AKRO.ThemeManager.Model
         // Called by TmNode.cs line 82 (TmNode default constructor)
         internal Metadata()
             : this(null, MetadataType.Undefined, MetadataFormat.Undefined, null, null)
-        {
-        }
-
-        private Metadata(string path)
-            : this(path, MetadataType.Undefined, MetadataFormat.Undefined, null, null)
         {
         }
 
