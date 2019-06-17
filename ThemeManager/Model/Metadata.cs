@@ -129,10 +129,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 return null;
 
             Meta myProps = ExpectedMetadataProperties(data);
-            Metadata metadata = new Metadata(myProps.Path, myProps.Type, myProps.Format);
-            if (metadata.Validate())
-                return metadata;
-            return null;
+            return new Metadata(myProps.Path, myProps.Type, myProps.Format);
         }
 
         //Called by TmNode.cs line 1133 (building object from theme list XML)
@@ -596,7 +593,6 @@ namespace NPS.AKRO.ThemeManager.Model
             Type = myNewProps.Type;
             Format = myNewProps.Format;
             Path = myNewProps.Path;  //will re validate only if path changes
-            Validate();
         }
 
         // Called by TmNode.cs line 845 (write object to theme list XML)
@@ -719,74 +715,6 @@ namespace NPS.AKRO.ThemeManager.Model
                     Format = MetadataFormat.Undefined;
             }
             return contents;
-        }
-
-        /// <summary>
-        /// Returns true if this is a Valid metadata object
-        /// </summary>
-        /// <remarks>
-        /// If the type is unknown, all valid types will be checked to determine the type
-        /// This is generally very fast, and can be called multiple times.
-        /// The exception is ESRI metadata which will do a license load, once per process
-        /// and will do some slow arcObjects calls if the metadata path has not been cached
-        /// </remarks>
-        /// <returns>True if this is a Valid metadata object, False otherwise</returns>
-        private bool Validate()
-        {
-            if (string.IsNullOrEmpty(Path))
-            {
-                Type = MetadataType.Undefined;
-                return false;
-            }
-
-            // Validate the Type
-            // TODO: URL, and FilePath should also be loaded to do proper validation
-            try
-            {
-                switch (Type)
-                {
-                    case MetadataType.FilePath:
-                        return File.Exists(Path);
-                    case MetadataType.Url:
-                        //if Path is not a valid URI, an exception will be thrown
-                        //FIXME - Validate that that the URI can be found ??
-                        //   (careful - URI may be valid, but temporarily not available)
-                        var uri = new Uri(Path);
-                        if (uri.IsFile)
-                        {
-                            Type = MetadataType.FilePath;
-                            return File.Exists(uri.LocalPath);
-                        }
-                        else
-                            return true;
-                    case MetadataType.EsriDataPath:
-                        // See if ArcObjects can load the metadata or throw an exception trying
-                        EsriMetadata.GetContentsAsXml(Path);
-                        return true;
-                    case MetadataType.Undefined:
-                        // MetadataType.Undefined (or some other anomaly
-                        // Try all each type - first valid type wins, so order matters.
-                        Type = MetadataType.FilePath;
-                        if (Validate())
-                            return true;
-                        Type = MetadataType.Url;
-                        if (Validate())
-                            return true;
-                        Type = MetadataType.EsriDataPath;
-                        if (Validate())
-                            return true;
-                        Type = MetadataType.Undefined;
-                        return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = ex.Message;
-                Debug.Print("Exception validating metadata: " + ex);
-            }
-            return false;
-
-            //FIXME: Validate the Format; will require loading
         }
 
         #endregion
