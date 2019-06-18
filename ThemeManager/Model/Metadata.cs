@@ -518,33 +518,55 @@ namespace NPS.AKRO.ThemeManager.Model
             if (webBrowser == null)
                 throw new ArgumentNullException(nameof(webBrowser));
 
-            // TODO: replace with LoadContentAndValidate() throw if ErrorMessage is non NULL
-            string xmlString = GetContentAsText();
-
-            //FIXME - return more meaningful exception messages or create web pages on the fly
-            // Exception message for Type == Undefined
-            //  Unable to obtain the metadata content because Theme Manager doesn't know the meaning of {Path}
-            // Exception message for Format == Undefined
-            //  Theme Manager is doesn't know the format of the metadata content, so it is presented as plain text below
-
-            try
+            // We need XML data as a string for the Stylesheet transformation, even if the XML is at a URL.
+            // GetContentAsText will also try to validate the Type and Format properties.
+            // This will not throw an exception, but might return null
+            string content = GetContentAsText();
+            if (content == null)
             {
+                throw new MetadataDisplayException($"Unable to load metadata content: {ErrorMessage}", null);
+            }
 
-                if (Type == MetadataType.Url)
-                    webBrowser.Url = new Uri(Path);
-                else if (Format == MetadataFormat.Xml && styleSheet != null)
+            // If GetContentAsText() thinks the content is XML (even if the Type is URL), we will
+            // send it to the stylesheet for transformation.  We will also send Undefined data in the
+            // hopes that it may actually be XML data.
+            if (Format == MetadataFormat.Xml || Format == MetadataFormat.Undefined)
+            {
+                if (styleSheet == null)
+                {
+                    // We could present Format.Undefined as plain text, but not having a stylesheet is
+                    // an error, especially if the content is actually XML.
+                    throw new MetadataDisplayException("Unable to transform metadata for display: There is no stylesheet available", null);
+                }
+                try
                 {
                     // Do this in two steps to avoid sending partial processing to the webBrowser
-                    string html = styleSheet.TransformText(xmlString);
+                    string html = styleSheet.TransformText(content);
                     webBrowser.DocumentText = html;
                 }
-                //TODO: Ensure that all permutations of Format and Type have been considered
-                else
-                    webBrowser.DocumentText = xmlString;
+                catch (Exception ex)
+                {
+                    if (Format == MetadataFormat.Undefined)
+                    {
+                        // Apparently it wasn't really XML after all
+                        webBrowser.DocumentText = content;
+                    }
+                    else
+                    {
+                        throw new MetadataDisplayException($"Unable to stylize the metadata content: {ex.Message}", ex);
+                    }
+                }
             }
-            catch (Exception ex)
+            else
             {
-                throw new MetadataDisplayException(ex.Message, ex);
+                if (Type == MetadataType.Url)
+                {
+                    webBrowser.Url = new Uri(Path);
+                }
+                else
+                {
+                    webBrowser.DocumentText = content;
+                }
             }
         }
 
