@@ -234,7 +234,11 @@ namespace NPS.AKRO.ThemeManager.Model
                 return newMeta;
             }
 
-            //FIXME - does not work for web services ???
+            //TODO: Add LAS datasets
+            //TODO: Add Raster functions
+            //TODO: Type = ESRI, format = XML if data source is a geo-database (*.gdb, *.mdb, *.sde)
+            //TODO: Add web services (should be XML at URL + /info/metadata for ArcGIS server) see https://enterprise.arcgis.com/en/server/10.3/publish-services/linux/metadata-for-services.htm
+
             newMeta.Type = MetadataType.Undefined;
             newMeta.Format = MetadataFormat.Undefined;
             return newMeta;
