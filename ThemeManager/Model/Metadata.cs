@@ -782,37 +782,32 @@ namespace NPS.AKRO.ThemeManager.Model
 
             Trace.TraceInformation("{0}: Start of Metadata.LoadASText({1})", DateTime.Now, Path); Stopwatch time = Stopwatch.StartNew();
 
-            // TODO: Remove lock, this is not an issue any longer
             // TODO: Check MetadataType.Url starts with http
             // TODO: return text at URL, not the path.
             // TODO: set Format to Text if not null and not XML or HTML
-            // 
-            // If another thread is loading the text, wait for it to finish.
-            // because of side effects, including changing state of CachedContentsAsText,
-            // we lock the whole routine.
-            lock (this)
+            // TODO: REGEX text for <XML> and <html> to determine format
+
+            try
             {
-                try
-                {
-                    if (Type == MetadataType.FilePath)
-                        contents = File.ReadAllText(Path);
-                    if (Type == MetadataType.EsriDataPath)
-                        contents = EsriMetadata.GetContentsAsXml(Path);
-                    if (Type == MetadataType.Url)
-                        contents = Path;
-                }
-                catch (Exception ex)
-                {
-                    ErrorMessage = ex.Message;
-                    Debug.Print("Exception thrown trying to load Metadata.\n" + ex);
-                    contents = null;
-                }
-                if (string.IsNullOrEmpty(contents))
-                {
-                    contents = null;
-                    Format = MetadataFormat.Undefined;
-                }
+                if (Type == MetadataType.FilePath)
+                    contents = File.ReadAllText(Path);
+                if (Type == MetadataType.EsriDataPath)
+                    contents = EsriMetadata.GetContentsAsXml(Path);
+                if (Type == MetadataType.Url)
+                    contents = Path;
             }
+            catch (Exception ex)
+            {
+                ErrorMessage = ex.Message;
+                Debug.Print("Exception thrown trying to load Metadata.\n" + ex);
+                contents = null;
+            }
+            if (string.IsNullOrEmpty(contents))
+            {
+                contents = null;
+                Format = MetadataFormat.Undefined;
+            }
+
             time.Stop(); Trace.TraceInformation("{0}: End of Metadata.LoadASText() - Elapsed Time: {1}", DateTime.Now, time.Elapsed);
 
             return contents;
