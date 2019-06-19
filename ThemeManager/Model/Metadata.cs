@@ -147,105 +147,139 @@ namespace NPS.AKRO.ThemeManager.Model
         /// <returns>a new Metadata object for a theme</returns>
         internal static Metadata FromDataSource(ThemeData data)
         {
-            Metadata newMeta = new Metadata();
+            Metadata newMetadata = new Metadata();
 
             if (data == null)
-                return newMeta;
+                return newMetadata;
 
-            //Caution, setting Path will clear the Type and Format
+            //Caution: Setting Path will clear the Type and Format, so set Path first.
 
-            //TODO: move these setters below the Path setter
-            newMeta.Type = MetadataType.FilePath;
-            newMeta.Format = MetadataFormat.Xml;
-
-            //general file based metadata
+            // General file based metadata
+            //   Includes layer files.  if *.lyr.xml exists, it trumps the datasource metadata (for single datasource layers)
             if (data.Path != null && File.Exists(data.Path + ".xml"))
             {
-                newMeta.Path = data.Path + ".xml";
-                return newMeta;
+                newMetadata.Path = data.Path + ".xml";
+                newMetadata.Type = MetadataType.FilePath;
+                newMetadata.Format = MetadataFormat.Xml;
+                return newMetadata;
             }
 
+            // General file based metadata
+            //   Includes file based raster data, LAS datasets, and others.
             if (data.DataSource != null && File.Exists(data.DataSource + ".xml"))
             {
-                newMeta.Path = data.DataSource + ".xml";
-                return newMeta;
+                newMetadata.Path = data.DataSource + ".xml";
+                newMetadata.Type = MetadataType.FilePath;
+                newMetadata.Format = MetadataFormat.Xml;
+                return newMetadata;
             }
 
-            //grids & tins
-            if (data.DataSource != null
-                //&& data.WorkspacePath != null
-                && Directory.Exists(data.DataSource))
+            // Grids, TINs, and other directory based feature classes
+            if (data.DataSource != null && Directory.Exists(data.DataSource))
             {
-                string metaPath = System.IO.Path.Combine(data.DataSource, "metadata.xml");
-                if (File.Exists(metaPath))
+                string metadataPath = System.IO.Path.Combine(data.DataSource, "metadata.xml");
+                if (File.Exists(metadataPath))
                 {
-                    newMeta.Path = metaPath;
-                    return newMeta;
+                    newMetadata.Path = metadataPath;
+                    newMetadata.Type = MetadataType.FilePath;
+                    newMetadata.Format = MetadataFormat.Xml;
                 }
+                return newMetadata;
             }
 
-            //Shapefile
+            // Shapefile
             if (data.IsShapefile)
             {
-                string metaPath = data.DataSource + ".shp.xml";
-                if (File.Exists(metaPath))
+                string metadataPath = data.DataSource + ".shp.xml";
+                if (File.Exists(metadataPath))
                 {
-                    newMeta.Path = metaPath;
-                    return newMeta;
+                    newMetadata.Path = metadataPath;
+                    newMetadata.Type = MetadataType.FilePath;
+                    newMetadata.Format = MetadataFormat.Xml;
                 }
+                return newMetadata;
             }
 
-            //coverages
+            // ArcInfo Coverages
             if (data.IsCoverage && data.WorkspacePath != null && data.Container != null)
             {
                 string coverageDir = System.IO.Path.Combine(data.WorkspacePath, data.Container);
                 if (Directory.Exists(coverageDir))
                 {
-                    string metaPath = System.IO.Path.Combine(coverageDir, "metadata.xml");
-                    if (File.Exists(metaPath))
+                    string metadataPath = System.IO.Path.Combine(coverageDir, "metadata.xml");
+                    if (File.Exists(metadataPath))
                     {
-                        newMeta.Path = metaPath;
-                        return newMeta;
+                        newMetadata.Path = metadataPath;
+                        newMetadata.Type = MetadataType.FilePath;
+                        newMetadata.Format = MetadataFormat.Xml;
                     }
+                    return newMetadata;
                 }
             }
 
-            //CAD
+            // CAD
             if (data.IsCad && data.WorkspacePath != null && data.Container != null)
             {
                 string cadFile = System.IO.Path.Combine(data.WorkspacePath, data.Container);
                 if (File.Exists(cadFile))
                 {
-                    string metaPath = cadFile + ".xml";
-                    if (File.Exists(metaPath))
+                    string metadataPath = cadFile + ".xml";
+                    if (File.Exists(metadataPath))
                     {
-                        newMeta.Path = metaPath;
-                        return newMeta;
+                        newMetadata.Path = metadataPath;
+                        newMetadata.Type = MetadataType.FilePath;
+                        newMetadata.Format = MetadataFormat.Xml;
                     }
+                    return newMetadata;
                 }
             }
 
-            newMeta.Type = MetadataType.EsriDataPath;
-
+            // GeoDatabases - Metadata is not a separate XML file, it is internal to the database
+            //   These properties are a little confusing, see ThemeNode for an explanation
+            //   For SDE datasets to work, the original connection file (*.sde) must be available
+            //     to all theme manager users, i.e. not in a local profile (the typical default location)
             if (data.IsInGeodatabase && !data.IsLayerFile)
             {
-                newMeta.Path = data.DataSource;
-                return newMeta;
+                newMetadata.Path = data.DataSource;
+                newMetadata.Type = MetadataType.EsriDataPath;
+                newMetadata.Format = MetadataFormat.Xml;
+                return newMetadata;
             }
-            if (data.IsLayerFile && !data.IsGroupLayerFile)
+
+            // Esri Web services
+            if (data.DataSource != null && data.DataSource.StartsWith("http", StringComparison.OrdinalIgnoreCase))
             {
-                newMeta.Path = data.DataSource;
-                return newMeta;
+                if (data.DataSource.EndsWith("/MapServer", StringComparison.OrdinalIgnoreCase) ||
+                    data.DataSource.EndsWith("/FeatureServer", StringComparison.OrdinalIgnoreCase) ||
+                    data.DataSource.EndsWith("/ImageServer", StringComparison.OrdinalIgnoreCase))
+                {
+                    newMetadata.Path = data.DataSource + "/info/metadata";
+                    newMetadata.Type = MetadataType.Url;
+                    newMetadata.Format = MetadataFormat.Xml;
+                    return newMetadata;
+                }
+                // FeatureService usually end with /FeatureService\XX where XX is an integer.  However they also
+                // have the workspace set to the Datasource without the \XX
+                if (data.DataSource.Contains("/FeatureServer", StringComparison.OrdinalIgnoreCase) &&
+                    data.WorkspacePath != null && data.WorkspacePath.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
+                    data.WorkspacePath.EndsWith("/FeatureServer", StringComparison.OrdinalIgnoreCase))
+                {
+                    newMetadata.Path = data.WorkspacePath + "/info/metadata";
+                    newMetadata.Type = MetadataType.Url;
+                    newMetadata.Format = MetadataFormat.Xml;
+                    return newMetadata;
+                }
             }
 
-            //TODO: Add LAS datasets
-            //TODO: Add Raster functions
-            //TODO: Type = ESRI, format = XML if data source is a geo-database (*.gdb, *.mdb, *.sde)
-            //TODO: Add web services (should be XML at URL + /info/metadata for ArcGIS server) see https://enterprise.arcgis.com/en/server/10.3/publish-services/linux/metadata-for-services.htm
+            // Other web services may have metadata, but we are not ready to support them
+            // LiDAR data tiles (.las) are not data sources that ArcGIS manages directly (*.lasD files are handled above)
+            // Raster functions have no permanent disk representation except a layer file
 
-            newMeta.Type = MetadataType.Undefined;
-            newMeta.Format = MetadataFormat.Undefined;
-            return newMeta;
+            // Do not provide a default, it was usually wrong, and it will be better to return nothing
+
+            Debug.Print($"Metadata not found for Data.Path:{data.Path}, Data.DataSource:{data.DataSource}, Data.DataSetType:{data.DataSetType}");
+
+            return newMetadata;
         }
 
         /// <summary>
