@@ -235,10 +235,9 @@ namespace NPS.AKRO.ThemeManager.Model
             }
 
             // GeoDatabases - Metadata is not a separate XML file, it is internal to the database
-            //   These properties are a little confusing, see ThemeNode for an explanation
             //   For SDE datasets to work, the original connection file (*.sde) must be available
             //     to all theme manager users, i.e. not in a local profile (the typical default location)
-            if (data.IsInGeodatabase && !data.IsLayerFile)
+            if (data.IsInGeodatabase)
             {
                 newMetadata.Path = data.DataSource;
                 newMetadata.Type = MetadataType.EsriDataPath;
