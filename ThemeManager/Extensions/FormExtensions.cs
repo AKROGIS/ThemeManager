@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NPS.AKRO.ThemeManager.Properties;
+using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
-using NPS.AKRO.ThemeManager.Properties;
+using System.Windows.Forms;
 
 namespace NPS.AKRO.ThemeManager.Extensions
 {
