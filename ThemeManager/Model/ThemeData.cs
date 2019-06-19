@@ -54,7 +54,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         //Path is a filesystem path to a file, not an ArcObject.
         //typically this is a layer file.
-        //Path will be null for sub-themes. Sub-theme data is in other proeprties
+        //Path will be null for sub-themes. Sub-theme data is in other properties
         //Path is available to the UI, so it needs to notify the UI if it changes
         public string Path
         {
@@ -89,7 +89,7 @@ namespace NPS.AKRO.ThemeManager.Model
         // Historically, when data.path points to a layer file, data type != layer file
         // oh no, it is either "group Layer" if the layer file contains a group of layers,
         // or it is the type of the data source in the layer. Similarly, Path contains either
-        // the pathe to the layer file (for a group layer, or a layer file with a single datasource,
+        // the path to the layer file (for a group layer, or a layer file with a single datasource,
         // however for all items in a group layer, then path has the ArcObjects path to the
         // data source.
         
@@ -105,7 +105,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         // DataSource is typically:
         // WorkspacePath + "\\" + {Container + "\\" +} DataSourceName
-        // However this needs to be verified for all datasources
+        // However this needs to be verified for all data sources
         // For now, we will track both DataSource and the constituent parts
 
         //Datasource is available to the UI, so it needs to notify the UI if it changes
@@ -178,7 +178,6 @@ namespace NPS.AKRO.ThemeManager.Model
             }
         }
 
-
         internal bool IsInGeodatabase
         {
             get
@@ -229,26 +228,26 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region XML Serialize
 
-        public static ThemeData Load(XElement xele)
+        public static ThemeData Load(XElement xEle)
         {
-            if (xele == null)
-                throw new ArgumentNullException("xele");
-            if (xele.Name != "data")
-                throw new ArgumentException("Invalid Xelement");
+            if (xEle == null)
+                throw new ArgumentNullException(nameof(xEle));
+            if (xEle.Name != "data")
+                throw new ArgumentException("Invalid XElement");
             ThemeData data = new ThemeData(
-                xele.Value,
-                (string)xele.Attribute("type"),
-                (string)xele.Attribute("format"),
-                (string)xele.Attribute("version"),
-                (string)xele.Attribute("datasource"),
-                (string)xele.Attribute("workspace"),
-                (string)xele.Attribute("workspacetype"),
-                (string)xele.Attribute("workspaceprogid"),
-                (string)xele.Attribute("container"),
-                (string)xele.Attribute("containertype"),
-                (string)xele.Attribute("datasourcename"),
-                (string)xele.Attribute("datasetname"),
-                (string)xele.Attribute("datasettype")
+                xEle.Value,
+                (string)xEle.Attribute("type"),
+                (string)xEle.Attribute("format"),
+                (string)xEle.Attribute("version"),
+                (string)xEle.Attribute("datasource"),
+                (string)xEle.Attribute("workspace"),
+                (string)xEle.Attribute("workspacetype"),
+                (string)xEle.Attribute("workspaceprogid"),
+                (string)xEle.Attribute("container"),
+                (string)xEle.Attribute("containertype"),
+                (string)xEle.Attribute("datasourcename"),
+                (string)xEle.Attribute("datasetname"),
+                (string)xEle.Attribute("datasettype")
             );
             return data;
         }
