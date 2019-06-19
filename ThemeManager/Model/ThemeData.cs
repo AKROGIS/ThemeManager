@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
 using System.ComponentModel;
-using NPS.AKRO.ThemeManager.ArcGIS;
-using System.Diagnostics;
 
 //FIXME - Refactoring change - break into two objects: ThemeListData, ThemeData and SubThemeData
 //FIXME - Add Datasource to ThemeListData, and remove from TmNode.
@@ -135,96 +133,35 @@ namespace NPS.AKRO.ThemeManager.Model
         internal string DataSetName { get; set; }
         internal string DataSetType { get; set; }
 
-        internal bool IsLayerFile
-        {
-            get
-            {
-                return (Path == null) ? false : (System.IO.Path.GetExtension(Path).ToLower() == ".lyr");
-            }
-        }
+        internal bool IsLayerFile => (Path != null) && (System.IO.Path.GetExtension(Path).ToLower() == ".lyr");
 
-        internal bool IsGroupLayerFile
-        {
-            get
-            {
-                return (IsLayerFile && Type == "Group Layer");
-            }
-        }
+        internal bool IsGroupLayerFile => (IsLayerFile && Type == "Group Layer");
 
         //The following checks are based on Type information only available to 
         //themes loaded with TM3.0, however these checks are only called
         //when trying to find metadata for themes loaded with TM3.0
-        internal bool IsCoverage
-        {
-            get
-            {
-                return Type != null && (Type.Contains("Coverage") || Type.Contains("Region") || Type.Contains("Route"));
-            }
-        }
+        internal bool IsCoverage => Type != null && (Type.Contains("Coverage") || Type.Contains("Region") || Type.Contains("Route"));
 
-        internal bool IsShapefile
-        {
-            get
-            {
-                return Type != null && Type.Contains("Shapefile");
-            }
-        }
+        internal bool IsShapefile => Type != null && Type.Contains("Shapefile");
 
-        internal bool IsCad
-        {
-            get
-            {
-                return Type != null && Type.Contains(" CAD ");
-            }
-        }
+        internal bool IsCad => Type != null && Type.Contains(" CAD ");
 
-        internal bool IsInGeodatabase
-        {
-            get
-            {
-                return WorkspaceProgId == "esriDataSourcesGDB.FileGDBWorkspaceFactory.1" || 
-                       WorkspaceProgId == "esriDataSourcesGDB.AccessWorkspaceFactory.1" ||
-                       WorkspaceProgId == "esriDataSourcesGDB.SdeWorkspaceFactory.1";
-            }
-        }
+        internal bool IsInGeodatabase =>
+            WorkspaceProgId == "esriDataSourcesGDB.FileGDBWorkspaceFactory.1" || 
+            WorkspaceProgId == "esriDataSourcesGDB.AccessWorkspaceFactory.1" ||
+            WorkspaceProgId == "esriDataSourcesGDB.SdeWorkspaceFactory.1";
 
-        internal bool IsEsriMapService
-        {
-            get
-            {
-                return DataSource != null && DataSource.StartsWith("http", StringComparison.OrdinalIgnoreCase) && 
-                       DataSource.EndsWith("/MapServer", StringComparison.OrdinalIgnoreCase);
-            }
-        }
+        internal bool IsEsriMapService =>
+            DataSource != null && DataSource.StartsWith("http", StringComparison.OrdinalIgnoreCase) && 
+            DataSource.EndsWith("/MapServer", StringComparison.OrdinalIgnoreCase);
 
-        internal bool IsEsriImageService
-        {
-            get
-            {
-                return DataSource != null && DataSource.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
-                       DataSource.EndsWith("/ImageServer", StringComparison.OrdinalIgnoreCase);
-            }
-        }
+        internal bool IsEsriImageService =>
+            DataSource != null && DataSource.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
+            DataSource.EndsWith("/ImageServer", StringComparison.OrdinalIgnoreCase);
 
-        internal bool IsEsriFeatureService
-        {
-            get
-            {
-                return WorkspacePath != null && WorkspacePath.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
-                       WorkspacePath.EndsWith("/FeatureServer", StringComparison.OrdinalIgnoreCase);
-            }
-        }
-
-        // FIXME - the following would be nice to have, but I don't have
-        // workable code, so they are not used
-        //
-        //internal bool IsThemeListFile
-        //{
-        //    get
-        //    {
-        //        return false;
-        //    }
-        //}
+        internal bool IsEsriFeatureService =>
+            WorkspacePath != null && WorkspacePath.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
+            WorkspacePath.EndsWith("/FeatureServer", StringComparison.OrdinalIgnoreCase);
 
         #region XML Serialize
 
@@ -277,24 +214,20 @@ namespace NPS.AKRO.ThemeManager.Model
 
         public object Clone()
         {
-            ThemeData obj = (ThemeData)MemberwiseClone();
-            return obj;
-            // return MemberwiseClone();
+            return (ThemeData)MemberwiseClone();
         }
 
         #endregion
 
         #region INotifyPropertyChanged
 
-        //FIXME - do I need this??? are events serialized???
         [field: NonSerializedAttribute()]
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
+        private void OnPropertyChanged(string property)
         {
             PropertyChangedEventHandler handle = PropertyChanged;
-            if (handle != null)
-                handle(this, new PropertyChangedEventArgs(property));
+            handle?.Invoke(this, new PropertyChangedEventArgs(property));
         }
 
         #endregion
