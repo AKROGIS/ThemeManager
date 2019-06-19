@@ -32,14 +32,14 @@ namespace NPS.AKRO.ThemeManager.Model
             }
         }
 
-        public static ThemeListAuthor Load(XElement xele)
+        public static ThemeListAuthor Load(XElement xEle)
         {
-            if (xele == null)
-                throw new ArgumentNullException("xele");
-            if (xele.Name != "author")
-                throw new ArgumentException("Invalid Xelement");
+            if (xEle == null)
+                throw new ArgumentNullException(nameof(xEle));
+            if (xEle.Name != "author")
+                throw new ArgumentException("Invalid XElement");
             ThemeListAuthor author = new ThemeListAuthor();
-            foreach (XElement entry in xele.Elements("info"))
+            foreach (XElement entry in xEle.Elements("info"))
             {
                 string attributeType = entry.Attributes("type").ToString();
                 if (!string.IsNullOrEmpty(attributeType))

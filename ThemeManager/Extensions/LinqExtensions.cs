@@ -27,17 +27,21 @@ namespace NPS.AKRO.ThemeManager.Extensions
             }
         }
 
+        // ReSharper disable once UnusedMember.Global
         public static IEnumerable<T> WithProgressReporting<T>(this  IEnumerable<T> sequence, Action<int> reportProgress)
         {
-            if (sequence == null) { throw new ArgumentNullException("sequence"); }
+            if (sequence == null) { throw new ArgumentNullException(nameof(sequence)); }
             //Counting the sequence may require enumerating the sequence, which may take as long as the
             //action we are hoping to monitor the progress of.  Oh well.
+            // ReSharper disable PossibleMultipleEnumeration
             return sequence.WithProgressReporting(sequence.Count(), reportProgress);
+            // ReSharper restore PossibleMultipleEnumeration
         }
 
+        // ReSharper disable once MemberCanBePrivate.Global
         public static IEnumerable<T> WithProgressReporting<T>(this IEnumerable<T> sequence, long itemCount, Action<int> reportProgress)
         {
-            if (sequence == null) { throw new ArgumentNullException("sequence"); }
+            if (sequence == null) { throw new ArgumentNullException(nameof(sequence)); }
 
             int completed = 0;
             foreach (var item in sequence)

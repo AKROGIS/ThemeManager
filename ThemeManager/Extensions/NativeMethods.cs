@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace NPS.AKRO.ThemeManager.Extensions
 {
-    internal class NativeMethods
+    internal static class NativeMethods
     {
         public const int HWND_BROADCAST = 0xffff;
         public static readonly int WM_SHOWME = RegisterWindowMessage("WM_SHOWME");

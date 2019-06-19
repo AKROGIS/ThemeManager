@@ -19,7 +19,7 @@ namespace NPS.AKRO.ThemeManager.Extensions
         public static string Concat(this IEnumerable<string> collection, string joiner)
         {
             if (joiner == null)
-                throw new ArgumentNullException("joiner");
+                throw new ArgumentNullException(nameof(joiner));
             StringBuilder sb = new StringBuilder();
             foreach (string item in collection)
                 sb.Append(item + joiner);
