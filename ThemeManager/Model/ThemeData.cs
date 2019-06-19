@@ -118,8 +118,6 @@ namespace NPS.AKRO.ThemeManager.Model
         internal string DataSetName { get; set; }
         internal string DataSetType { get; set; }
 
-        internal bool IsLayerFile => (Path != null) && (System.IO.Path.GetExtension(Path).ToLower() == ".lyr");
-
         //The following checks are based on Type information only available to 
         //themes loaded with TM3.0, however these checks are only called
         //when trying to find metadata for themes loaded with TM3.0
