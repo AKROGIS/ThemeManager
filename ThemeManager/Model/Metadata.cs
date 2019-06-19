@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using System.Xml.XPath;
+using System.Net.Http;
 
 namespace NPS.AKRO.ThemeManager.Model
 {
@@ -151,6 +152,9 @@ namespace NPS.AKRO.ThemeManager.Model
             if (data == null)
                 return newMeta;
 
+            //Caution, setting Path will clear the Type and Format
+
+            //TODO: move these setters below the Path setter
             newMeta.Type = MetadataType.FilePath;
             newMeta.Format = MetadataFormat.Xml;
 
@@ -521,8 +525,9 @@ namespace NPS.AKRO.ThemeManager.Model
             // We need XML data as a string for the Stylesheet transformation, even if the XML is at a URL.
             // GetContentAsText will also try to validate the Type and Format properties.
             // This will not throw an exception, but might return null
+            // It will return null if Type = URL and Format in (Html, Text), but that is ok, since we only need the Path
             string content = GetContentAsText();
-            if (content == null)
+            if (content == null && (Type != MetadataType.Url || Format == MetadataFormat.Xml || Format == MetadataFormat.Undefined))
             {
                 throw new MetadataDisplayException($"Unable to load metadata content: {ErrorMessage}", null);
             }
@@ -796,41 +801,121 @@ namespace NPS.AKRO.ThemeManager.Model
         /// <returns>a text string of the metadata if available or null</returns>
         private string GetContentAsText()
         {
-            if (string.IsNullOrEmpty(Path))
-                //TODO: Set error message
-                return null;
-
             string contents = null;
+            ErrorMessage = null;
 
-            Trace.TraceInformation("{0}: Start of Metadata.LoadASText({1})", DateTime.Now, Path); Stopwatch time = Stopwatch.StartNew();
+            if (string.IsNullOrEmpty(Path))
+            {
+                ErrorMessage = "Metadata has no Path to the content.";
+                return null;
+            }
 
-            // TODO: Check MetadataType.Url starts with http
-            // TODO: return text at URL, not the path.
-            // TODO: set Format to Text if not null and not XML or HTML
-            // TODO: REGEX text for <XML> and <html> to determine format
+            // using System.Diagnostics.Eventing.Reader;
+            // Trace.TraceInformation("{0}: Start of Metadata.LoadASText({1})", DateTime.Now, Path); Stopwatch time = Stopwatch.StartNew();
 
+            // Try to guess an Undefined MetadataType
+            if (Type == MetadataType.Undefined)
+            {
+                if (Path.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                {
+                    Type = MetadataType.Url;
+                }
+                else if (File.Exists(Path))
+                {
+                    Type = MetadataType.FilePath;
+                }
+                else if (Path.Contains(".gdb\\", StringComparison.OrdinalIgnoreCase) ||
+                         Path.Contains(".sde\\", StringComparison.OrdinalIgnoreCase) ||
+                         Path.Contains(".mdb\\", StringComparison.OrdinalIgnoreCase))
+                {
+                    
+                    Type = MetadataType.EsriDataPath;
+                }
+                else
+                {
+                    ErrorMessage = "The Type of the metadata Path is Undefined and not obvious.";
+                    return null;
+                }
+            }
+
+            // Correct a URL with the file:// scheme
+            if (Type == MetadataType.Url && new Uri(Path).IsFile)
+            {
+                Path = new Uri(Path).LocalPath;
+                Type = MetadataType.FilePath;
+            }
+
+            // Try and load the content
             try
             {
                 if (Type == MetadataType.FilePath)
+                {
                     contents = File.ReadAllText(Path);
+                }
                 if (Type == MetadataType.EsriDataPath)
+                {
                     contents = EsriMetadata.GetContentsAsXml(Path);
+                    Format = MetadataFormat.Xml;
+                }
                 if (Type == MetadataType.Url)
-                    contents = Path;
+                {
+                    // If the format is Undefined, I need to download the contents to check the Format
+                    // If the Format is Xml, I will download the contents for getting attributes
+                    // For Html and Text Formats, I can't do anything with the contents, so skip this step
+                    // The Display method will use the URL to get the contents
+                    if (Format == MetadataFormat.Xml || Format == MetadataFormat.Undefined)
+                    {
+                        var uri = new Uri(Path);
+                        HttpClient client = new HttpClient();
+                        var response = client.GetAsync(uri).Result;
+                        if (response.IsSuccessStatusCode)
+                        {
+                            contents = response.Content.ReadAsStringAsync().Result;
+                        }
+                        else
+                        {
+                            ErrorMessage =
+                                $"Could not get {Path} from server.  Status code: {response.StatusCode}({response.ReasonPhrase})";
+                            return null;
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 ErrorMessage = ex.Message;
                 Debug.Print("Exception thrown trying to load Metadata.\n" + ex);
-                contents = null;
-            }
-            if (string.IsNullOrEmpty(contents))
-            {
-                contents = null;
-                Format = MetadataFormat.Undefined;
+                return null;
             }
 
-            time.Stop(); Trace.TraceInformation("{0}: End of Metadata.LoadASText() - Elapsed Time: {1}", DateTime.Now, time.Elapsed);
+            // If the file, service, or geo-database returned nothing, we are done for.
+            if (string.IsNullOrEmpty(contents) && (Type != MetadataType.Url || Format == MetadataFormat.Xml || Format == MetadataFormat.Undefined))
+            {
+                ErrorMessage = "The content of the resource at Path is empty.";
+                Format = MetadataFormat.Undefined;
+                return null;
+            }
+
+            // Test the format
+            if (Format == MetadataFormat.Undefined)
+            {
+                // ReSharper disable once PossibleNullReferenceException
+                if (contents.StartsWith("<?xml version=", StringComparison.OrdinalIgnoreCase) ||
+                    contents.StartsWith("<metadata", StringComparison.OrdinalIgnoreCase))
+                {
+                    Format = MetadataFormat.Xml;
+                }
+                if (Regex.IsMatch(contents, "<html>|<html .+>"))
+                {
+                    Format = MetadataFormat.Html;
+                }
+                if (!Regex.IsMatch(contents, "<.+>|</.+>"))
+                {
+                    Format = MetadataFormat.Text;
+                }
+            }
+
+            // time.Stop(); Trace.TraceInformation("{0}: End of Metadata.LoadASText() - Elapsed Time: {1}", DateTime.Now, time.Elapsed);
 
             return contents;
         }
