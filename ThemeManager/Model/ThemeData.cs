@@ -107,8 +107,8 @@ namespace NPS.AKRO.ThemeManager.Model
         }
         private string _datasource;
 
-        internal string Format { get; set; }
-        internal string Version { get; set; }
+        private string Format { get; }
+        internal string Version { private get; set; }
         internal string WorkspacePath { get; set; }
         internal string WorkspaceProgId { get; set; }
         internal string WorkspaceType { get; set; }
@@ -119,8 +119,6 @@ namespace NPS.AKRO.ThemeManager.Model
         internal string DataSetType { get; set; }
 
         internal bool IsLayerFile => (Path != null) && (System.IO.Path.GetExtension(Path).ToLower() == ".lyr");
-
-        internal bool IsGroupLayerFile => (IsLayerFile && Type == "Group Layer");
 
         //The following checks are based on Type information only available to 
         //themes loaded with TM3.0, however these checks are only called
