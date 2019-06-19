@@ -1,14 +1,12 @@
-﻿using System;
+﻿using NPS.AKRO.ThemeManager.Extensions;
+using NPS.AKRO.ThemeManager.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
-using NPS.AKRO.ThemeManager.Model;
-using NPS.AKRO.ThemeManager.Extensions;
 
 namespace NPS.AKRO.ThemeManager.UI.Forms
 {

@@ -1,6 +1,6 @@
-﻿using System;
-using ESRI.ArcGIS.Carto;
+﻿using ESRI.ArcGIS.Carto;
 using NPS.AKRO.ThemeManager.Model;
+using System;
 using System.Diagnostics;
 using System.IO;
 

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows.Forms;
-using ESRI.ArcGIS;
+﻿using ESRI.ArcGIS;
 using ESRI.ArcGIS.esriSystem;
 using NPS.AKRO.ThemeManager.Properties;
 using NPS.AKRO.ThemeManager.UI.Forms;
+using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS

@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Xml.Linq;
 using System.ComponentModel;
+using System.Xml.Linq;
 
 //FIXME - Refactoring change - break into two objects: ThemeListData, ThemeData and SubThemeData
 //FIXME - Add Datasource to ThemeListData, and remove from TmNode.

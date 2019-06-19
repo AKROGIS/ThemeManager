@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using NPS.AKRO.ThemeManager.ArcGIS;
+using NPS.AKRO.ThemeManager.Extensions;
+using NPS.AKRO.ThemeManager.Model;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Collections.Generic;
-using NPS.AKRO.ThemeManager.Model;
-using NPS.AKRO.ThemeManager.Extensions;
-using NPS.AKRO.ThemeManager.ArcGIS;
+using System.Windows.Forms;
 
 namespace NPS.AKRO.ThemeManager.UI.Forms
 {

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using ESRI.ArcGIS.Catalog;
+﻿using ESRI.ArcGIS.Catalog;
 using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
 using NPS.AKRO.ThemeManager.UI.Forms;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {

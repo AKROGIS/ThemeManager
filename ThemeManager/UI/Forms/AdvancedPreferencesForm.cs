@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NPS.AKRO.ThemeManager.Properties;
+using System;
 using System.Windows.Forms;
-using NPS.AKRO.ThemeManager.Properties;
 
 namespace NPS.AKRO.ThemeManager.UI.Forms
 {

@@ -1,7 +1,13 @@
+using ESRI.ArcGIS.Controls;
+using ESRI.ArcGIS.SystemUI;
+using Microsoft.Win32;
+using NPS.AKRO.ThemeManager.ArcGIS;
+using NPS.AKRO.ThemeManager.Extensions;
+using NPS.AKRO.ThemeManager.Model;
+using NPS.AKRO.ThemeManager.Properties;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -10,13 +16,6 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using ESRI.ArcGIS.Controls;
-using ESRI.ArcGIS.SystemUI;
-using Microsoft.Win32;
-using NPS.AKRO.ThemeManager.Properties;
-using NPS.AKRO.ThemeManager.Extensions;
-using NPS.AKRO.ThemeManager.Model;
-using NPS.AKRO.ThemeManager.ArcGIS;
 
 namespace NPS.AKRO.ThemeManager.UI.Forms
 {

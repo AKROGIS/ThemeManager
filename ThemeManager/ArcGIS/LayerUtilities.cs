@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ESRI.ArcGIS.Carto;
-using ESRI.ArcGIS.Geodatabase;
-using System.Diagnostics;
-using ESRI.ArcGIS.GISClient;
+﻿using ESRI.ArcGIS.Carto;
 using ESRI.ArcGIS.esriSystem;
+using ESRI.ArcGIS.Geodatabase;
+using ESRI.ArcGIS.GISClient;
+using System;
+using System.Text;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {

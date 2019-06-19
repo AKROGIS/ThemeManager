@@ -1,10 +1,10 @@
+using ESRI.ArcGIS;
 using System;
 using System.Windows.Forms;
-using ESRI.ArcGIS;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {
-  internal partial class LicenseInitializer
+    internal partial class LicenseInitializer
   {
     public LicenseInitializer()
     {

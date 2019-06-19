@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NPS.AKRO.ThemeManager.Model;
+using NPS.AKRO.ThemeManager.Properties;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
@@ -8,8 +10,6 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Windows.Forms;
-using NPS.AKRO.ThemeManager.Properties;
-using NPS.AKRO.ThemeManager.Model;
 
 namespace NPS.AKRO.ThemeManager.UI
 {

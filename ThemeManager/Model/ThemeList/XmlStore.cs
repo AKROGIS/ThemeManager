@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Xml.Linq;
-using System.Diagnostics;
 
 namespace NPS.AKRO.ThemeManager.Model.ThemeList
 {

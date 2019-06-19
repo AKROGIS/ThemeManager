@@ -1,18 +1,18 @@
-﻿using System;
+﻿using NPS.AKRO.ThemeManager.ArcGIS;
+using NPS.AKRO.ThemeManager.Extensions;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
-using NPS.AKRO.ThemeManager.Extensions;
-using NPS.AKRO.ThemeManager.ArcGIS;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.RegularExpressions;
 using System.Xml.XPath;
-using System.Net.Http;
 
 namespace NPS.AKRO.ThemeManager.Model
 {
