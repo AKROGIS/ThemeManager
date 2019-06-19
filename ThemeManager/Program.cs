@@ -11,7 +11,7 @@ namespace NPS.AKRO.ThemeManager
     {
         // Introduce a Mutex, to enforce a single instance application.
         // code from http://sanity-free.org/143/csharp_dotnet_single_instance_application.html
-        static Mutex mutex = new Mutex(true, "{2FE4D2B8-6C44-4B80-BBB2-0901B57E603B}");
+        static readonly Mutex AppLock = new Mutex(true, "{2FE4D2B8-6C44-4B80-BBB2-0901B57E603B}");
 
         /// <summary>
         /// The main entry point for the application.
@@ -19,12 +19,12 @@ namespace NPS.AKRO.ThemeManager
         [STAThread]
         static void Main()
         {
-            if (mutex.WaitOne(TimeSpan.Zero, true))
+            if (AppLock.WaitOne(TimeSpan.Zero, true))
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new MainForm().CommonInit());
-                mutex.ReleaseMutex();
+                AppLock.ReleaseMutex();
             }
             else
             {

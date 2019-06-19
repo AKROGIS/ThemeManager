@@ -1,7 +1,9 @@
-﻿
+﻿// ReSharper disable All
+// Properties are public to be accessed by a WinForm control
+
 namespace NPS.AKRO.ThemeManager.Model
 {
-    class Duration
+    struct Duration
     {
         public Duration(int days, string description)
         {
@@ -9,7 +11,7 @@ namespace NPS.AKRO.ThemeManager.Model
             Description = description;
         }
 
-        public int Days { get; set; }
-        public string Description { get; set; }
+        public int Days { get; }
+        public string Description { get; }
     }
 }
