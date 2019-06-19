@@ -15,25 +15,10 @@ namespace NPS.AKRO.ThemeManager.Model
     [Serializable]
     class ThemeData : ICloneable, INotifyPropertyChanged
     {
-        public ThemeData()
-            : this(null, null, null, null, null, null, null, null, null, null, null, null, null)
-        {
-        }
-
-        public ThemeData(string path)
-            : this(path, null, null, null, null, null, null, null, null, null, null, null, null)
-        {
-        }
-
-        public ThemeData(string path, string type, string format)
-            : this(path, type, format, null, null, null, null, null, null, null, null, null, null)
-        {
-        }
-
-        public ThemeData(string path, string type, string format, string version,
-            string datasource, string workspacePath, string workspaceType,
-            string workspaceProgId, string container, string containerType,
-            string dataSourceName, string datasetName, string datasetType)
+        public ThemeData(string path = null, string type = null, string format = null, string version = null,
+            string datasource = null, string workspacePath = null, string workspaceType = null,
+            string workspaceProgId = null, string container = null, string containerType = null,
+            string dataSourceName = null, string datasetName = null, string datasetType = null)
         {
             Path = path;
             Type = type;
