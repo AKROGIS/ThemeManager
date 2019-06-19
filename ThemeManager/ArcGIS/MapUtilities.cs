@@ -3,7 +3,7 @@ using System;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {
-    class MapUtilities
+    static class MapUtilities
     {
         private static MapDocument _mapDocument;
 
@@ -26,7 +26,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             return _mapDocument.IsMapDocument[file];
         }
 
-        static public IMapDocument GetMapDocumentFromFileName(string file)
+        public static IMapDocument GetMapDocumentFromFileName(string file)
         {
             if (!InitLayerFile(file))
                 throw new Exception("Map file is not valid.");

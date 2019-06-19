@@ -48,7 +48,7 @@ namespace NPS.AKRO.ThemeManager.Model
     class TmNode : ICloneable, INotifyPropertyChanged
     {
         static readonly int CountOfNodeTypes = Enum.GetValues(typeof(TmNodeType)).Length;
-        static private readonly DateTime DefaultPubDate = new DateTime(1900, 01, 01); //FIXME - make default date a setting
+        private static readonly DateTime DefaultPubDate = new DateTime(1900, 01, 01); //FIXME - make default date a setting
         private ThemeData _data;
         private Store _dataStore;
         private DateTime _pubDate;

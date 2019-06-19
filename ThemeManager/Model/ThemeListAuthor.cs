@@ -8,7 +8,7 @@ namespace NPS.AKRO.ThemeManager.Model
     [Serializable]
     class ThemeListAuthor : Dictionary<string, string>, ICloneable
     {
-        static public string[] DefaultKeys = {
+        public static string[] DefaultKeys = {
                                         "Name", 
                                         "Title", 
                                         "Organization",
