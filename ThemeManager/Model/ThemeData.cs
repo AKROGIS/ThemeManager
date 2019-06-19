@@ -183,7 +183,9 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             get
             {
-                return Type != null && Type.Contains("Geodatabase");
+                return WorkspaceProgId == "esriDataSourcesGDB.FileGDBWorkspaceFactory.1" || 
+                       WorkspaceProgId == "esriDataSourcesGDB.AccessWorkspaceFactory.1" ||
+                       WorkspaceProgId == "esriDataSourcesGDB.SdeWorkspaceFactory.1";
             }
         }
 
