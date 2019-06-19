@@ -247,28 +247,19 @@ namespace NPS.AKRO.ThemeManager.Model
             }
 
             // Esri Web services
-            if (data.DataSource != null && data.DataSource.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+            if (data.IsEsriMapService || data.IsEsriImageService)
             {
-                if (data.DataSource.EndsWith("/MapServer", StringComparison.OrdinalIgnoreCase) ||
-                    data.DataSource.EndsWith("/FeatureServer", StringComparison.OrdinalIgnoreCase) ||
-                    data.DataSource.EndsWith("/ImageServer", StringComparison.OrdinalIgnoreCase))
-                {
-                    newMetadata.Path = data.DataSource + "/info/metadata";
-                    newMetadata.Type = MetadataType.Url;
-                    newMetadata.Format = MetadataFormat.Xml;
-                    return newMetadata;
-                }
-                // FeatureService usually end with /FeatureService\XX where XX is an integer.  However they also
-                // have the workspace set to the Datasource without the \XX
-                if (data.DataSource.Contains("/FeatureServer", StringComparison.OrdinalIgnoreCase) &&
-                    data.WorkspacePath != null && data.WorkspacePath.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
-                    data.WorkspacePath.EndsWith("/FeatureServer", StringComparison.OrdinalIgnoreCase))
-                {
-                    newMetadata.Path = data.WorkspacePath + "/info/metadata";
-                    newMetadata.Type = MetadataType.Url;
-                    newMetadata.Format = MetadataFormat.Xml;
-                    return newMetadata;
-                }
+                newMetadata.Path = data.DataSource + "/info/metadata";
+                newMetadata.Type = MetadataType.Url;
+                newMetadata.Format = MetadataFormat.Xml;
+                return newMetadata;
+            }
+            if (data.IsEsriFeatureService)
+            {
+                newMetadata.Path = data.WorkspacePath + "/info/metadata";
+                newMetadata.Type = MetadataType.Url;
+                newMetadata.Format = MetadataFormat.Xml;
+                return newMetadata;
             }
 
             // Other web services may have metadata, but we are not ready to support them

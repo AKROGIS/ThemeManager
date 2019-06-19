@@ -187,6 +187,33 @@ namespace NPS.AKRO.ThemeManager.Model
             }
         }
 
+        internal bool IsEsriMapService
+        {
+            get
+            {
+                return DataSource != null && DataSource.StartsWith("http", StringComparison.OrdinalIgnoreCase) && 
+                       DataSource.EndsWith("/MapServer", StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        internal bool IsEsriImageService
+        {
+            get
+            {
+                return DataSource != null && DataSource.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
+                       DataSource.EndsWith("/ImageServer", StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        internal bool IsEsriFeatureService
+        {
+            get
+            {
+                return WorkspacePath != null && WorkspacePath.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
+                       WorkspacePath.EndsWith("/FeatureServer", StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
         // FIXME - the following would be nice to have, but I don't have
         // workable code, so they are not used
         //
