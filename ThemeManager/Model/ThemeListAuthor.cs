@@ -5,6 +5,17 @@ using System.Xml.Linq;
 
 namespace NPS.AKRO.ThemeManager.Model
 {
+    // This was a first try at having a variable set of attributes for the Author information
+    // Any Key/Value pair could be part of the Author's attributes
+    // On the UI, the dictionary would be bound to a DataGridView With the attribute column
+    // using a combobox picklist for a set of set of default property names.
+    // However this doesn't work because Dictionary does not support binding in WinForms
+    // See https://stackoverflow.com/q/854953 for way to create a IBindableDictionary
+    // Another philisophical problem is that ThemeListAuthor is not a Dictionary, rather it
+    // uses a dictionary for storing its attributes.  A cleaner interface may be have a
+    // property BindingList<KeyValuePair<TKey,TValue>> AttributeList that bound to the form.
+    // See https://docs.microsoft.com/en-us/dotnet/api/system.componentmodel.bindinglist-1?view=netframework-4.5
+
     [Serializable]
     class ThemeListAuthor : Dictionary<string, string>, ICloneable
     {
