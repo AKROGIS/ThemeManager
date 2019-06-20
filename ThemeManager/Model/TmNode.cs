@@ -85,6 +85,7 @@ namespace NPS.AKRO.ThemeManager.Model
             if (_type == TmNodeType.ThemeList)
             {
                 Author = new ThemeListAuthor();
+                Author.Name = Environment.UserName;
                 _status = ThemeListStatus.Created;
                 _dataStore = TryToGetDataStore();
                 // TryToGetDataStore() will set _readonly for theme
@@ -765,7 +766,7 @@ namespace NPS.AKRO.ThemeManager.Model
             Debug.Assert(this.IsCategory, "Should only be called on a Category Node");
             TmNode newNode = new TmNode(TmNodeType.ThemeList, this.Name, null, new ThemeData(path), this.Metadata.Clone() as Metadata, this.Description, null);
             ThemeListAuthor author = new ThemeListAuthor();
-            author["Name"] = Environment.UserName;
+            author.Name = Environment.UserName;
             newNode.Author = author;
             foreach (var child in Children)
                 newNode.Add(child.Copy());

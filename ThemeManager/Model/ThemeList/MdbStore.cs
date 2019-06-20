@@ -488,21 +488,15 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
                 {
                     if (!HasAuthor)
                         return null;
-                    var author = new ThemeListAuthor();
-                    if (!string.IsNullOrEmpty(AuthorName))
-                        author["Name"] = AuthorName;
-                    if (!string.IsNullOrEmpty(AuthorTitle))
-                        author["Title"] = AuthorTitle;
-                    if (!string.IsNullOrEmpty(AuthorOrganization))
-                        author["Organization"] = AuthorOrganization;
-                    if (!string.IsNullOrEmpty(AuthorAddress1))
-                        author["Address1"] = AuthorAddress1;
-                    if (!string.IsNullOrEmpty(AuthorAddress2))
-                        author["Address2"] = AuthorAddress2;
-                    if (!string.IsNullOrEmpty(AuthorPhone))
-                        author["Phone"] = AuthorPhone;
-                    if (!string.IsNullOrEmpty(AuthorEmail))
-                        author["Email"] = AuthorEmail;
+                    var author = new ThemeListAuthor {
+                        Name = string.IsNullOrWhiteSpace(AuthorName) ? null : AuthorName,
+                        Title = string.IsNullOrWhiteSpace(AuthorTitle) ? null : AuthorTitle,
+                        Organization = string.IsNullOrWhiteSpace(AuthorOrganization) ? null : AuthorOrganization,
+                        Address1 = string.IsNullOrWhiteSpace(AuthorAddress1) ? null : AuthorAddress1,
+                        Address2 = string.IsNullOrWhiteSpace(AuthorAddress2) ? null : AuthorAddress2,
+                        Phone = string.IsNullOrWhiteSpace(AuthorPhone) ? null : AuthorPhone,
+                        Email = string.IsNullOrWhiteSpace(AuthorEmail) ? null : AuthorEmail,
+                    };
                     return author;
                 }
             }
