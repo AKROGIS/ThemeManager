@@ -1365,10 +1365,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
         private void PopulateThemeListPropertyPanel(PropertiesForm form, TmNode node)
         {
-            //FIXME node.Metadata and node.Data may not exists
-            // ?? create a dummy property that will act as a proxy until the object is created
-            // ?? monitor events and provide a proxy during event handlers
-            // ?? always create a metadata and data object
+            Debug.Assert(node != null, "PropertyPanel has no Themelist node");
             Debug.Assert(node.Author != null, "Themelist node has no author object");
             Debug.Assert(node.Data != null, "TMNode node has no no data object");
             Debug.Assert(node.Metadata != null, "TMNode node has no metadata object");
@@ -1377,38 +1374,25 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             form.themelistFile.DataBindings.Clear();
             form.themelistMetadata.DataBindings.Clear();
             form.themelistDescription.DataBindings.Clear();
-            //form.themelistAge.DataBindings.Clear();
+            form.themelistAuthorName.DataBindings.Clear();
+            form.themelistAuthorTitle.DataBindings.Clear();
+            form.themelistAuthorOrg.DataBindings.Clear();
+            form.themelistAuthorAddress1.DataBindings.Clear();
+            form.themelistAuthorAddress2.DataBindings.Clear();
+            form.themelistAuthorPhone.DataBindings.Clear();
+            form.themelistAuthorEmail.DataBindings.Clear();
 
             form.themelistName.DataBindings.Add(new Binding("Text", node, "Name"));
             form.themelistFile.DataBindings.Add(new Binding("Text", node.Data, "Path"));
             form.themelistMetadata.DataBindings.Add(new Binding("Text", node.Metadata, "Path"));
             form.themelistDescription.DataBindings.Add(new Binding("Text", node, "Description"));
-            //form.themelistAge.DataBindings.Add(new Binding("Text", node, "DaysSinceNewestPublication"));
-            /*
-            DataGridViewComboBoxColumn authorAttributes = form.authorDataGridView.Columns["Attribute"] as DataGridViewComboBoxColumn;
-            if (authorAttributes != null)
-                authorAttributes.Items.AddRange(ThemeListAuthor.DefaultKeys);
-            if (node.HasAuthor)
-            {
-                BindingSource _bindingSource = new BindingSource();
-                form.authorDataGridView.DataSource = _bindingSource;
-                _bindingSource.DataSource = from row in node.Author select new { Attribute = row.Key, Value = row.Value };
-                //form.authorDataGridView.DataSource = node.Author ;
-            }
-             */
-
-            if (node.Author != null)
-            {
-                string value;
-                node.Author.TryGetValue("Name", out value); form.themelistAuthorName.Text = value;
-                node.Author.TryGetValue("Title", out value); form.themelistAuthorTitle.Text = value;
-                node.Author.TryGetValue("Organization", out value); form.themelistAuthorOrg.Text = value;
-                node.Author.TryGetValue("Address1", out value); form.themelistAuthorAddress1.Text = value;
-                node.Author.TryGetValue("Address2", out value); form.themelistAuthorAddress2.Text = value;
-                node.Author.TryGetValue("Phone", out value); form.themelistAuthorPhone.Text = value;
-                node.Author.TryGetValue("Email", out value); form.themelistAuthorEmail.Text = value;
-            }
-
+            form.themelistAuthorName.DataBindings.Add(new Binding("Text", node.Author, "Name"));
+            form.themelistAuthorTitle.DataBindings.Add(new Binding("Text", node.Author, "Title"));
+            form.themelistAuthorOrg.DataBindings.Add(new Binding("Text", node.Author, "Organization"));
+            form.themelistAuthorAddress1.DataBindings.Add(new Binding("Text", node.Author, "Address1"));
+            form.themelistAuthorAddress2.DataBindings.Add(new Binding("Text", node.Author, "Address2"));
+            form.themelistAuthorPhone.DataBindings.Add(new Binding("Text", node.Author, "Phone"));
+            form.themelistAuthorEmail.DataBindings.Add(new Binding("Text", node.Author, "Email"));
         }
 
         private void PopulateCategoryPropertyPanel(PropertiesForm form, TmNode node)
