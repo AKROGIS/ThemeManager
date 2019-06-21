@@ -102,14 +102,22 @@ namespace NPS.AKRO.ThemeManager.Model
             // This is based on examination of the Stylesheets and the Esri Libraries
             // I could not find this documented by Esri, so it may be subject to change without notice
             XsltArgumentList xslArgList = new XsltArgumentList();
+#if PRO
+            var esri = new ArcGIS.Desktop.Metadata.Editor.XsltExtensionFunctions();
+#else
             var esri = new ESRI.ArcGIS.Metadata.Editor.XsltExtensionFunctions();
+#endif
             xslArgList.AddExtensionObject("http://www.esri.com/metadata/", esri);
             xslArgList.AddExtensionObject("http://www.esri.com/metadata/res/", esri);
             return xslArgList;
         }
         private static string EsriLocalize(Match match)
         {
+#if PRO
+            return ArcGIS.Desktop.Metadata.Editor.XsltExtensionFunctions.GetResString(match.Groups[1].Value);
+#else
             return ESRI.ArcGIS.Metadata.Editor.XsltExtensionFunctions.GetResString(match.Groups[1].Value);
+#endif
         }
 
         private XslCompiledTransform GetCachedXslt()
@@ -177,7 +185,7 @@ namespace NPS.AKRO.ThemeManager.Model
             if (Directory.Exists(dir)) {
                 try
                 {
-                    foreach (string file in Directory.GetFiles(dir, "*.xslt", SearchOption.TopDirectoryOnly))
+                    foreach (string file in Directory.GetFiles(dir, "*.xsl", SearchOption.TopDirectoryOnly))
                     {
                         Add(new StyleSheet(file, true));
                     }

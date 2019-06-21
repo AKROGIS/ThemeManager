@@ -65,4 +65,5 @@ packages/
 
 #Test files
 *.testsettings
-ThemeManager/ESRI.ArcGIS.Metadata.Editor.dll
+ThemeManager/ESRI.ArcGIS.MetadataEditor.dll
+ThemeManager/ArcGIS.Desktop.Metadata.dll
