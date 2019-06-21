@@ -103,6 +103,8 @@ namespace NPS.AKRO.ThemeManager.Model
             // I could not find this documented by Esri, so it may be subject to change without notice
             XsltArgumentList xslArgList = new XsltArgumentList();
 #if PRO
+            //This library requires .net framework 4.6.1, and it conflicts with other Desktop libraries
+            //So, to use this, all the project references (and using) all need to be changed to the match the Pro SDK
             var esri = new ArcGIS.Desktop.Metadata.Editor.XsltExtensionFunctions();
 #else
             var esri = new ESRI.ArcGIS.Metadata.Editor.XsltExtensionFunctions();
