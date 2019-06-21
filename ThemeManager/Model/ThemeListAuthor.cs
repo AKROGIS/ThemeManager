@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
 namespace NPS.AKRO.ThemeManager.Model
@@ -87,7 +88,7 @@ namespace NPS.AKRO.ThemeManager.Model
             ThemeListAuthor author = new ThemeListAuthor();
             foreach (XElement entry in xEle.Elements("info"))
             {
-                string attributeType = entry.Attributes("type").ToString();
+                string attributeType = (string)entry.Attribute("type");
                 string value = string.IsNullOrWhiteSpace(entry.Value) ? null : entry.Value;
                 switch (attributeType)
                 {

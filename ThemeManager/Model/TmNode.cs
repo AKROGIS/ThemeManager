@@ -1139,6 +1139,10 @@ namespace NPS.AKRO.ThemeManager.Model
             if (data != null)
                 Metadata = Metadata.FromXElement(data);
 
+            data = xele.Element("author");
+            if (data != null)
+                Author = ThemeListAuthor.Load(data);
+
             if (recurse)
             {
                 TmNode childNode;
