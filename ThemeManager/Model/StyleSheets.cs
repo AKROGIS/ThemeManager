@@ -119,40 +119,66 @@ namespace NPS.AKRO.ThemeManager.Model
         public override Encoding Encoding => Encoding.UTF8;
     }
 
-    class StyleSheetsByEsri: List<StyleSheet>
+    class StyleSheetList: List<StyleSheet>
     {
-        private string _esriStyleSheetDir;
-
-        public StyleSheetsByEsri()
+        public StyleSheetList()
         {
-            //FIXME - catch and ignore file access related exceptions
-            string dir = EmbeddedStyleSheetDir;
-            if (string.IsNullOrEmpty(dir))
+            string dir = GetEmbeddedStyleSheetDir();
+            // Directory.Exists() returns false if it encounters any exceptions
+            if (string.IsNullOrWhiteSpace(dir) || !Directory.Exists(dir)) {
                 return;
-
-            foreach (string file in Directory.GetFiles(dir, "*.xslt", SearchOption.TopDirectoryOnly))
+            }
+            // Get files could fail if dir gets deleted/renamed/etc by another process after the check above
+            try
             {
-                if (Path.GetExtension(file).ToLower() == ".xslt")
-                    Add(new StyleSheet(file));
+                // Theme Manager provided Style Sheets
+                foreach (string file in Directory.GetFiles(dir, "*.xslt", SearchOption.TopDirectoryOnly))
+                {
+                    Add(new StyleSheet(file, false));
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print("Directory.GetFiles() failed on directory = {0}. Exception: = {1}", dir, ex.Message);
+                throw new DirectoryNotFoundException($"Style Sheet directory ({dir}) disappeared. {ex.Message}", ex);
+            }
+
+            // TODO: try and load the esri metadata library, and skip the Esri Stylesheets if not found.
+            // Unfortunately, there would be no way to notify the user at this point.
+
+            // Esri provided Style Sheets
+            dir = Path.Combine(dir, "Esri");
+            if (Directory.Exists(dir)) {
+                try
+                {
+                    foreach (string file in Directory.GetFiles(dir, "*.xslt", SearchOption.TopDirectoryOnly))
+                    {
+                        Add(new StyleSheet(file, true));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.Print("Directory.GetFiles() failed on directory = {0}. Exception: = {1}", dir, ex.Message);
+                    throw new DirectoryNotFoundException($"Style Sheet directory ({dir}) disappeared. {ex.Message}", ex);
+                }
             }
         }
 
-        // return a valid directory or empty string
-        private string EmbeddedStyleSheetDir
+        // Does not verify that path exists the caller should do that.  It may throw an exception if
+        // The user modified Settings.Default.StyleSheetDirectory is invalid
+        private string GetEmbeddedStyleSheetDir()
         {
-            get
-            {
-                if (_esriStyleSheetDir == null)
-                {
-                    // need a full path for the stylesheet transformer
-                    _esriStyleSheetDir = Path.Combine(
-                        Path.GetDirectoryName(Application.ExecutablePath),
-                        Settings.Default.StyleSheetDirectory
-                    );
-                    Debug.Print("Stylesheet directory = {0}, Exists = {1}", _esriStyleSheetDir, Directory.Exists(_esriStyleSheetDir));
-                }
-                return _esriStyleSheetDir;
+            // need a full path for the stylesheet transformer
+            var styleSheetDir = Path.Combine(
+                Path.GetDirectoryName(Application.ExecutablePath),
+                Settings.Default.StyleSheetDirectory ?? ""
+            );
+            Debug.Print($"Stylesheet directory = {styleSheetDir}, Exists = {Directory.Exists(styleSheetDir)}");
+            if (!Directory.Exists(styleSheetDir)) {
+                Debug.Print($"Style Sheet directory ({styleSheetDir}) not found.");
+                throw new DirectoryNotFoundException($"Style Sheet directory ({styleSheetDir}) not found: Check settings in ThemeManager.config");
             }
+            return styleSheetDir;
         }
     }
 }

@@ -1679,7 +1679,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
         private void LoadStyleSheetPickList()
         {
-            styleSheetComboBox.Items.AddRange(new StyleSheetsByEsri().ToArray());
+            try
+            {
+                styleSheetComboBox.Items.AddRange(new StyleSheetList().ToArray());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error finding stylesheets. {ex.Message}.", "Oh No!");
+            }
         }
 
         private void LoadAgePickList()
