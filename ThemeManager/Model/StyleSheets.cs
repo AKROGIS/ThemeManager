@@ -21,16 +21,20 @@ namespace NPS.AKRO.ThemeManager.Model
 
     internal class StyleSheet
     {
+        // Assume we can find the Esri Metadata Library, until proved otherwise.  Then we won't check anymore
+        private static bool EsriLibraryAvailable = true;
+
         private XslCompiledTransform _xlst;
 
         /// <summary>
         /// Creates a new object for transforming XML
         /// </summary>
         /// <param name="path">Must be a local filesystem path</param>
-        internal StyleSheet(string path)
+        internal StyleSheet(string path, bool esriStyleSheet = false)
         {
             Path = path;
             Name = System.IO.Path.GetFileNameWithoutExtension(path);
+            EsriStyleSheet = esriStyleSheet;
             //Do not pre-load the style sheets.  1) it takes significant time to compile, 2) it might not be used
             //_xlst = GetXslt(Path);
             //This means that a bad (invalid) stylesheet might be in the list
@@ -39,6 +43,8 @@ namespace NPS.AKRO.ThemeManager.Model
         internal string ErrorMessage {get; private set;}
         private string Name { get; }
         private string Path { get; }
+        // Esri Style Sheets are not installed by default, and they require extra processing which might not be possible.
+        private bool EsriStyleSheet { get; set; }
 
         // Stylesheet selector in UI calls ToString() on the stylesheet object to get text for the pick list.
         public override string ToString() {return Name;}
@@ -50,15 +56,22 @@ namespace NPS.AKRO.ThemeManager.Model
             {
                 var metadataXml = new XPathDocument(sr);
 
-                XslCompiledTransform xlst = GetCachedXslt();
+                XsltArgumentList xslArgList;
+                try
+                {
+                    xslArgList = EsriLibraryAvailable ? EsriProcessingArguments() : new XsltArgumentList();
+                }
+                catch (FileNotFoundException)
+                {
+                    EsriLibraryAvailable = false;
+                    xslArgList = new XsltArgumentList();
+                }
 
-                // Custom Esri extensions are needed to process the Esri Stylesheets
-                // This is based on examination of the Stylesheets and the Esri Libraries
-                // I could not find this documented by Esri, so it may be subject to change without notice
-                XsltArgumentList xslArgList = new XsltArgumentList();
-                var esri = new ESRI.ArcGIS.Metadata.Editor.XsltExtensionFunctions();
-                xslArgList.AddExtensionObject("http://www.esri.com/metadata/", esri);
-                xslArgList.AddExtensionObject("http://www.esri.com/metadata/res/", esri);
+                if (EsriStyleSheet && !EsriLibraryAvailable) {
+                    throw new FileNotFoundException("Esri Metadata library not found.  See installation instructions");
+                }
+
+                XslCompiledTransform xlst = GetCachedXslt();
 
                 // HTML output
                 TextWriter textWriter = new Utf8StringWriter();
@@ -66,21 +79,34 @@ namespace NPS.AKRO.ThemeManager.Model
                 {
                     xlst.Transform(metadataXml, xslArgList, xmlWriter);
                 }
-                // Use Regex to replace the localizable elements <res:xxx /> with the localized text
-                var pattern = @"<res:(\w+)(?:\s?|\s\S*\s)/>";
-                MatchEvaluator evaluator = EsriLocalize;
-                htmlText = Regex.Replace(textWriter.ToString(), pattern, evaluator, RegexOptions.None, TimeSpan.FromSeconds(0.25));
-            }
+                htmlText = textWriter.ToString();
 
-            // The following 2 fixes should be done in the stylesheets
-            //Add DOCTYPE
-            htmlText = htmlText.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>",
-                "<?xml version=\"1.0\" encoding=\"utf-8\"?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
-            //Fix Thumbnail centering
-            htmlText = htmlText.Replace(".noThumbnail {", ".noThumbnail {display:inline-block;");
+                if (EsriStyleSheet) {
+                    // Use Regex to replace the localizable elements <res:xxx /> with the localized text
+                    var pattern = @"<res:(\w+)(?:\s?|\s\S*\s)/>";
+                    htmlText = Regex.Replace(htmlText, pattern, EsriLocalize, RegexOptions.None, TimeSpan.FromSeconds(0.25));
+                    // The following 2 fixes should be done in the stylesheets, and are only required(?) in the Esri Stylesheets
+                    //Add DOCTYPE
+                    htmlText = htmlText.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+                        "<?xml version=\"1.0\" encoding=\"utf-8\"?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
+                    //Fix Thumbnail centering
+                    htmlText = htmlText.Replace(".noThumbnail {", ".noThumbnail {display:inline-block;");
+                }
+            }
             return htmlText;
         }
 
+        private static XsltArgumentList EsriProcessingArguments()
+        {
+            // Custom Esri extensions are needed to process the Esri Stylesheets
+            // This is based on examination of the Stylesheets and the Esri Libraries
+            // I could not find this documented by Esri, so it may be subject to change without notice
+            XsltArgumentList xslArgList = new XsltArgumentList();
+            var esri = new ESRI.ArcGIS.Metadata.Editor.XsltExtensionFunctions();
+            xslArgList.AddExtensionObject("http://www.esri.com/metadata/", esri);
+            xslArgList.AddExtensionObject("http://www.esri.com/metadata/res/", esri);
+            return xslArgList;
+        }
         private static string EsriLocalize(Match match)
         {
             return ESRI.ArcGIS.Metadata.Editor.XsltExtensionFunctions.GetResString(match.Groups[1].Value);
