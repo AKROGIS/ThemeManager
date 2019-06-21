@@ -156,6 +156,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -294,10 +295,10 @@
       <DependentUpon>WarningForm.cs</DependentUpon>
     </Compile>
     <None Include="app.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="Docs\Change Log.docx" />
     <None Include="Docs\Help.docx" />
-    <None Include="Model\ClassDiagram1.cd" />
+    <None Include="Docs\Installation.docx" />
+    <None Include="Docs\Stylesheets.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -336,9 +337,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Html\Help.html">
+    <None Include="Docs\_TaskList.txt" />
+    <None Include="Html\Help.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="Images\ArcMap_MXD_File16.png" />
     <Content Include="Images\DataFrame16.png" />
     <Content Include="Images\KmlIcon.png" />
@@ -375,12 +377,13 @@
     <Content Include="Images\LayerTracking16.png" />
     <Content Include="Images\FavoriteStar_16x16.png" />
     <Content Include="Images\SortNone.png" />
+    <None Include="Stylesheets\Alaska.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Stylesheets\Unformatted Xml.xslt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="UI\How To Compile for ArcGIS9.3.txt" />
     <None Include="Properties\app.manifest" />
-    <None Include="thememanager.dtd" />
     <None Include="Images\category.png" />
     <None Include="Images\copy.png" />
     <None Include="Images\cut.png" />
@@ -400,19 +403,18 @@
     <None Include="Images\tools.png" />
     <None Include="Images\open.png" />
     <None Include="Images\print.png" />
-    <None Include="themelist.dtd" />
-    <Content Include="Html\NoInitialData.html">
+    <None Include="Html\NoInitialData.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Html\NoMetadata.html">
+    </None>
+    <None Include="Html\NoMetadata.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Html\Startup.html">
+    </None>
+    <None Include="Html\Startup.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Html\tm.css">
+    </None>
+    <None Include="Html\tm.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="Images\BlmLogo.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -421,8 +423,6 @@
     <Content Include="Images\NPSLogo.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="ThemeManager_TemporaryKey.pfx" />
-    <None Include="_TaskList.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
