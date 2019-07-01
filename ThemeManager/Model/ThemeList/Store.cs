@@ -8,7 +8,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
     class Store
     {
         protected bool _loaded;
-        protected bool? _readonly;
+        protected bool? _isReadOnly;
         protected bool? _valid;
         protected string _version;
         protected string _path;
@@ -24,13 +24,15 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
         /// </summary>
         public virtual bool IsThemeList { get {return false; }}
 
-        public virtual bool ReadOnly
+        public virtual bool IsReadOnly
         {
             get
             {
-                return _readonly ?? (bool)(_readonly = !CanWriteToExistingPath);
+                return _isReadOnly ?? (bool)(_isReadOnly = !CanWriteToExistingPath);
             }
         }
+
+        public bool IsEditable { get { return !IsReadOnly; } }
 
         public virtual string Version { get { return _version; } }
 
@@ -56,14 +58,14 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
             }
         }
 
-        public virtual void Build(TmNode node) { }
+        public virtual void Build(ThemeListNode node) { }
 
-        public virtual void Save(TmNode node) { }
+        public virtual void Save(ThemeListNode node) { }
 
         public virtual void Reset()
         {
             _version = null;
-            _readonly = null;
+            _isReadOnly = null;
             _valid = null;
             _loaded = false;
         }

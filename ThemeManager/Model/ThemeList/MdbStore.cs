@@ -31,13 +31,18 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
             _oleConnection = DbProvider + path + ";";
         }
 
+        /// <summary>
+        /// MDB are readonly (never editable) until we provide write support
+        /// </summary>
+        public override bool IsReadOnly { get {return true;} }
+
         public override bool IsThemeList
         {
-            get 
+            get
             {
                 if (_valid == null)
                     _valid = IsValid();
-                return (bool)_valid; 
+                return (bool)_valid;
             }
         }
 
@@ -82,10 +87,10 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
 
             if (!File.Exists(path))
                 return null;
-            return new MdbStore(path) {_version = version, _readonly = false, _valid = true, _loaded = true};
+            return new MdbStore(path) {_version = version, _isReadOnly = false, _valid = true, _loaded = true};
         }
 
-        public override void Build(TmNode node)
+        public override void Build(ThemeListNode node)
         {
             if (node == null)
                 throw new ArgumentNullException("TMNode is null");
@@ -117,7 +122,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
                 Load();
 
             Theme theme = FindThemebyId(themeId);
-            TmNode newNode = new TmNode(TmNodeType.Theme,
+            TmNode newNode = new ThemeNode(
                 theme.Name,
                 null,
                 MakeThemeData(theme.Name, theme.DataSource, theme.Type),
@@ -142,7 +147,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
             throw new ArgumentException("No Theme for theme ID = " + themeId);
         }
 
-        public override void Save(TmNode node)
+        public override void Save(ThemeListNode node)
         {
             //FIXME - Implement Save;
             // check version and save appropriate to that version
@@ -216,7 +221,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
                             cat.Link = rdr["CategoryLink"] as string;
                             cat.Description = rdr["Description"] as string;
                         }
-                        // make lists of categories with the same category ID 
+                        // make lists of categories with the same category ID
                         if (!_categoriesInCategories.ContainsKey(cat.ParentId))
                             _categoriesInCategories.Add(cat.ParentId, new List<Category>());
                         _categoriesInCategories[cat.ParentId].Add(cat);
@@ -258,16 +263,16 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
                         }
                         else
                         {
-                            theme.PubDate = (rdr["Date_Last_Updated"] is DBNull) ? new DateTime(1900, 01, 01) 
+                            theme.PubDate = (rdr["Date_Last_Updated"] is DBNull) ? new DateTime(1900, 01, 01)
                                                                               : (DateTime)rdr["Date_Last_Updated"];
                         }
 
                         // if parent ID = -1 and category ID = -1 then theme parent is the theme List (category ID = -1).
-                        // if parent ID = -1 and category ID <> -1 then parent is a category (look for it in the category list) 
+                        // if parent ID = -1 and category ID <> -1 then parent is a category (look for it in the category list)
                         // if parent ID <> -1 and category ID = -1 then parent is a theme (look for it in the theme list)
                         // if parent ID <> -1 and category <> -1 then parent is a theme (category is a grand parent).
                         // In a well formed database, the category should never be -1, so check parent ID first.
-                        
+
                         // make lists of themes with the same parent ID, if it is valid
                         if (theme.ParentId != -1)
                         {
@@ -331,13 +336,11 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
             if (cats != null)
                 foreach (Category cat in cats)
                 {
-                    TmNode newNode = new TmNode(TmNodeType.Category,
+                    TmNode newNode = new CategoryNode(
                         cat.Name,
                         node,
-                        null,
                         MakeMetadataForCategory(cat.Link),
                         cat.Description,
-                        null
                         );
                     node.Add(newNode);
                     FillCategory(newNode, cat.Id);
@@ -348,7 +351,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
             if (themes != null)
                 foreach (Theme theme in themes)
                 {
-                    TmNode newNode = new TmNode(TmNodeType.Theme,
+                    TmNode newNode = new new ThemeNode(
                         theme.Name,
                         node,
                         MakeThemeData(theme.Name, theme.DataSource, theme.Type),
@@ -363,13 +366,13 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
 
         private void FillTheme(TmNode node, int themeId)
         {
-            //  A theme can have only themes for children.
+            //  A theme can have only themes for children, we create new subtheme nodes..
             List<Theme> themes;
             _themesInThemes.TryGetValue(themeId, out themes);
             if (themes != null)
                 foreach (Theme theme in themes)
                 {
-                    TmNode newNode = new TmNode(TmNodeType.Theme,
+                    TmNode newNode = new SubThemeNode(
                         theme.Name,
                         node,
                         MakeThemeData(theme.Name, theme.DataSource, theme.Type),
@@ -389,7 +392,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
         //       or a PGDB feature class with '::PGDB' appended
 
         // datasource was typically a layer file, but it could also be an ArcCatalog datapath (i.e. ../file.gdb/feat_class
- 
+
         private static Metadata MakeMetadataForTheme(string path)
         {
             Metadata newMetadata;

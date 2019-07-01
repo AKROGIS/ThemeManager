@@ -58,7 +58,7 @@ namespace NPS.AKRO.ThemeManager.Model
         EsriDataPath,
         /// <summary>
         /// Uniform Resource Locator to an online metadata resource.
-        /// While the file:// schema is a valid URL, those will be treated as a FilePath.  
+        /// While the file:// schema is a valid URL, those will be treated as a FilePath.
         /// </summary>
         Url
     }
@@ -119,7 +119,7 @@ namespace NPS.AKRO.ThemeManager.Model
     ///
     /// The metadata object is never validated.  If it cannot be used as requested, an exception
     /// will be thrown, or null will be returned and the ErrorMessage property set.
-    /// 
+    ///
     /// The Type and Format Properties are informational and may be wrong. They will be assumed at
     /// object creation and path/datasource changes.  They will be verified when the resource is
     /// used (display, search, get attributes).  Even then the contents of an external file or
@@ -131,7 +131,7 @@ namespace NPS.AKRO.ThemeManager.Model
         #region  Class Methods (Public)
 
         /// <summary>
-        /// Creates a Metadata reference appropriate for the data source.   
+        /// Creates a Metadata reference appropriate for the data source.
         /// </summary>
         /// <remarks>
         /// This method will guess the metadata Path, Type and Format based on Esri conventions
@@ -457,7 +457,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// <remarks>
         /// This is an option to throwing an exception.  If a method GetInfo() returns null, the
         /// caller can check this property for an possible explanation.
-        /// This property will usually be null, and is not guaranteed to have a value. 
+        /// This property will usually be null, and is not guaranteed to have a value.
         /// </remarks>
         internal string ErrorMessage { get; private set; }
 
@@ -493,20 +493,9 @@ namespace NPS.AKRO.ThemeManager.Model
         #endregion
 
 
-        #region  Interface Implementations
-        #region IClonable Interface
-
-        public object Clone()
-        {
-            var obj = (Metadata)MemberwiseClone();
-            return obj;
-        }
-
-        #endregion
-
         #region INotifyPropertyChanged Interface
 
-        [field: NonSerializedAttribute()]
+        [field: NonSerializedAttribute]
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
@@ -514,7 +503,6 @@ namespace NPS.AKRO.ThemeManager.Model
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        #endregion
         #endregion
 
 
@@ -652,14 +640,14 @@ namespace NPS.AKRO.ThemeManager.Model
                     .Concat(xmlMetadata.XPathSelectElements("/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract/gco:CharacterString", namespaceManager))
                     .Select(element => element.Value)
                     .FirstOrDefault(value => !string.IsNullOrEmpty(value) &&
-                                             !value.StartsWith("REQUIRED:"));  // Unpopulated data from FGDC template
+                                             !value.StartsWith("REQUIRED:", StringComparison.Ordinal));  // Unpopulated data from FGDC template
                 description = StripSimpleHtmlTags(description);
 
                 // PublicationDate
                 //   FGDC: /metadata/idinfo/citation/citeinfo/pubdate
                 //   ArcGIS: /metadata/dataIdInfo/idCitation/date/pubDate
                 //   ISO 19139: {root}/gmd:dateStamp/gco:DateTime (or {root}/gmd:dateStamp/gco:Date if just a date is provided)
-                //       that is actually the date of the metadata.  The actual publication date will be in 
+                //       that is actually the date of the metadata.  The actual publication date will be in
                 //       publication date: {root}/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date
                 //       where the ../../gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode = "publication; publication" (actual values may vary based on codelist used)
                 var pubDateString = xmlMetadata
@@ -671,7 +659,7 @@ namespace NPS.AKRO.ThemeManager.Model
                     .Concat(xmlMetadata.XPathSelectElements("/gmi:MI_Metadata/gmd:dateStamp/gco:Date", namespaceManager))
                     .Select(element => element.Value)
                     .FirstOrDefault(value => !string.IsNullOrEmpty(value) &&
-                                             !value.StartsWith("REQUIRED:"));  // Unpopulated data from FGDC template
+                                             !value.StartsWith("REQUIRED:", StringComparison.Ordinal));  // Unpopulated data from FGDC template
                 // Normalize date string and convert to optional datetime
                 pubDateString = NormalizeFgdcDateString(pubDateString);
                 DateTime date;
@@ -689,7 +677,7 @@ namespace NPS.AKRO.ThemeManager.Model
                     .Concat(xmlMetadata.XPathSelectElements("/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString", namespaceManager))
                     .Select(element => element.Value)
                     .FirstOrDefault(value => !string.IsNullOrEmpty(value) &&
-                                             !value.StartsWith("REQUIRED:"));   // Unpopulated data from FGDC template
+                                             !value.StartsWith("REQUIRED:", StringComparison.Ordinal));   // Unpopulated data from FGDC template
                 summary = StripSimpleHtmlTags(summary);
 
                 // Tags (aka Keywords)
@@ -707,8 +695,8 @@ namespace NPS.AKRO.ThemeManager.Model
                     .Concat(xmlMetadata.XPathSelectElements("/gmi:MI_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString", namespaceManager))
                     .Select(element => element.Value)
                     .Where(value => !string.IsNullOrEmpty(value) &&
-                                    !value.StartsWith("00") &&       // keyword in otherKeys for all new ArcGIS metadata
-                                    !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
+                                    !value.StartsWith("00", StringComparison.Ordinal) &&       // keyword in otherKeys for all new ArcGIS metadata
+                                    !value.StartsWith("REQUIRED:", StringComparison.Ordinal))  // Unpopulated data from FGDC template
                     .Distinct().Concat(", ");
                 tags = StripSimpleHtmlTags(tags);  // Also condenses whitespace
             }
@@ -722,7 +710,7 @@ namespace NPS.AKRO.ThemeManager.Model
         }
 
         /// <summary>
-        /// Search the metadata content for text strings. 
+        /// Search the metadata content for text strings.
         /// </summary>
         /// <remarks>
         /// This method is required to load and possibly parse the metadata content.
@@ -819,7 +807,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// <remarks>
         /// This method will not throw an exception.
         /// Side effects:
-        /// It will set ErrorMessage to an error message (if any are encountered) 
+        /// It will set ErrorMessage to an error message (if any are encountered)
         /// It may change the Type and Format if they are wrong.
         /// </remarks>
         /// <returns>a text string of the metadata if available or null</returns>
@@ -852,7 +840,7 @@ namespace NPS.AKRO.ThemeManager.Model
                          Path.Contains(".sde\\", StringComparison.OrdinalIgnoreCase) ||
                          Path.Contains(".mdb\\", StringComparison.OrdinalIgnoreCase))
                 {
-                    
+
                     Type = MetadataType.EsriDataPath;
                 }
                 else
@@ -950,7 +938,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// <remarks>
         /// This method will not throw an exception.
         /// Side effects:
-        /// It will set ErrorMessage to an exception message (if encountered) 
+        /// It will set ErrorMessage to an exception message (if encountered)
         /// It may change the Type and Format if they are wrong.
         /// </remarks>
         /// <returns>An XDocument or null</returns>

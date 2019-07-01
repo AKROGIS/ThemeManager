@@ -7,7 +7,7 @@ using System.Xml.Linq;
 namespace NPS.AKRO.ThemeManager.Model
 {
     [Serializable]
-    class ThemeListAuthor : ICloneable, INotifyPropertyChanged
+    class ThemeListAuthor : INotifyPropertyChanged
     {
 
         #region Properties
@@ -85,7 +85,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 throw new ArgumentNullException(nameof(xEle));
             if (xEle.Name != "author")
                 throw new ArgumentException("Invalid XElement");
-            ThemeListAuthor author = new ThemeListAuthor();
+            var author = new ThemeListAuthor();
             foreach (XElement entry in xEle.Elements("info"))
             {
                 string attributeType = (string)entry.Attribute("type");
@@ -120,20 +120,11 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #endregion
 
-        #region ICloneable Members
-
-        public object Clone()
-        {
-            ThemeListAuthor author = (ThemeListAuthor)MemberwiseClone();
-            return author;
-        }
-
-        #endregion
-
         #region INotifyPropertyChanged
 
         // From code provided by Marc Gravell (https://stackoverflow.com/a/1316417)
 
+        [field: NonSerializedAttribute]
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

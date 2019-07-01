@@ -8,12 +8,12 @@ using System.Xml.Linq;
 //        Themes do not contain data sources (they point to a layer file, or other document)
 //        Sub-Themes contain the data source information.
 //        Therefore all layer file themes will have one and only one sub-theme
-//        Historically a theme contains the properties of this singular sub-theme.  
+//        Historically a theme contains the properties of this singular sub-theme.
 
 namespace NPS.AKRO.ThemeManager.Model
 {
     [Serializable]
-    class ThemeData : ICloneable, INotifyPropertyChanged
+    class ThemeData : INotifyPropertyChanged
     {
         public ThemeData(string path = null, string type = null, string format = null, string version = null,
             string datasource = null, string workspacePath = null, string workspaceType = null,
@@ -75,7 +75,7 @@ namespace NPS.AKRO.ThemeManager.Model
         // the path to the layer file (for a group layer, or a layer file with a single datasource,
         // however for all items in a group layer, then path has the ArcObjects path to the
         // data source.
-        
+
         // For the future, Path will contain only contain a file system path.
         // DatasourceName will contain the ArcObjects name of the data source.
         // for a layer file with a single data layer, then both Path and DataSourceName are populated
@@ -118,7 +118,7 @@ namespace NPS.AKRO.ThemeManager.Model
         internal string DataSetName { get; set; }
         internal string DataSetType { get; set; }
 
-        //The following checks are based on Type information only available to 
+        //The following checks are based on Type information only available to
         //themes loaded with TM3.0, however these checks are only called
         //when trying to find metadata for themes loaded with TM3.0
         internal bool IsCoverage => Type != null && (Type.Contains("Coverage") || Type.Contains("Region") || Type.Contains("Route"));
@@ -128,12 +128,12 @@ namespace NPS.AKRO.ThemeManager.Model
         internal bool IsCad => Type != null && Type.Contains(" CAD ");
 
         internal bool IsInGeodatabase =>
-            WorkspaceProgId == "esriDataSourcesGDB.FileGDBWorkspaceFactory.1" || 
+            WorkspaceProgId == "esriDataSourcesGDB.FileGDBWorkspaceFactory.1" ||
             WorkspaceProgId == "esriDataSourcesGDB.AccessWorkspaceFactory.1" ||
             WorkspaceProgId == "esriDataSourcesGDB.SdeWorkspaceFactory.1";
 
         internal bool IsEsriMapService =>
-            DataSource != null && DataSource.StartsWith("http", StringComparison.OrdinalIgnoreCase) && 
+            DataSource != null && DataSource.StartsWith("http", StringComparison.OrdinalIgnoreCase) &&
             DataSource.EndsWith("/MapServer", StringComparison.OrdinalIgnoreCase);
 
         internal bool IsEsriImageService =>
@@ -152,7 +152,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 throw new ArgumentNullException(nameof(xEle));
             if (xEle.Name != "data")
                 throw new ArgumentException("Invalid XElement");
-            ThemeData data = new ThemeData(
+            var data = new ThemeData(
                 xEle.Value,
                 (string)xEle.Attribute("type"),
                 (string)xEle.Attribute("format"),
@@ -191,18 +191,9 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #endregion
 
-        #region ICloneable
-
-        public object Clone()
-        {
-            return (ThemeData)MemberwiseClone();
-        }
-
-        #endregion
-
         #region INotifyPropertyChanged
 
-        [field: NonSerializedAttribute()]
+        [field: NonSerializedAttribute]
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string property)

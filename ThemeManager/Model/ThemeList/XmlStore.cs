@@ -31,7 +31,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
                 Load();
             if (_xml == null)
                 return false;
-            return _xml.Name == Enum.GetName(typeof(TmNodeType), TmNodeType.ThemeList).ToLower();
+            return _xml.Name == ThemeListNode.TypeString;
         }
 
         public override string Version
@@ -62,7 +62,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
 
             if (!File.Exists(path))
                 return null;
-            return new XmlStore(path) { _version = version, _readonly = false, _valid = true, _loaded = true };
+            return new XmlStore(path) { _version = version, _isReadOnly = false, _valid = true, _loaded = true };
         }
 
         public static XmlStore CreateNew(string path, string version)
@@ -78,7 +78,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
 
             if (!File.Exists(path))
                 return null;
-            return new XmlStore(path) { _version = version, _readonly = false, _valid = true, _loaded = true };
+            return new XmlStore(path) { _version = version, _isReadOnly = false, _valid = true, _loaded = true };
         }
 
         private void Load()
@@ -96,14 +96,14 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
             }
         }
 
-        public override void Build(TmNode node)
+        public override void Build(ThemeListNode node)
         {
             if (!IsThemeList)
                 return;
             node.Load(_xml);
         }
 
-        public override void Save(TmNode node)
+        public override void Save(ThemeListNode node)
         {
             _xml = node.ToXElement();
             _xml.Save(_path);
@@ -119,7 +119,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
                     res = (string)x.Attribute("name");
                 else
                     res = (string)x.Attribute("name") + "/" + res;
-                 
+
             }
             return res;
         }
