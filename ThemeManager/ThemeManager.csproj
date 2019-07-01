@@ -229,6 +229,13 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\DeepCopyExtension.cs" />
+    <Compile Include="Model\CategoryNode.cs" />
+    <Compile Include="Model\ShortcutNode.cs" />
+    <Compile Include="Model\SubThemeNode.cs" />
+    <Compile Include="Model\ThemeListNode.cs" />
+    <Compile Include="Model\ThemeListStatus.cs" />
+    <Compile Include="Model\ThemeNode.cs" />
     <Compile Include="Model\ThemeData.cs" />
     <Compile Include="Model\ThemeListAuthor.cs" />
     <Compile Include="Model\ThemeList\MdbStore.cs" />
