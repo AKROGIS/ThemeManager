@@ -17,7 +17,7 @@ namespace NPS.AKRO.ThemeManager.UI
             UpdateProperties();
 
             tmNode.PropertyChanged += Data_PropertyChanged;
-            tmNode.ReloadNode += Data_ReloadNode;
+            tmNode.NodeHasBeenUpdated += Data_ReloadNode;
             tmNode.ChildRemoved += Data_ChildRemoved;
             tmNode.ChildAdded += Data_ChildAdded;
 
@@ -29,15 +29,15 @@ namespace NPS.AKRO.ThemeManager.UI
         {
             Text = TmNode.Name;
             //ImageIndex = TmNode.ImageIndex;
-            ImageKey = TmNode.ImageKey;
-            SelectedImageKey = TmNode.ImageKey;
+            ImageKey = TmNode.ImageName;
+            SelectedImageKey = TmNode.ImageName;
             //SelectedImageIndex = TmNode.ImageIndex;
             if (!string.IsNullOrEmpty(TmNode.Description))
                 ToolTipText = TmNode.Description;
             BackColor = TmNode.IsSelected ? Color.DeepSkyBlue : Color.Empty;
             //if (TmNode.IsHidden && !Settings.Default.ShowHiddenThemes)
             //    Remove();
-            ForeColor = (TmNode.IsHidden || TmNode.IsSubTheme) ? Color.Gray : Color.Black;
+            ForeColor = (TmNode.IsHidden || TmNode is SubThemeNode) ? Color.Gray : Color.Black;
         }
 
         public TmNode TmNode { get; private set; }
@@ -53,8 +53,8 @@ namespace NPS.AKRO.ThemeManager.UI
                 Text = TmNode.Name;
             if (e.PropertyName == "ImageKey")
             {
-                ImageKey = TmNode.ImageKey;
-                SelectedImageKey = TmNode.ImageKey;
+                ImageKey = TmNode.ImageName;
+                SelectedImageKey = TmNode.ImageName;
             }
             if (e.PropertyName == "Description")
                 if (string.IsNullOrEmpty(TmNode.Description))
@@ -64,7 +64,7 @@ namespace NPS.AKRO.ThemeManager.UI
             if (e.PropertyName == "IsSelected")
                 BackColor = TmNode.IsSelected ? Color.DeepSkyBlue : Color.Empty;
             if (e.PropertyName == "IsHidden" || e.PropertyName == "IsSubTheme")
-                ForeColor = (TmNode.IsHidden || TmNode.IsSubTheme) ? Color.Gray : Color.Black;
+                ForeColor = (TmNode.IsHidden || TmNode is SubThemeNode) ? Color.Gray : Color.Black;
         }
 
         //private void Data_ImageChanged(object sender, TmNodeEventArgs e)
@@ -89,7 +89,7 @@ namespace NPS.AKRO.ThemeManager.UI
         private void Data_ChildAdded(object sender, TmNodeEventArgs e)
         {
             Nodes.Insert(e.Index, new TmTreeNode(e.Node));
-            // this node 
+            // this node
         }
 
         private void Data_ReloadNode(object sender, EventArgs e)

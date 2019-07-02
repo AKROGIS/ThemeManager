@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.IO;
-using System.Diagnostics;
+﻿using NPS.AKRO.ThemeManager.ArcGIS;
+using System;
 using System.ComponentModel;
-using NPS.AKRO.ThemeManager.ArcGIS;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
 namespace NPS.AKRO.ThemeManager.Model
 {
@@ -14,7 +14,7 @@ namespace NPS.AKRO.ThemeManager.Model
         //case sensitive, and needs to be impervious to refactoring
         new public const string TypeString = "theme";
 
-        static readonly private DateTime DefaultPubDate = new DateTime(1900, 01, 01); //FIXME - make default date a setting
+        private static readonly DateTime DefaultPubDate = new DateTime(1900, 01, 01); //FIXME - make default date a setting
 
         //Load From XML
         public ThemeNode()
@@ -83,8 +83,9 @@ namespace NPS.AKRO.ThemeManager.Model
         public override void Reload()
         {
             SyncThemeDataToPath();
-            Metadata.Repair(Data);
-            //Don't bother syncing ;  User can ask for this later.
+            Metadata.UpdateWithDataSource(Data);
+            // Don't automatically sync metadata attributes.  It may overwrite manually edited Theme data.
+            // User can explicitly ask for a metadata sync if they want it.
         }
 
         public ThemeData Data
@@ -102,11 +103,11 @@ namespace NPS.AKRO.ThemeManager.Model
                     if (_data != null)
                         _data.PropertyChanged -= Data_PropertyChanged;
                     _data = value;
-                    if (_data != null) 
+                    if (_data != null)
                         _data.PropertyChanged += Data_PropertyChanged;
                     //FIXME: Replacing the Data object implicitly changes the data properties.
                     //Should I call Data_PropertyChanged to ensure I am up to date, or is this
-                    //too expensive?  For now I calc the image name and set ThemeList.IsDirty 
+                    //too expensive?  For now I calc the image name and set ThemeList.IsDirty
                     ImageName = CalculateImageName();
                     MarkAsChanged();
                 }
@@ -149,14 +150,22 @@ namespace NPS.AKRO.ThemeManager.Model
             {
                 if (this is ThemeNode)
                 {
-                    SyncThemeDataToPath();
-                    // Get new metadata for new data path/type
-                    //replacing the metadaata object, breaks the databinding on the prperties form
-                    //Metadata = Metadata.Find(Data)
-                    //FIXME - subtheme metadata is not reloaded
-                    Metadata.Repair(Data);
-                    //resync all metadata
-                    SyncWithMetadata(true);
+                    // Changes to Data.Path may trigger exceptions
+                    try
+                    {
+                        // Update Theme properties (icons, etc) for new data path
+                        SyncThemeDataToPath();
+                        // Update the metadata object (can't replace because it breaks property binding in forms)
+                        // FIXME: May need to repair metadata paths on sub themes as well.
+                        Metadata.UpdateWithDataSource(Data);
+                        // Don't automatically sync metadata attributes.  It may overwrite manually edited Theme data.
+                        // User can explicitly ask for a metadata sync if they want it.
+                    }
+                    catch (Exception)
+                    {
+                        // FIXME: Exception checking should be done in the view not model
+                        // TODO: Figure out how to catch exceptions for form bound properties
+                    }
                 }
             }
             if (e.PropertyName == "Type")
@@ -242,7 +251,7 @@ namespace NPS.AKRO.ThemeManager.Model
             //  ImageIndex = 12: "*TIN*"
             //  ImageIndex = 13: "*AGS*"
             //  ImageIndex = ??: "*SHAPE*" -- ?? = GetShapeImageIndex(sLayerName) = {5, 6, 7, 9, 10}
-            //                      esriGeoDatabase.IFeatureClass.ShapeType = 
+            //                      esriGeoDatabase.IFeatureClass.ShapeType =
             //                          esriGeometryPoint | esriGeometryMultipoint => 6:"Point"
             //                          esriGeometryLine | esriGeometryPolyline | esriGeometryPath => 5:"Line"
             //                          esriGeometryPolygon => 6:"Point" or 10:"RasterCatalog" if esriGeoDatabase.IFeatureClass.FeatureType = esriFTRasterCatalogItem
@@ -257,7 +266,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 datatype = "";
             else
                 datatype = Data.Type.ToUpper();
-            
+
             if (Data != null && Data.DataSource != null && Data.DataSource.StartsWith("http"))
                 return "_wms"; //look for non local data sources first
 
@@ -347,45 +356,19 @@ namespace NPS.AKRO.ThemeManager.Model
                 Process.Start(Data.Path);
         }
 
-        public string SyncPubDate(bool preferMetadata)
-        {
-            if (preferMetadata)
-                if (Metadata.HasPubDate)
-                    return SyncPubDateWithMetaData();
-                else
-                {
-                    string ret = SyncPubDateWithFileProps();
-                    if (ret == null)
-                        return null;
-                    return "Metadata has no Publication Date. " + ret;
-                }
-            return SyncPubDateWithFileProps();
-        }
-
-        public string SyncPubDateWithMetaData()
-        {
-            if (!Metadata.HasPubDate)
-                return "Metadata has no Publication Date.";
-            PubDate = Metadata.PubDate;
-            return null;
-        }
-
-        /// <summary>
-        /// Reset the PubData based on the file modification time
-        /// </summary>
-        /// <remarks>
-        /// This does not do anything is the data objects is stored in a geodatabase.
-        /// </remarks>
-        public string SyncPubDateWithFileProps()
-        {
-            if (!File.Exists(Data.Path))
+        public void SetPubDate(DateTime? pubDate) {
+            if (pubDate.HasValue)
+                    PubDate = pubDate.Value;
+            else
             {
-                PubDate = new DateTime(1900, 1, 1);
-                return "Cannot determine file modification date of the data.";
+                if (!File.Exists(Data.Path))
+                {
+                    //TODO - See if ESRI supports an API to query the modification date of a data object
+                    PubDate = new DateTime(1900, 1, 1);
+                }
+                else
+                    PubDate = File.GetLastWriteTime(Data.Path);
             }
-            PubDate = File.GetLastWriteTime(Data.Path);
-            return null;
-            //TODO - See if ESRI supports an API to query the modification date of a data object
         }
 
     }

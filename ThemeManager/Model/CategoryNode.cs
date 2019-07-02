@@ -1,5 +1,5 @@
-﻿using System;
-using NPS.AKRO.ThemeManager.Extensions;
+﻿using NPS.AKRO.ThemeManager.Extensions;
+using System;
 
 namespace NPS.AKRO.ThemeManager.Model
 {
@@ -38,7 +38,7 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             var newNode = new ThemeListNode(this.Name, path, this.Metadata.DeepCopy(), this.Description);
             var author = new ThemeListAuthor();
-            author["Name"] = Environment.UserName;
+            author.Name = Environment.UserName;
             newNode.Author = author;
             foreach (var child in Children)
                 newNode.Add(child.DeepCopy());

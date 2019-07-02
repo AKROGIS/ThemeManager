@@ -126,7 +126,7 @@ namespace NPS.AKRO.ThemeManager.Model
     /// online resource may change before the resource is used again.
     /// </remarks>
     [Serializable]
-    class Metadata : ICloneable, INotifyPropertyChanged
+    class Metadata : INotifyPropertyChanged
     {
         #region  Class Methods (Public)
 

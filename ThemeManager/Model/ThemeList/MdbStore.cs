@@ -340,7 +340,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
                         cat.Name,
                         node,
                         MakeMetadataForCategory(cat.Link),
-                        cat.Description,
+                        cat.Description
                         );
                     node.Add(newNode);
                     FillCategory(newNode, cat.Id);
@@ -351,7 +351,7 @@ namespace NPS.AKRO.ThemeManager.Model.ThemeList
             if (themes != null)
                 foreach (Theme theme in themes)
                 {
-                    TmNode newNode = new new ThemeNode(
+                    TmNode newNode = new ThemeNode(
                         theme.Name,
                         node,
                         MakeThemeData(theme.Name, theme.DataSource, theme.Type),

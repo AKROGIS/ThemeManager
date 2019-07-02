@@ -33,6 +33,7 @@ namespace NPS.AKRO.ThemeManager.Model
             IsInitialized = false;
             FilePath = path;
             Author = new ThemeListAuthor();
+            Author.Name = Environment.UserName;
             _status = ThemeListStatus.Created;
             GetDataSource();
             // TryToGetDataStore() will set _readonly for theme

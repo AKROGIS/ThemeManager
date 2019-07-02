@@ -121,6 +121,9 @@
     <Compile Include="..\ThemeManager\Extensions\StringExtensions.cs">
       <Link>Extensions\StringExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\ThemeManager\Extensions\DeepCopyExtensions.cs">
+      <Link>Extensions\DeepCopyExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\ThemeManager\Model\DateRange.cs">
       <Link>Model\DateRange.cs</Link>
     </Compile>
@@ -148,6 +151,24 @@
     <Compile Include="..\ThemeManager\Model\TmNode.cs">
       <Link>Model\TmNode.cs</Link>
     </Compile>
+    <Compile Include="..\ThemeManager\Model\ThemeNode.cs">
+      <Link>Model\ThemeNode.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\ThemeListNode.cs">
+      <Link>Model\ThemeListNode.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\CategoryNode.cs">
+      <Link>Model\CategoryNode.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\ShortcutNode.cs">
+      <Link>Model\ShortcutNode.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\SubThemeNode.cs">
+      <Link>Model\SubThemeNode.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\ThemeListStatus.cs">
+      <Link>Model\ThemeListStatus.cs</Link>
+    </Compile>
     <Compile Include="Shims.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -156,7 +177,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

@@ -215,7 +215,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             {
                 tv.BeginUpdate();
                 foreach (TmTreeNode node in tv.Nodes.OfType<TmTreeNode>())
-                    node.TmNode.UpdateImageIndex(true);
+                    node.TmNode.UpdateImageNames();
                 tv.EndUpdate();
             }
         }
@@ -257,7 +257,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         private void newThemeListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CurrentTreeView = themesTreeView;
-            TmTreeNode node = CurrentTreeView.Add(new TmNode(TmNodeType.ThemeList, "New Theme List"));
+            TmTreeNode node = CurrentTreeView.Add(new ThemeListNode("New Theme List", null));
             node.EnsureVisible();
             CurrentTreeView.SelectNode(node);
         }
@@ -266,10 +266,10 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         {
             TmTreeNode node = CurrentTreeView.SelectedNode as TmTreeNode;
             if (node == null)
-                CurrentTreeView.Add(new TmNode(TmNodeType.Category, "New Category"));
+                CurrentTreeView.Add(new CategoryNode("New Category"));
             else
             {
-                node.TmNode.Add(new TmNode(TmNodeType.Category, "New Category"));
+                node.TmNode.Add(new CategoryNode("New Category"));
                 node.EnsureVisible();
                 node.Expand();
             }
@@ -280,7 +280,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             TmTreeNode node = CurrentTreeView.SelectedNode as TmTreeNode;
             if (node == null)
                 return;
-            node.TmNode.Add(new TmNode(TmNodeType.Theme, "New Theme"));
+            node.TmNode.Add(new ThemeNode("New Theme"));
             node.EnsureVisible();
             node.Expand();
         }
@@ -291,9 +291,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             {
                 //TmTreeNode prevNode = themesTreeView.SelectedNode as TmTreeNode;
                 //themesTreeView.ClearSelectedNodes();
-                TmTreeNode node = themesTreeView.Add(new TmNode(TmNodeType.ThemeList,
+                TmTreeNode node = themesTreeView.Add(new ThemeListNode(
                                   Path.GetFileNameWithoutExtension(openFileDialog1.FileName),
-                                  null, new ThemeData(openFileDialog1.FileName), null, null, null));
+                                 openFileDialog1.FileName));
                 if (node == null)
                 {
                     MessageBox.Show("Theme list could not be added.  Probably because it is already loaded.");
@@ -318,11 +318,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         private void saveToolStripButton_Click(object sender, EventArgs e)
         {
             foreach (TmTreeNode node in themesTreeView.Nodes)
-                if (node.TmNode.IsThemeList && !node.TmNode.IsReadOnly && node.TmNode.IsDirty)
-                    if (string.IsNullOrEmpty(node.TmNode.Data.Path))
-                        SaveAs(node.TmNode);
+            {
+                ThemeListNode tlNode = node.TmNode as ThemeListNode;
+                if (tlNode != null && tlNode.IsEditable && tlNode.IsDirty)
+                    if (string.IsNullOrEmpty(tlNode.FilePath))
+                        SaveAs(tlNode);
                     else
-                        Save(node.TmNode);
+                        Save(tlNode);
+            }
             saveToolStripButton.Enabled = EnableSaveCommand();
         }
 
@@ -431,7 +434,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             //This is similar to other browser/explorer behavior
             favoritesTreeView.ClearSelectedNodes();
             foreach (TmTreeNode node in CurrentTreeView.SelectedNodes)
-                favoritesTreeView.Add(node.TmNode.Copy());
+                favoritesTreeView.Add(node.TmNode.DeepCopy());
         }
 
         private void launchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -561,7 +564,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             TmTreeNode node = tv.SelectedNode as TmTreeNode;
             if (node == null)
                 return false;
-            return (node.TmNode.IsThemeList || node.TmNode.IsCategory) && !node.TmNode.IsReadOnly;
+            return (node.TmNode is ThemeListNode || node.TmNode is CategoryNode) && node.TmNode.IsEditable;
         }
 
         private bool EnableNewThemeCommand()
@@ -572,7 +575,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             TmTreeNode node = tv.SelectedNode as TmTreeNode;
             if (node == null)
                 return false;
-            return (node.TmNode.IsThemeList || node.TmNode.IsCategory) && !node.TmNode.IsReadOnly;
+            return (node.TmNode is ThemeListNode || node.TmNode is CategoryNode) && node.TmNode.IsEditable;
         }
 
         private bool EnableOpenCommand()
@@ -585,8 +588,11 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         {
             //return true if there are any modified themelists.
             foreach (TmTreeNode node in themesTreeView.Nodes)
-                if (!node.TmNode.IsReadOnly && node.TmNode.IsDirty)
+            {
+                ThemeListNode tlNode = node.TmNode as ThemeListNode;
+                if (tlNode != null && tlNode.IsEditable && tlNode.IsDirty)
                     return true;
+            }
             return false;
         }
 
@@ -600,7 +606,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             TmTreeNode node = tv.SelectedNode as TmTreeNode;
             if (node == null)
                 return false;
-            return node.TmNode.IsThemeList || node.TmNode.IsCategory;
+            return node.TmNode is ThemeListNode || node.TmNode is CategoryNode;
         }
 
         private bool EnablePrintCommand()
@@ -662,7 +668,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             if (tv == null || tv == favoritesTreeView)
                 return false;
 
-            if (!tv.SelectedNodes.Any() || tv.SelectedNodes.Any(n => n.TmNode.IsSubTheme || n.TmNode.IsThemeList))
+            if (!tv.SelectedNodes.Any() || tv.SelectedNodes.Any(n => n.TmNode is SubThemeNode || n.TmNode is ThemeListNode))
                 return false;
             return true;
         }
@@ -785,32 +791,34 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         {
             if (newNode == null)
                 return false;
-            TmNode tmNode = newNode.TmNode;
-            if (tmNode == null || !tmNode.IsValidThemeList)
+            ThemeListNode tlNode = newNode.TmNode as ThemeListNode;
+            if (tlNode == null || !tlNode.IsValid)
                 return false;
-            if (!tmNode.NeedsThemeListLoaded)
+            if (!tlNode.NeedsLoading)
                 return true;
-            tmNode.SuspendUpdates();
-            if (TryToLoadThemeList(tmNode))
+            tlNode.BeginUpdate();
+            if (TryToLoadThemeList(tlNode))
             {
                 // This method may be called on a background thread, if so we need to us Invoke
                 // to access the UI on the primary thread.
-                Trace.TraceInformation("{0}: Start updating tree for {1}", DateTime.Now, tmNode.Name); Stopwatch time = Stopwatch.StartNew();
+                Trace.TraceInformation("{0}: Start updating tree for {1}", DateTime.Now, tlNode.Name); Stopwatch time = Stopwatch.StartNew();
                 TmTreeView tv = newNode.TreeView as TmTreeView;
                 if (tv != null)
                     if (tv.InvokeRequired)
                         tv.Invoke(tv.UpdateDelegate, new object[] { newNode, true });
                     else
                         tv.UpdateNode(newNode, true);
-                time.Stop(); Trace.TraceInformation("{0}: End updating tree for {1} - Elapsed Time: {2}", DateTime.Now, tmNode.Name, time.Elapsed);
-                tmNode.ResumeUpdates();
+                time.Stop(); Trace.TraceInformation("{0}: End updating tree for {1} - Elapsed Time: {2}", DateTime.Now, tlNode.Name, time.Elapsed);
+                tlNode.UpdateAge();
+                tlNode.EndUpdate();
                 return true;
             }
-            tmNode.ResumeUpdates();
+            tlNode.UpdateAge();
+            tlNode.EndUpdate();
             return false;
         }
 
-        private static bool TryToLoadThemeList(TmNode node)
+        private static bool TryToLoadThemeList(ThemeListNode node)
         {
             //FIXME - need to load as much as possible on exception.
             if (node == null)
@@ -929,7 +937,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     nodes.Count, nodes.Count == 1 ? "" : "s", searchParams.Label, searchParams.Location);
                 searchTreeView.BeginUpdate();
                 searchTreeView.ClearSelectedNodes();
-                TmNode catNode = new TmNode(TmNodeType.Category, resultsNodeLabel);
+                TmNode catNode = new CategoryNode(resultsNodeLabel);
                 TmTreeNode newNode = searchTreeView.Add(catNode);
                 if (newNode == null)
                 {
@@ -937,7 +945,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     return;
                 }
                 foreach (TmNode node in nodes)
-                    catNode.Add(node.Copy());
+                    catNode.Add(node.DeepCopy());
                 searchTreeView.SelectNode(newNode);
                 newNode.Expand();
                 searchTreeView.EndUpdate();
@@ -952,11 +960,11 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             {
                 try
                 {
-                    if (node.IsThemeList)
-                        node.SaveAs(saveFileDialog1.FileName);
-                    else if (node.IsCategory)
+                    if (node is ThemeListNode)
+                        ((ThemeListNode)node).SaveAs(saveFileDialog1.FileName);
+                    else if (node is CategoryNode)
                     {
-                        themesTreeView.Add(node.CopyAsThemeList(saveFileDialog1.FileName));
+                        themesTreeView.Add(((CategoryNode)node).ToThemeList(saveFileDialog1.FileName));
                     }
                     else
                         MessageBox.Show("Save As... is only valid on a Theme List or a Category");
@@ -969,7 +977,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             }
         }
 
-        private void Save(TmNode node)
+        private void Save(ThemeListNode node)
         {
             try
             {
@@ -977,7 +985,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Unable to save themelist '{0}'\n in file '{1}'\n{2}", node.Name, node.Data.Path, ex.Message),
+                MessageBox.Show(string.Format("Unable to save themelist '{0}'\n in file '{1}'\n{2}", node.Name, node.FilePath, ex.Message),
                                 "Oh no!");
             }
         }
@@ -1015,7 +1023,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             if (_cachedSafeNoMetadataTemplate == null)
                 _cachedSafeNoMetadataTemplate = GetSafeNoMetadataTemplate();
 
-            var nodeName = $"{node.Name} ({node.Type})";
+            var nodeName = $"{node.Name} ({node.TypeName})";
             if (string.IsNullOrEmpty(node.Metadata.Path))
 
                 webBrowser.DocumentText = string.Format(_cachedSafeNoMetadataTemplate, nodeName, node.Parent, "&lt;empty&gt;", "No Metadata",
@@ -1123,7 +1131,8 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         {
             Trace.TraceInformation("Display map preview for node: " + (node == null ? "null" : node.ToString()));
 
-            if (node == null || node.IsCategory || node.IsThemeList)
+            ThemeNode tNode = node as ThemeNode;
+            if (tNode == null)
             {
                 ShowTextInPreviewPage("Select a theme");
             }
@@ -1131,30 +1140,20 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             {
                 if (node.HasDataToPreview)
                 {
-                    if (mapControl == null)
+                    string msg = null;
+                    try
                     {
-                        try
-                        {
-                            CreateMapControl();
-                        }
-                        catch (Exception ex)
-                        {
-                            Trace.TraceError("Unable to create ESRI mapControl\n" + ex);
-                            mapControl = null;
-                        }
+                        if (!MapInPreviewPage)
+                            ShowTextInPreviewPage("Loading map viewer...");
+                        msg = MapViewer.LoadMapFileInControl(tNode.Data.Path, tabPage5);
                     }
-                    if (mapControl == null)
+                    catch (Exception ex)
                     {
-                        ShowTextInPreviewPage("Unable to initialize the ArcGIS Viewer.");
+                        msg = ex.Message;
                     }
-                    else
+                    if (!string.IsNullOrEmpty(msg))
                     {
-                        ShowMapInPreviewPage();
-                        string msg = LoadMapFileInPreviewControl(node.Data.Path);
-                        if (!string.IsNullOrEmpty(msg))
-                        {
-                            ShowTextInPreviewPage(msg);
-                        }
+                        ShowTextInPreviewPage(msg);
                     }
                 }
                 else
@@ -1164,134 +1163,22 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             }
         }
 
+        private bool MapInPreviewPage
+        {
+            get
+            {
+                return (tabPage5.Controls[0] != previewLabel);
+            }
+        }
+
         private void ShowTextInPreviewPage(string text)
         {
-            if (tabPage5.Controls[0] != previewLabel)
+            if (MapInPreviewPage)
             {
                 tabPage5.Controls.Clear();
                 tabPage5.Controls.Add(previewLabel);
             }
             previewLabel.Text = text;
-        }
-
-        private void ShowMapInPreviewPage()
-        {
-            if (mapControl == null)
-                throw new Exception("mapControl is null");
-            if (mapToolbar == null)
-                throw new Exception("mapToolbar is null");
-            if (tabPage5.Controls[0] != mapToolbar)
-            {
-                tabPage5.Controls.Clear();
-                tabPage5.Controls.Add(mapToolbar);
-                tabPage5.Controls.Add(mapControl);
-            }
-        }
-
-        private void CreateMapControl()
-        {
-            Trace.TraceInformation("{0}: Start of CreateMapControl()", DateTime.Now); Stopwatch time = Stopwatch.StartNew();
-            ShowTextInPreviewPage("Loading preview image...");
-
-            if (!EsriLicenseManager.Running)
-                EsriLicenseManager.Start(true);
-            if (!EsriLicenseManager.Running)
-                throw new Exception("Could not initialize an ArcGIS license. \n" + EsriLicenseManager.Message);
-
-            Trace.TraceInformation("{0}: CreateMapControl()- Got License - Elapsed time: {1}", DateTime.Now, time.Elapsed);
-
-            mapToolbar = new AxToolbarControl();
-            ((ISupportInitialize)mapToolbar).BeginInit();
-            mapToolbar.Name = "mapToolbar";
-            //mapToolbar.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
-            mapToolbar.Location = new Point(0, 0);
-            mapToolbar.Size = new Size(600, 28);
-            //AutoScaleDimensions = new System.Drawing.SizeF(6f, 13F);
-            //AutoScaleMode = AutoScaleMode.Font;
-            ((ISupportInitialize)mapToolbar).EndInit();
-
-            mapControl = new AxMapControl();
-            ((ISupportInitialize)mapControl).BeginInit();
-            mapControl.Name = "mapControl";
-            mapControl.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
-            mapControl.Location = new Point(0, 28);
-            mapControl.Size = new Size(tabPage5.ClientSize.Width, tabPage5.ClientSize.Height - 28);
-            ResizeBegin += MapViewer_ResizeBegin;
-            ResizeEnd += MapViewer_ResizeEnd;
-            ((ISupportInitialize)mapControl).EndInit();
-
-            // I can't add items until it is activated in a parent control
-            ShowMapInPreviewPage();
-            mapToolbar.AddItem("esriControls.ControlsMapZoomInTool", -1, -1, true, 0, esriCommandStyles.esriCommandStyleIconOnly);
-            mapToolbar.AddItem("esriControls.ControlsMapZoomOutTool", -1, -1, false, 0, esriCommandStyles.esriCommandStyleIconOnly);
-            mapToolbar.AddItem("esriControls.ControlsMapPanTool", -1, -1, false, 0, esriCommandStyles.esriCommandStyleIconOnly);
-            mapToolbar.AddItem("esriControls.ControlsMapFullExtentCommand", -1, -1, false, 0, esriCommandStyles.esriCommandStyleIconOnly);
-            mapToolbar.AddItem("esriControls.ControlsMapZoomToLastExtentBackCommand", -1, -1, false, 0, esriCommandStyles.esriCommandStyleIconOnly);
-            mapToolbar.AddItem("esriControls.ControlsMapZoomToLastExtentForwardCommand", -1, -1, false, 0, esriCommandStyles.esriCommandStyleIconOnly);
-
-            //tocControl.SetBuddyControl(mapControl);
-            mapToolbar.SetBuddyControl(mapControl);
-
-            time.Stop(); Trace.TraceInformation("{0}: End of CreateMapControl() - Elapsed time: {1}", DateTime.Now, time.Elapsed);
-        }
-
-        private void MapViewer_ResizeBegin(object sender, EventArgs e)
-        {
-            mapControl.SuppressResizeDrawing(true, 0);
-        }
-
-        private void MapViewer_ResizeEnd(object sender, EventArgs e)
-        {
-            mapControl.SuppressResizeDrawing(false, 0);
-        }
-
-        private string LoadMapFileInPreviewControl(string fileName)
-        {
-            string msg = string.Empty;
-            if (File.Exists(fileName))
-            {
-                string ext = Path.GetExtension(fileName).ToLower();
-                if (ext == ".mxd")
-                {
-                    if (mapControl.CheckMxFile(fileName))
-                    {
-                        try
-                        {
-                            mapControl.LoadMxFile(fileName);
-                            mapControl.Extent = mapControl.FullExtent;
-                        }
-                        catch (Exception ex)
-                        {
-                            msg = "ESRI Map Control generated an error.\nFile: " + fileName + "\nError: " + ex;
-                        }
-                    }
-                    else
-                        msg = "Map document not valid: " + fileName;
-                }
-                else
-                    if (ext == ".lyr")
-                    {
-                        try
-                        {
-                            mapControl.ClearLayers();
-                            mapControl.SpatialReference = null;
-                            mapControl.AddLayerFromFile(fileName);
-                            mapControl.get_Layer(0).Visible = true; //Make sure the layer is visible
-                            //Set the Spatial Ref to match the current layer, not the previous layer.
-                            //mapControl.SpatialReference = mapControl.get_Layer(0).SpatialReference;
-                            mapControl.Extent = mapControl.FullExtent;
-                        }
-                        catch (Exception ex)
-                        {
-                            msg = "ESRI Map Control generated an error.\nFile: " + fileName +"\nError: "+ex;
-                        }
-                    }
-                    else
-                        msg = "File must be a map document (.mxd) or a layer file (.lyr): " + fileName;
-            }
-            else
-                msg = "File not found: " + fileName;
-            return msg;
         }
 
         #endregion
@@ -1331,20 +1218,20 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 return;
             if (propertiesForm == null)
                 propertiesForm = new PropertiesForm().CommonInit();
-            if (node.Type == TmNodeType.ThemeList)
+            if (node is ThemeListNode)
             {
                 AddPropertyPanelToForm(controls, propertiesForm.themelistPanel, node.IsReadOnly);
-                PopulateThemeListPropertyPanel(propertiesForm, node);
+                PopulateThemeListPropertyPanel(propertiesForm, (ThemeListNode)node);
             }
-            if (node.Type == TmNodeType.Category)
+            if (node is CategoryNode)
             {
                 AddPropertyPanelToForm(controls, propertiesForm.categoryPanel, node.IsReadOnly);
-                PopulateCategoryPropertyPanel(propertiesForm, node);
+                PopulateCategoryPropertyPanel(propertiesForm, (CategoryNode)node);
             }
-            if (node.Type == TmNodeType.Theme)
+            if (node is ThemeNode || node is SubThemeNode)
             {
                 AddPropertyPanelToForm(controls, propertiesForm.themePanel, node.IsReadOnly);
-                PopulateThemePropertyPanel(propertiesForm, node);
+                PopulateThemePropertyPanel(propertiesForm, (ThemeNode)node);
             }
         }
 
@@ -1363,15 +1250,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     item.Enabled = !readOnly;
         }
 
-        private void PopulateThemeListPropertyPanel(PropertiesForm form, TmNode node)
+        private void PopulateThemeListPropertyPanel(PropertiesForm form, ThemeListNode node)
         {
-            Debug.Assert(node != null, "PropertyPanel has no Themelist node");
             Debug.Assert(node.Author != null, "Themelist node has no author object");
-            Debug.Assert(node.Data != null, "TMNode node has no no data object");
             Debug.Assert(node.Metadata != null, "TMNode node has no metadata object");
 
+            form.themelistFile.Text = node.FilePath;
+
             form.themelistName.DataBindings.Clear();
-            form.themelistFile.DataBindings.Clear();
             form.themelistMetadata.DataBindings.Clear();
             form.themelistDescription.DataBindings.Clear();
             form.themelistAuthorName.DataBindings.Clear();
@@ -1383,7 +1269,6 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             form.themelistAuthorEmail.DataBindings.Clear();
 
             form.themelistName.DataBindings.Add(new Binding("Text", node, "Name"));
-            form.themelistFile.DataBindings.Add(new Binding("Text", node.Data, "Path"));
             form.themelistMetadata.DataBindings.Add(new Binding("Text", node.Metadata, "Path"));
             form.themelistDescription.DataBindings.Add(new Binding("Text", node, "Description"));
             form.themelistAuthorName.DataBindings.Add(new Binding("Text", node.Author, "Name"));
@@ -1395,25 +1280,20 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             form.themelistAuthorEmail.DataBindings.Add(new Binding("Text", node.Author, "Email"));
         }
 
-        private void PopulateCategoryPropertyPanel(PropertiesForm form, TmNode node)
+        private void PopulateCategoryPropertyPanel(PropertiesForm form, CategoryNode node)
         {
-            Debug.Assert(node.Data != null, "TMNode node has no no data object");
             Debug.Assert(node.Metadata != null, "TMNode node has no metadata object");
 
             form.categoryName.DataBindings.Clear();
             form.categoryMetadata.DataBindings.Clear();
             form.categoryDescription.DataBindings.Clear();
-            //form.categoryAge.DataBindings.Clear();
-            //form.categoryHide.DataBindings.Clear();
 
             form.categoryName.DataBindings.Add(new Binding("Text", node, "Name"));
             form.categoryMetadata.DataBindings.Add(new Binding("Text", node.Metadata, "Path"));
             form.categoryDescription.DataBindings.Add(new Binding("Text", node, "Description"));
-            //form.categoryAge.DataBindings.Add(new Binding("Text", node, "DaysSinceNewestPublication"));
-            //form.categoryHide.DataBindings.Add(new Binding("Checked", node, "IsHidden"));
         }
 
-        private void PopulateThemePropertyPanel(PropertiesForm form, TmNode node)
+        private void PopulateThemePropertyPanel(PropertiesForm form, ThemeNode node)
         {
             Debug.Assert(node.Data != null, "TMNode node has no no data object");
             Debug.Assert(node.Metadata != null, "TMNode node has no metadata object");
@@ -1427,8 +1307,6 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             form.themePubDate.DataBindings.Clear();
             form.themeDataType.DataBindings.Clear();
             form.themeDataSource.DataBindings.Clear();
-            //form.themeAge.DataBindings.Clear();
-            //form.themeHide.DataBindings.Clear();
 
             form.themeName.DataBindings.Add(new Binding("Text", node, "Name"));
             form.themeFile.DataBindings.Add(new Binding("Text", node.Data, "Path"));
@@ -1439,10 +1317,8 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             form.themeSummary.DataBindings.Add(new Binding("Text", node, "Summary"));
             form.themeDescription.DataBindings.Add(new Binding("Text", node, "Description"));
             form.themePubDate.DataBindings.Add(new Binding("Value", node, "PubDate"));
-            //form.themeAge.DataBindings.Add(new Binding("Text", node, "DaysSinceNewestPublication"));
-            //form.themeHide.DataBindings.Add(new Binding("Checked", node, "IsHidden"));
 
-            if (node.IsSubTheme)
+            if (node is SubThemeNode)
             {
                 form.themeName.Enabled = false;
                 form.themeFile.Enabled = false;
@@ -1818,29 +1694,30 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         private void LoadTreeFromXML(XElement xele, TmTreeView tv)
         {
             TmNode node;
-            string themelist = Enum.GetName(typeof(TmNodeType), TmNodeType.ThemeList).ToLower();
-            foreach (XElement xnode in xele.Elements(themelist))
+            foreach (XElement xnode in xele.Elements(ThemeListNode.TypeString))
             {
-                node = new TmNode(TmNodeType.ThemeList);
+                node = new ThemeListNode();
                 node.Load(xnode, false); // Add only the first node
                 tv.Add(node);
             }
 
-            string category = Enum.GetName(typeof(TmNodeType), TmNodeType.Category).ToLower();
-            foreach (XElement xnode in xele.Elements(category))
+            foreach (XElement xnode in xele.Elements(CategoryNode.TypeString))
             {
-                node = new TmNode(TmNodeType.Category);
+                node = new CategoryNode();
+                node.BeginUpdate();
                 node.Load(xnode, true); // Add entire branch
-                node.UpdateImageIndex(true);
+                node.UpdateAge();
+                node.EndUpdate();
                 tv.Add(node);
             }
 
-            string theme = Enum.GetName(typeof(TmNodeType), TmNodeType.Theme).ToLower();
-            foreach (XElement xnode in xele.Elements(theme))
+            foreach (XElement xnode in xele.Elements(ThemeNode.TypeString))
             {
-                node = new TmNode(TmNodeType.Theme);
+                node = new ThemeNode();
+                node.BeginUpdate();
                 node.Load(xnode, true); // Add entire branch
-                node.UpdateImageIndex(true);
+                node.UpdateAge();
+                node.EndUpdate();
                 tv.Add(node);
             }
             tv.TextSortInit((string)xele.Attribute("sortorder"));
@@ -1936,7 +1813,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     MessageBox.Show("Error adding theme list.\nFile not found: " + database);
                 else
                     if (themesTreeView.FindThemeListNode(database) == null)
-                        themesTreeView.Add(new TmNode(TmNodeType.ThemeList, database, null, new ThemeData(database), null, null, null));
+                        themesTreeView.Add(new ThemeListNode(
+                            Path.GetFileNameWithoutExtension(database),
+                            database));
             }
         }
 
@@ -1952,7 +1831,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
         private void LoadFavoritesFromRegistryList(IEnumerable<string> favorites, string[] databases)
         {
-            TmNode themeList;
+            ThemeListNode themeList;
             foreach (string favorite in favorites)
             {
                 string database = DatabaseOfFavorite(favorite, databases);
@@ -1995,14 +1874,16 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             return databases[index - 1];
         }
 
-        private TmNode ThemeListFromDatabasePath(string database)
+        private ThemeListNode ThemeListFromDatabasePath(string database)
         {
             if (string.IsNullOrEmpty(database))
                 return null;
             foreach (TmTreeNode node in themesTreeView.Nodes.OfType<TmTreeNode>())
-                // Assert node.TmNode and node.TmNode.Data are not null
-                if (node.TmNode.Data.Path == database)
-                    return node.TmNode;
+            {
+                ThemeListNode tlNode = node.TmNode as ThemeListNode;
+                if (tlNode != null && tlNode.FilePath == database)
+                    return tlNode;
+            }
             return null;
         }
 

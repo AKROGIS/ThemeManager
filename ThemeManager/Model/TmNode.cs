@@ -58,7 +58,7 @@ namespace NPS.AKRO.ThemeManager.Model
         private string _name;
 
         /// <summary>
-        /// A short description of the contents of this nodel.  
+        /// A short description of the contents of this nodel.
         /// </summary>
         public string Description
         {
@@ -80,7 +80,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// </summary>
         /// <remarks>
         /// Inherited from the parent at creation.  Defaults to false if there is no parent.
-        /// If this node is re-parented, it does NOT change it's IsUpdating state to match. 
+        /// If this node is re-parented, it does NOT change it's IsUpdating state to match.
         /// </remarks>
         private bool IsUpdating { get; set; }
 
@@ -295,7 +295,7 @@ namespace NPS.AKRO.ThemeManager.Model
                         _metadata.PropertyChanged += Metadata_PropertyChanged;
                     //FIXME: Replacing the metadata object implicitly changes the metadata properties.
                     //Should I call Metadata_PropertyChanged to ensure I am up to date, or is this
-                    //too expensive?    For now I just set ThemeList.IsDirty 
+                    //too expensive?    For now I just set ThemeList.IsDirty
                     MarkAsChanged();
                 }
             }
@@ -333,37 +333,31 @@ namespace NPS.AKRO.ThemeManager.Model
         }
         private string _tags;
 
-        public void SyncWithMetadata()
-        {
-            SyncWithMetadata(false);
-        }
-
         public void SyncWithMetadata(bool recurse)
         {
-            Description = Metadata.Description ?? (Metadata.IsValid ? "" : Description);
-            Tags = Metadata.Tags ?? (Metadata.IsValid ? "" : Tags);
-            Summary = Metadata.Summary ?? (Metadata.IsValid ? "" : Summary);
+            var info = Metadata.GetGeneralInfo();
+            Tags = info.Tags ?? "";
+            Summary = info.Summary ?? "";
+            Description = info.Description ?? "";
+
+            // PubDate is a property of ThemeNode
             //FIXME: Remove this subclass dependency
             var themeNode = this as ThemeNode;
-            if (themeNode != null)
-                (themeNode).SyncPubDate(true);
+            if (themeNode != null) {
+                themeNode.SetPubDate(info.PublicationDate);
+            }
+
             if (recurse)
                 foreach (TmNode child in Children)
                     child.SyncWithMetadata(true);
         }
 
-        public void PreloadMetadata()
-        {
-            Metadata.PreloadAsText();
-            foreach (TmNode child in Children)
-                child.PreloadMetadata();
-        }
-
         private void Metadata_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             MarkAsChanged();
-            if (Metadata.IsValid)
-                SyncWithMetadata(false);
+            // Do not sync the theme properties with the changed metadata path
+            // User may have manually set those properties.
+            // After Node/metadata is created, a sync should only be done by user.
         }
 
         #endregion
@@ -406,7 +400,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// </summary>
         /// <remarks>
         /// Checks every node only once, so it does not rely on events (_issueUpdates == false),
-        /// Therefore it can (and should) be done inside a Begin/EndUpdate pair 
+        /// Therefore it can (and should) be done inside a Begin/EndUpdate pair
         /// </remarks>
         virtual internal void UpdateAge()
         {
@@ -459,7 +453,7 @@ namespace NPS.AKRO.ThemeManager.Model
         }
 
         /// <summary>
-        /// Recursively updates all the ImageNames at this node and below. 
+        /// Recursively updates all the ImageNames at this node and below.
         /// </summary>
         /// <remarks>
         /// This will only be necessary when conditions change, i.e. Settings.Default.AgeInDays
@@ -478,7 +472,7 @@ namespace NPS.AKRO.ThemeManager.Model
         #region Load/Store
 
         /// <summary>
-        /// Refresh this node from permanent storage 
+        /// Refresh this node from permanent storage
         /// </summary>
         public virtual void Reload()
         {
@@ -528,7 +522,12 @@ namespace NPS.AKRO.ThemeManager.Model
 
             data = xele.Element("metadata");
             if (data != null)
-                Metadata = Metadata.Load(data);
+                Metadata = Metadata.FromXElement(data);
+
+            data = xele.Element("author");
+            if (data != null)
+                if (this is ThemeListNode)
+                        ((ThemeListNode)this).Author = ThemeListAuthor.Load(data);
 
             if (recurse)
             {
@@ -697,9 +696,9 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             if (!HasMetadata)
                 return false;
-            return Metadata.Match(search);
+            return Metadata.SearchContent(search);
         }
-        
+
         #endregion
 
         #region Path Names
@@ -781,7 +780,7 @@ namespace NPS.AKRO.ThemeManager.Model
             if (handle != null && !IsUpdating && IsInitialized)
                 handle(this, new PropertyChangedEventArgs(property));
         }
-        
+
         #endregion
 
         [field: NonSerializedAttribute]

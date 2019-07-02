@@ -77,7 +77,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 return;
             }
             LoadingForm form = new LoadingForm();
-            if (node.IsTheme)
+            if (node is ThemeNode)
                 form.Message = "Reloading " + node.Name + "...";
             else
                 form.Message = "Reloading all themes in " + node.Name + "...";
@@ -87,7 +87,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             form.ShowDialog();
             //Treeview may need updating.
             //Data type (icon) may have changed, and sub-themes may have been added/removed.
-            node.UpdateTree();
+            node.BroadcastNodeHasBeenUpdatedEvent();
         }
 
         private void syncThemeButton_Click(object sender, EventArgs e)
@@ -126,7 +126,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 {
                     // May need to load/verify metadata which could throw.
                     // No need to recurse, since we just checked that we have no children.
-                    node.SyncWithMetadata(false); 
+                    node.SyncWithMetadata(false);
                 }
                 catch (Exception ex)
                 {
@@ -151,7 +151,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             form.ShowDialog();
             //Treeview may need updating.
             //Description is used for tool tips, and PubDate is used for highlighting the icon.
-            node.UpdateTree();            
+            node.BroadcastNodeHasBeenUpdatedEvent();
         }
 
         private void textbox_DragDrop(object sender, DragEventArgs e)
@@ -168,7 +168,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 return;
             }
 
-            // Text Drop - Can only get here if it is not a filedrop, so it must be a URI 
+            // Text Drop - Can only get here if it is not a filedrop, so it must be a URI
             if (e.Data.GetDataPresent(DataFormats.Text))
             {
                 tb.Text = (string)e.Data.GetData(DataFormats.Text);

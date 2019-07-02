@@ -27,7 +27,7 @@ namespace tm
                 Console.WriteLine("Could not load the Theme List.");
                 return;
             }
-            themeList.SuspendUpdates();
+            themeList.BeginUpdate();
             themeList.Build();
             Reload(themeList);
             Sync(themeList);
@@ -36,24 +36,23 @@ namespace tm
             Console.WriteLine("Done.");
         }
 
-        static TmNode Load(String path)
+        static ThemeListNode Load(String path)
         {
-            return new TmNode(TmNodeType.ThemeList,
-                Path.GetFileNameWithoutExtension(path),
-                null, new ThemeData(path), null, null, null);
+            return new ThemeListNode(
+                Path.GetFileNameWithoutExtension(path), path, null, null);
         }
 
         static void Reload(TmNode root)
         {
             List<TmNode> nodes = root.Recurse(x => x.Children)
-                                        .Where(n => n.IsTheme)
+                                        .Where(n => n is ThemeNode)
                                         .ToList();
             Console.WriteLine($"Reloading {nodes.Count} Themes");
             foreach (var node in nodes)
             {
                 try
                 {
-                    node.ReloadTheme();
+                    node.Reload();
                 }
                 catch (Exception ex)
                 {

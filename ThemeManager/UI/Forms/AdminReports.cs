@@ -33,7 +33,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         {
             reportComboBox.DataSource = new BindingList<Tool>()
                 {
-                    new Tool {Name="List all themes", 
+                    new Tool {Name="List all themes",
                               Description = "Creates a list all themes in the theme list",
                               Command = ListThemes},
                     new Tool {Name="List missing themes",
@@ -127,7 +127,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             data.Columns.Add(new DataColumn("Theme", typeof(string)));
             data.Columns.Add(new DataColumn("File", typeof(string)));
             data.Columns.Add(new DataColumn("File Type", typeof(string)));
-            foreach (var theme in themeList.Recurse(x => x.Children).Where(n => n.IsTheme))
+            foreach (ThemeNode theme in themeList.Recurse(x => x.Children).Where(n => n is ThemeNode))
             {
                 DataRow row = data.NewRow();
                 row["Category"] = theme.CategoryPath();
@@ -149,7 +149,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             data.Columns.Add(new DataColumn("Theme", typeof(string)));
             data.Columns.Add(new DataColumn("File", typeof(string)));
             data.Columns.Add(new DataColumn("Error", typeof(string)));
-            List<TmNode> nodes = themeList.Recurse(x => x.Children).Where(n => n.IsTheme).ToList();
+            List<ThemeNode> nodes = themeList.Recurse(x => x.Children).Where(n => n is ThemeNode).Cast<ThemeNode>().ToList();
             int count = nodes.Count;
             int index = 0;
             foreach (var theme in nodes)
@@ -181,13 +181,13 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             data.Columns.Add(new DataColumn("Theme", typeof(string)));
             data.Columns.Add(new DataColumn("Type", typeof(string)));
             foreach (var theme in themeList.Recurse(x => x.Children)
-                                            .Where(n => n.IsTheme || n.IsSubTheme && 
+                                            .Where(n => n is ThemeNode || n is SubThemeNode &&
                                                    string.IsNullOrEmpty(n.Metadata.Path)))
             {
                 DataRow row = data.NewRow();
                 row["Category"] = theme.CategoryPath();
                 row["Theme"] = theme.Name;
-                row["Type"] = (theme.IsTheme) ? "Theme" : "SubTheme";
+                row["Type"] = (theme is ThemeNode) ? "Theme" : "SubTheme";
                 data.Rows.Add(row);
                 if (bw.CancellationPending)
                     return data;
@@ -203,7 +203,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             data.Columns.Add(new DataColumn("Metadata", typeof(string)));
             data.Columns.Add(new DataColumn("Error", typeof(string)));
             List<TmNode> nodes = themeList.Recurse(x => x.Children)
-                                          .Where(n => n.IsTheme || n.IsSubTheme && 
+                                          .Where(n => n is ThemeNode || n is SubThemeNode &&
                                                  !string.IsNullOrEmpty(n.Metadata.Path))
                                           .ToList();
             int count = nodes.Count;
@@ -244,14 +244,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             data.Columns.Add(new DataColumn("Type", typeof(string)));
             data.Columns.Add(new DataColumn("Data Path", typeof(string)));
             data.Columns.Add(new DataColumn("Data Type", typeof(string)));
-            foreach (var theme in themeList.Recurse(x => x.Children)
-                                            .Where(n => (n.IsTheme || n.IsSubTheme) &&
-                                                   (n.ImageKey == "Theme" || n.ImageKey == "Themelock" || n.ImageKey == "Themenew")))
+            foreach (ThemeNode theme in themeList.Recurse(x => x.Children)
+                                            .Where(n => (n is ThemeNode || n is SubThemeNode) &&
+                                                   (n.ImageName == "Theme" || n.ImageName == "Themelock" || n.ImageName == "Themenew")))
             {
                 DataRow row = data.NewRow();
                 row["Category"] = theme.CategoryPath();
                 row["Theme"] = theme.Name;
-                row["Type"] = (theme.IsTheme) ? "Theme" : "SubTheme";
+                row["Type"] = (theme is ThemeNode) ? "Theme" : "SubTheme";
                 row["Data Path"] = theme.Data.Path;
                 row["Data Type"] = theme.Data.Type;
                 data.Rows.Add(row);
@@ -278,16 +278,16 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             data.Columns.Add(new DataColumn("Data Source", typeof(string)));
             data.Columns.Add(new DataColumn("Data Set Type", typeof(string)));
             data.Columns.Add(new DataColumn("Data Source Path", typeof(string)));
-            foreach (var theme in themeList.Recurse(x => x.Children)
-                                            .Where(n => (n.IsTheme || n.IsSubTheme)))
+            foreach (ThemeNode theme in themeList.Recurse(x => x.Children)
+                                            .Where(n => (n is ThemeNode || n is SubThemeNode)))
             {
                 DataRow row = data.NewRow();
-                //reload cannot be done in the background, because treeview 
+                //reload cannot be done in the background, because treeview
                 // on UI thread gets property updates
                 //theme.ReloadTheme();
                 row["Category"] = theme.CategoryPath();
                 row["Theme"] = theme.Name;
-                row["Type"] = (theme.IsTheme) ? "Theme" : "SubTheme";
+                row["Type"] = (theme is SubThemeNode) ? "SubTheme":  "Theme";
                 row["Data Path"] = theme.Data.Path;
                 row["Data Set Name"] = theme.Data.DataSetName;
                 row["Data Type"] = theme.Data.Type;

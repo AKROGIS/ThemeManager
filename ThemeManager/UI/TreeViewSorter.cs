@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NPS.AKRO.ThemeManager.Model;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -59,9 +60,9 @@ namespace NPS.AKRO.ThemeManager.UI
 
             //Hack to sort categories above all other items
             //FIXME - 1) make this a settings option, 2) this pollutes a generic sorter with TMNode details.
-            if (((TmTreeNode)x).TmNode.IsCategory && !((TmTreeNode)y).TmNode.IsCategory)
+            if (((TmTreeNode)x).TmNode is CategoryNode && !(((TmTreeNode)y).TmNode is CategoryNode))
                 return -1;
-            if (!((TmTreeNode)x).TmNode.IsCategory && ((TmTreeNode)y).TmNode.IsCategory)
+            if (!(((TmTreeNode)x).TmNode is CategoryNode) && ((TmTreeNode)y).TmNode is CategoryNode)
                 return 1;
 
             return (int)NodeSortOrder * string.Compare(x.Text, y.Text, TextComparer);

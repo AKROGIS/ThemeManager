@@ -1,4 +1,5 @@
-﻿using NPS.AKRO.ThemeManager.Model;
+﻿using NPS.AKRO.ThemeManager.Extensions;
+using NPS.AKRO.ThemeManager.Model;
 using NPS.AKRO.ThemeManager.Properties;
 using System;
 using System.Collections.Generic;
@@ -76,7 +77,7 @@ namespace NPS.AKRO.ThemeManager.UI
         /// <param name="e"></param>
         protected override void OnBeforeSelect(TreeViewCancelEventArgs e)
         {
-            
+
             if (Settings.Default.DontSelectFirstNode)
             {
                 if (e.Action == TreeViewAction.Unknown && !OkToChangeSelection)
@@ -110,7 +111,7 @@ namespace NPS.AKRO.ThemeManager.UI
                 else
                 {
                     InternalClearSelectedNodes();
-                    InternalSelectNode(node);                    
+                    InternalSelectNode(node);
                 }
             }
             base.OnAfterSelect(e);
@@ -133,7 +134,7 @@ namespace NPS.AKRO.ThemeManager.UI
         {
             if (_selectedNodes.Contains(node))
             {
-                //Do not change selection set, by default new node will be the selected node 
+                //Do not change selection set, by default new node will be the selected node
             }
             else
             {
@@ -237,7 +238,7 @@ namespace NPS.AKRO.ThemeManager.UI
         {
             if (_selectedNodes.Count == 0)
                 return false;
-            if (_selectedNodes.All(n => n.TmNode.IsSubTheme))
+            if (_selectedNodes.All(n => n.TmNode is SubThemeNode))
                 return false;
             return true;
         }
@@ -247,8 +248,8 @@ namespace NPS.AKRO.ThemeManager.UI
             //FIXME - allow some cases when selectednode == null
             if (SelectedTmNode == null ||
                 SelectedTmNode.IsReadOnly ||
-                SelectedTmNode.IsTheme ||
-                SelectedTmNode.IsSubTheme)
+                SelectedTmNode is ThemeNode ||
+                SelectedTmNode is SubThemeNode)
                 return false;
             return (Clipboard.ContainsData("TmNodeList") ||
                    Clipboard.ContainsData("TmNode") ||
@@ -259,7 +260,7 @@ namespace NPS.AKRO.ThemeManager.UI
         {
             if (_selectedNodes.Count == 0)
                 return false;
-            if (_selectedNodes.Any(n => (n.TmNode.IsSubTheme || (n.TmNode.IsReadOnly && !n.TmNode.IsThemeList))))
+            if (_selectedNodes.Any(n => (n.TmNode is SubThemeNode || (n.TmNode.IsReadOnly && !(n.TmNode is ThemeListNode)))))
                 return false;
             return true;
         }
@@ -308,7 +309,7 @@ namespace NPS.AKRO.ThemeManager.UI
             StringCollection files = new StringCollection();
             foreach (TmTreeNode node in _selectedNodes.Where(node => node.TmNode.IsLaunchable))
             {
-                files.Add(node.TmNode.Data.Path);
+                files.Add(((ThemeNode)node.TmNode).Data.Path);
             }
             if (files.Count > 0)
                 clipboardData.SetFileDropList(files);
@@ -421,11 +422,11 @@ namespace NPS.AKRO.ThemeManager.UI
                 string basename = Path.GetFileNameWithoutExtension(file);
                 //assume this file is a valid theme
                 //FIXME - determine valid theme or themelist; reject otherwise.
-                TmNode newNode = new TmNode(TmNodeType.Theme, basename, null, new ThemeData(file), null, null, null);
+                TmNode newNode = new ThemeNode(basename, file);
                 try
                 {
                     // May need to load to query arc objects which could throw any number of exceptions.
-                    newNode.ReloadTheme(false);
+                    newNode.Reload();
                 }
                 catch (Exception ex)
                 {
@@ -485,7 +486,8 @@ namespace NPS.AKRO.ThemeManager.UI
                 return;
 
             //SourceNode is also used to determine the drag/drop effects  see SetDndEffect();
-            sourceNodes = _selectedNodes.Select(x => x.TmNode).Where(x => (x.IsTheme || x.IsCategory)).ToList<TmNode>();
+            //sourceNodes = _selectedNodes.Select(x => x.TmNode).ToList<TmNode>();
+            sourceNodes = _selectedNodes.Select(x => x.TmNode).Where(x => (!(x is SubThemeNode) && !(x is ThemeListNode))).ToList<TmNode>();
             if (sourceNodes.Count == 0)
                 return;
 
@@ -500,13 +502,16 @@ namespace NPS.AKRO.ThemeManager.UI
                 dataObject.SetData("TmNodeList", sourceNodes);
             }
 
-            // Also drag as a file list (for ArcMap) 
+            // Also drag as a file list (for ArcMap)
             StringCollection paths = new StringCollection();
             foreach (var item in sourceNodes)
-                if (item.IsTheme && item.HasData && File.Exists(item.Data.Path))
+            {
+                ThemeNode theme = item as ThemeNode;
+                if (theme != null && theme.HasData && File.Exists(theme.Data.Path))
                 {
-                    paths.Add(item.Data.Path);
+                    paths.Add(theme.Data.Path);
                 }
+            }
             if (paths.Count > 0)
                 dataObject.SetFileDropList(paths);
 
@@ -552,7 +557,7 @@ namespace NPS.AKRO.ThemeManager.UI
             // TmNode drop
             if (e.Data.GetDataPresent("TmNode", false))
             {
-                // e.Effect == none for illeagal drops. 
+                // e.Effect == none for illeagal drops.
                 TmNode oldNode = e.Data.GetData("TmNode") as TmNode;
                 Debug.Assert(oldNode != null, "Could not reserialize node from clipboard");
                 if (oldNode != null)
@@ -579,11 +584,11 @@ namespace NPS.AKRO.ThemeManager.UI
                 {
                     //FIXME - determine if this is a Theme or a ThemeList
                     //currently assuming it is a theme.
-                    TmNode newNode = new TmNode(TmNodeType.Theme, Path.GetFileNameWithoutExtension(file), null, new ThemeData(file), null, null, null);
+                    TmNode newNode = new ThemeNode(Path.GetFileNameWithoutExtension(file), file);
                     try
                     {
                         // May need to load to query arc objects which could throw any number of exceptions.
-                        newNode.ReloadTheme(false);
+                        newNode.Reload();
                     }
                     catch (Exception ex)
                     {
@@ -610,7 +615,7 @@ namespace NPS.AKRO.ThemeManager.UI
             {
                 string txt = (string)e.Data.GetData(DataFormats.Text);
 
-                TmNode newNode = new TmNode(TmNodeType.Category, txt);
+                TmNode newNode = new CategoryNode(txt);
                 if (destinationNode == null)
                     SelectNode(Add(newNode));
                 else
@@ -625,7 +630,7 @@ namespace NPS.AKRO.ThemeManager.UI
         private void CopyNode(TmNode destinationNode, TmNode oldNode)
         {
             //TmNode newNode = oldNode.Clone() as TmNode;
-            TmNode newNode = oldNode.Copy();
+            TmNode newNode = oldNode.DeepCopy();
             Debug.Assert(newNode != null, "Could not clone node from clipboard");
             if (newNode != null)
             {
@@ -668,7 +673,7 @@ namespace NPS.AKRO.ThemeManager.UI
         protected override void OnDragOver(DragEventArgs e)
         {
             base.OnDragOver(e);
-            e.Effect = SetDndEffect(e);  
+            e.Effect = SetDndEffect(e);
             CheckForHover(e, 1.0);       //Expand a node if we are hovering for x seconds
         }
 
@@ -685,16 +690,16 @@ namespace NPS.AKRO.ThemeManager.UI
 
             if (destinationNode == null)
                 return DragDropEffects.None;
-            
+
             TmNode node = destinationNode.TmNode;
-            if (node.IsReadOnly || node.IsTheme || node.IsSubTheme)
+            if (node.IsReadOnly || node is ThemeNode || node is SubThemeNode)
                 return DragDropEffects.None;
 
             if (sourceNodes != null)
             {
-                if (sourceNodes.Any(n => (n.IsThemeList || n.IsSubTheme)))
+                if (sourceNodes.Any(n => (n is ThemeListNode || n is SubThemeNode)))
                     return DragDropEffects.None;
-                if ((e.KeyState & 8) == 8 && (e.AllowedEffect & DragDropEffects.Copy) == DragDropEffects.Copy) // Ctrl 
+                if ((e.KeyState & 8) == 8 && (e.AllowedEffect & DragDropEffects.Copy) == DragDropEffects.Copy) // Ctrl
                     return DragDropEffects.Copy;
                 if (sourceNodes.Any(n => (n.IsReadOnly || n == node)))
                     return DragDropEffects.None;
@@ -788,7 +793,7 @@ namespace NPS.AKRO.ThemeManager.UI
         //     if no sibling is selected Add or remove from list
         // Shift-click not on a node
         //     no-op (adds or removes nothing from the selected list)
-        // Ctrl-Shift(or any other unspecified modifiers)-Click on a node 
+        // Ctrl-Shift(or any other unspecified modifiers)-Click on a node
         //     same as click on a node
         // Ctrl-Shift(or any other unspecified modifiers)-Click not on a node
         //     same as click not on a node
@@ -848,7 +853,7 @@ namespace NPS.AKRO.ThemeManager.UI
             SelectedNode = node; //will trigger OnAfterSelect method to do rest of work.
             OkToChangeSelection = false;
         }
-        
+
         //Does not cause any SelectionEvents
         private void InternalSelectNode(TmTreeNode node)
         {
@@ -989,9 +994,9 @@ namespace NPS.AKRO.ThemeManager.UI
                 return null;
 
             // Do not allow the same list loaded twice.
-            if (newNode.IsThemeList && 
+            if (newNode is ThemeListNode &&
                   //(string.IsNullOrEmpty(newNode.Data.Path) ||
-                   FindThemeListNode(newNode.Data.Path) != null)
+                   FindThemeListNode(((ThemeListNode)newNode).FilePath) != null)
                 return null;
 
             RootNodes.Add(newNode);
@@ -1002,7 +1007,7 @@ namespace NPS.AKRO.ThemeManager.UI
         {
             if (node.IsHidden && !Settings.Default.ShowHiddenThemes)
                 return null;
-            
+
             TmTreeNode newNode = new TmTreeNode(node);
             nodes.Add(newNode);
             return newNode;
@@ -1034,8 +1039,11 @@ namespace NPS.AKRO.ThemeManager.UI
                 return null;
 
             foreach (TmTreeNode tNode in Nodes)
-                if (tNode.TmNode.Data.Path == path)
+            {
+                ThemeListNode tlNode = tNode.TmNode as ThemeListNode;
+                if (tlNode != null && tlNode.FilePath == path)
                     return tNode;
+            }
             return null;
         }
 
@@ -1146,7 +1154,7 @@ namespace NPS.AKRO.ThemeManager.UI
 
         /// <summary>
         /// On first call this method sorts the node display text in ascending order
-        /// with a CurrentCultureIgnoreCase string comparison. 
+        /// with a CurrentCultureIgnoreCase string comparison.
         /// Repeated calls toggle between Ascending and Descending
         /// </summary>
         public void TextSortToggle()
@@ -1233,7 +1241,7 @@ namespace NPS.AKRO.ThemeManager.UI
                     NodeSortOrder = NodeSortOrder.Unsorted,
                     TextComparer = StringComparison.CurrentCultureIgnoreCase
                 };
-                TreeViewNodeSorter = sorter;  // triggers an (unsorted) sort 
+                TreeViewNodeSorter = sorter;  // triggers an (unsorted) sort
                 //UnSort();
             }
             else
@@ -1284,7 +1292,7 @@ namespace NPS.AKRO.ThemeManager.UI
         /// Prunes all nodes which are not visible from the tree.
         /// Visibility is determined by the data in the node tag.
         /// From the TreeView perspective this is a non-reversable operation.
-        /// The original treeview should be cloned if it may needed. 
+        /// The original treeview should be cloned if it may needed.
         /// </summary>
         public void Filter()
         {

@@ -71,7 +71,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             //It is best to not modify it's state, and just use the event args for communication
             //with the main thread.
 
-            
+
             //I'm not sure I should be accessing these form properties on the background thread,
             //but it seems to be working.
             e.Result = Command(bw, Node, Path);
@@ -131,7 +131,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             if (root == null)
                 return "No node provided for sync";
 
-            root.SuspendUpdates();
+            root.BeginUpdate();
             List<TmNode> nodes = root.Recurse(x => x.Children)
                                         .Where(n => !string.IsNullOrEmpty(n.Metadata.Path))
                                         .ToList();
@@ -155,7 +155,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     return null;
                 index++;
             }
-            root.ResumeUpdates();
+            root.EndUpdate();
             return null;
         }
 
@@ -164,9 +164,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             if (root == null)
                 return "No node provided for reload";
 
-            root.SuspendUpdates();
+            root.BeginUpdate();
             List<TmNode> nodes = root.Recurse(x => x.Children)
-                                        .Where(n => n.IsTheme)
+                                        .Where(n => n is ThemeNode)
                                         .ToList();
             int count = nodes.Count;
             int index = 0;
@@ -178,7 +178,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 {
                     // node.ReloadTheme() may need to load to query ArcObjects
                     // which could throw any number of exceptions.
-                    node.ReloadTheme();
+                    node.Reload();
                 }
                 catch (Exception ex)
                 {
@@ -188,7 +188,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     return null;
                 index++;
             }
-            root.ResumeUpdates();
+            root.EndUpdate();
             return null;
         }
 
