@@ -121,8 +121,8 @@
     <Compile Include="..\ThemeManager\Extensions\StringExtensions.cs">
       <Link>Extensions\StringExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Extensions\DeepCopyExtensions.cs">
-      <Link>Extensions\DeepCopyExtensions.cs</Link>
+    <Compile Include="..\ThemeManager\Extensions\DeepCopyExtension.cs">
+      <Link>Extensions\DeepCopyExtension.cs</Link>
     </Compile>
     <Compile Include="..\ThemeManager\Model\DateRange.cs">
       <Link>Model\DateRange.cs</Link>

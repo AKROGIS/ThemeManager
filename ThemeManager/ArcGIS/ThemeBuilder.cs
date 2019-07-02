@@ -8,7 +8,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 {
     static class ThemeBuilder
     {
-        internal static void BuildThemesForLayerFile(TmNode tmNode)
+        internal static void BuildThemesForLayerFile(ThemeNode tmNode)
         {
             ILayer layer;
             try
@@ -32,7 +32,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             LayerUtilities.CloseOpenLayerFile();
         }
 
-        private static void BuildSubThemesForGroupLayer(TmNode node, ILayer layer)
+        private static void BuildSubThemesForGroupLayer(ThemeNode node, ILayer layer)
         {
             // GroupLayer implements IGroupLayer and ICompositeLayer
             if (!(layer is ICompositeLayer))
@@ -46,7 +46,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 BuildSubThemeForLayer(node, gl.Layer[i]);
         }
 
-        internal static void BuildSubThemesForMapDocument(TmNode node)
+        internal static void BuildSubThemesForMapDocument(ThemeNode node)
         {
             IMapDocument mapDoc = MapUtilities.GetMapDocumentFromFileName(node.Data.Path);
             int count = mapDoc.MapCount;
@@ -55,20 +55,20 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             mapDoc.Close();
         }
 
-        private static void BuildSubThemeForMap(TmNode node, IMap map)
+        private static void BuildSubThemeForMap(ThemeNode node, IMap map)
         {
-            TmNode newNode = new TmNode(TmNodeType.Theme, map.Name, node, new ThemeData(null, "Map Data Frame"), null, null, null);
+            SubThemeNode newNode = new SubThemeNode(map.Name, node, new ThemeData(null, "Map Data Frame", null), null, null, null);
             node.Add(newNode);
             int count = map.LayerCount;
             for (int i = 0; i < count; i++)
                 BuildSubThemeForLayer(newNode, map.Layer[i]);
         }
 
-        private static void BuildSubThemeForLayer(TmNode node, ILayer subLayer)
+        private static void BuildSubThemeForLayer(ThemeNode node, ILayer subLayer)
         {
             if (subLayer is GroupLayer)
             {
-                TmNode newNode = new TmNode(TmNodeType.Theme, subLayer.Name, node, new ThemeData(null, "Group Layer"), null, null, null);
+                SubThemeNode newNode = new SubThemeNode(subLayer.Name, node, new ThemeData(null, "Group Layer", null), null, null, null);
                 node.Add(newNode);
                 BuildSubThemesForGroupLayer(newNode, subLayer);
             }
@@ -80,7 +80,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 BuildThemeDataForLayer(data, subLayer);
 
                 Metadata md = Metadata.FromDataSource(data);
-                TmNode newNode = new TmNode(TmNodeType.Theme, subLayer.Name, node, data, md, null, null);
+                TmNode newNode = new SubThemeNode(subLayer.Name, node, data, md, null, null);
                 node.Add(newNode);
             }
         }
@@ -166,7 +166,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 data.DataSource = "!Error - Data source not found";
         }
 
-        //FIXME - get this directly from the layer object, or move this to the themeData object 
+        //FIXME - get this directly from the layer object, or move this to the themeData object
         private static string GetDataSourceFullNameFromLayer(ILayer layer)
         {
             if (!(layer is IDataLayer))
