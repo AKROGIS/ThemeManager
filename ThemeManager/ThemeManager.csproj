@@ -169,6 +169,7 @@
     <Compile Include="ArcGIS\EsriLicenseManager.cs" />
     <Compile Include="ArcGIS\LayerUtilities.cs" />
     <Compile Include="ArcGIS\MapUtilities.cs" />
+    <Compile Include="ArcGIS\MapViewer.cs" />
     <Compile Include="ArcGIS\ThemeBuilder.cs" />
     <Compile Include="Model\DateRange.cs" />
     <Compile Include="ArcGIS\EsriLicenseInitializer.cs" />
