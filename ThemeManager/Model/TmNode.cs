@@ -516,8 +516,9 @@ namespace NPS.AKRO.ThemeManager.Model
                 if (themeNode != null)
                     (themeNode).Data = ThemeData.Load(data);
                 var themeListNode = this as ThemeListNode;
-                if (themeListNode != null)
-                    (themeListNode).FilePath = data.Value;
+                if (themeListNode != null && themeListNode.FilePath == null && data.Value != null)
+                    // If the path of a themelist is already set (by the open dialog), do not restore the old path
+                    themeListNode.FilePath = data.Value;
             }
 
             data = xele.Element("metadata");
