@@ -192,7 +192,7 @@ After Theme Manager 3.0.12, this change log was not actively maintained.  It sti
 
 _Only major changes are shown here.  See Github repo for all changes._
 
-- Now uses real (W3C specification for XSLT version 1.0)[https://www.w3.org/TR/xslt-10/] stylesheets.
+- Now uses real [W3C specification for XSLT version 1.0](https://www.w3.org/TR/xslt-10) stylesheets.
 - Removes dependency on vulnerable MSXML2.0 and the obscure MS draft XSL transformation.
 - Can use ESRI ArcMap 10.0+, or ArcGIS Pro metadata stylesheets (if ArcGIS is installed).
 - Attributes can be extracted from ISO (19139) metadata.

@@ -1,6 +1,13 @@
 Theme Manager 3.1 - Installation Instructions
 =================
 
+# Contents
+  * [Installation](#installation)
+  * [Requirements](#requirements)
+  * [Using ESRI Metadata Stylesheets](#using-esri-metadata-stylesheets)
+  * [Using Theme Manager on a Network](#using-theme-manager-on-a-network)
+  * [Accessing Theme Manager from ArcMap](#accessing-theme-manager-from-arcmap)
+
 # Installation
 
 Theme Manager is delivered as a zip file that can be extracted to any convenient location[^1]. Theme Manager does not write to the registry, or make any changes to your system, so no administrative privileges are required to install or run it.
@@ -17,7 +24,7 @@ Theme Manager can be used on a computer without any GIS software, but to get ful
 
 Theme Manager 3.0 is available for ArcGIS 9.3 through ArcGIS 10.6.
 
-# Using ESRI Metadata Stylesheets with Theme Manager
+# Using ESRI Metadata Stylesheets
 
 Stylesheets are required to stylize the metadata in XML format to an easier to read HTML format.  Esri provides Stylesheets which work with FGDC, ISO, and ESRI formatted XML metadata, however
 these stylesheets require the use of a esri code library not generally available to custom
