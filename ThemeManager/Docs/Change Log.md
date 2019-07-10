@@ -176,3 +176,30 @@ After Theme Manager 3.0.12, this change log was not actively maintained.  It sti
 - Added `try/catch` around license manager checks in main form and loading form to protect against cases where ESRI libraries were not found.
 - Added code to ensure that a new theme is shown and selected when created.
 - Added code to ensure that new themes and categories are shown (but not selected) when created.
+
+## 3.0.0.12 ⇨ 3.0.1.3
+
+- Fixed bug that could have allowed a mal-formed sub-theme to be launched.
+- Added ability to find metadata abstract, purpose, tags, etc from Esri Metadata.
+- Sort categories above all other items.
+- Disallow copy of SubThemes
+- Fixed license code to work with changes in ArcGIS 10.1+ SDK.
+- Fixed bug that allowed drag and drop of subthemes and theme lists.
+- Added icons for word and pdf; more services now get wms icon
+- Recompiled for ArcGIS 10.1 to 10.6.
+
+## 3.0.1.3 ⇨ 3.1.00
+
+_Only major changes are shown here.  See Github repo for all changes._
+
+- Now uses real (W3C specification for XSLT version 1.0)[https://www.w3.org/TR/xslt-10/] stylesheets.
+- Removes dependency on vulnerable MSXML2.0 and the obscure MS draft XSL transformation.
+- Can use ESRI ArcMap 10.0+, or ArcGIS Pro metadata stylesheets (if ArcGIS is installed).
+- Attributes can be extracted from ISO (19139) metadata.
+- HTML tags are stripped from extracted metadata attributes when adding to Theme node.
+- Can extract attributes, search and display Metadata for ArcGIS services (Map, Image, and Feature).
+- Better logic for finding metadata for data sources.
+- Removed option (in preferences to preload metadata).
+- Metadata is always guaranteed fresh, no caching.
+- Reading and saving Author data on the Themelist is supported.
+- Cleaner formating of display when metadata is missing or has errors.
