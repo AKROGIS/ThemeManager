@@ -117,7 +117,7 @@ This section assumes you have used previous versions of Theme Manager. If you ar
 - HTML tags are stripped from extracted metadata attributes when adding to Theme node.
 - Can extract attributes, search and display Metadata for ArcGIS services (Map, Image, and Feature).
 - Better logic for finding metadata for data sources.
-- Removed option (in preferences to preload metadata).
+- Removed option `KeepMetaDataInMemory` (this was a half baked idea, and never fully implemented).
 - Metadata is always guaranteed fresh, no caching.
 - Reading and saving Author data on the Themelist is supported.
 - Cleaner formating of display when metadata is missing or has errors.
@@ -411,7 +411,6 @@ The following is a list of the settings and valid values found in the configurat
 | KeepSearchFormOpen | See Advanced Options | true/false |
 | DisplayDefaultHtml | User prefers a blank metadata panel to the default html page | true/false |
 | AgeComboIndex | Current pick list choice | 0 (1 Day) to 10 (5 Years) |
-| KeepMetaDataInMemory | See Advanced Options | true/false |
 | InPlaceNodeEditing | See Advanced Options | true/false |
 | CheckForArcViewBeforeArcInfo | See Advanced Options | true/false |
 | mainFormTabpage2 | Selected info tab | 0=Metadata, 1=Preview, 2=Properties |
@@ -468,7 +467,6 @@ The advanced options are available by clicking the advanced options button on th
 | --- | --- | --- |
 | Keep Theme Manage on top of other windows | No | With yes, Theme Manager application will float above all other windows on the screen |
 | Display introduction when no theme is selected | Yes | With yes, the quick start tutorial (or whatever is in starup.html) will display in the metadata panel at startup and whenever a nothing is selected. |
-| Keep metadata in memory | No | With yes, once metadata is read from a file or database it will be kept in memory until the program quits. This makes the program faster, but increases memory usage. I have a sneaking suspicion that this option doesn't work, and metadata is never cleared from memory until Theme Manager quits. This won't matter unless you have a lot of themes, and your search the metadata of all themes. |
 | Check for ArcView before ArcInfo License | No | It is faster to check for the license you know you have first. With yes the ArcView is checked first. Having an ArcInfo license does not imply you have a ArcView license. |
 | Keep search form open after results are displayed | No | With no, the search form will close after results are displayed. With yes, the search form will stay open so similar searches can be done quickly. |
 
