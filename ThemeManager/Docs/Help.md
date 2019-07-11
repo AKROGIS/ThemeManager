@@ -331,7 +331,7 @@ The application configuration file can be found at:
 
 ``` bash
     X:\GIS\ThemeMgrApp\Ver10.x\ThemeManager.exe.config
-````
+```
 
 The settings available in that file are subject to change until the development stabilizes.
 
@@ -465,7 +465,7 @@ The advanced options are available by clicking the advanced options button on th
 
 | Setting | Default | Description |
 | --- | --- | --- |
-| Keep Theme Manage on top of other windows | No | With yes, Theme Manager application will float above all other windows on the screen |
+| Keep Theme Manager on top of other windows | No | With yes, Theme Manager application will float above all other windows on the screen |
 | Display introduction when no theme is selected | Yes | With yes, the quick start tutorial (or whatever is in starup.html) will display in the metadata panel at startup and whenever a nothing is selected. |
 | Check for ArcView before ArcInfo License | No | It is faster to check for the license you know you have first. With yes the ArcView is checked first. Having an ArcInfo license does not imply you have a ArcView license. |
 | Keep search form open after results are displayed | No | With no, the search form will close after results are displayed. With yes, the search form will stay open so similar searches can be done quickly. |
@@ -557,10 +557,8 @@ The following is a brainstorming list and not a planning document. Some of the i
 
 # Contact Information
 
-``` bash
-    Alaska Region GIS Team
-    National Park Service
-    240 West 5th Avenue
-    Anchorage Alaska 99505
-```
+Alaska Region GIS Team  
+National Park Service  
+240 West 5th Avenue  
+Anchorage Alaska 99501  
 [akro_gis_helpdesk@nps.gov](mailto:akro_gis_helpdesk@nps.gov?subject=ThemeManager3.0)
