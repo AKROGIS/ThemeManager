@@ -582,14 +582,14 @@ pre.editor-colors .fold-marker:after {
 }
 </style>
         </head>
-        <body class='markdown-preview' data-use-github-style><h1 id="theme-manager">Theme Manager Help</h1>
+        <body class='markdown-preview' data-use-github-style><h1 id="theme-manager-help">Theme Manager Help</h1>
 <h1 id="contents">Contents</h1>
 <ul>
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#quick-start">Quick Start</a></li>
 <li><a href="#installation">Installation</a><ul>
 <li><a href="#requirements">Requirements</a></li>
-<li><a href="#using-esri-metadata-stylesheets">Using ESRI Metadata Stylesheets</a></li>
+<li><a href="#using-esri-metadata-stylesheets">Using Esri Metadata Stylesheets</a></li>
 <li><a href="#using-theme-manager-on-a-network">Using Theme Manager on a Network</a></li>
 <li><a href="#accessing-theme-manager-from-arcmap">Accessing Theme Manager from ArcMap</a></li>
 </ul>
@@ -645,12 +645,7 @@ pre.editor-colors .fold-marker:after {
 </li>
 </ul>
 </li>
-<li><a href="#known-issues">Known Issues</a><ul>
-<li><a href="#general-issues">Genera Issues</a></li>
-<li><a href="#drag-n-drop-and-copy-n-paste">Drag-n-Drop and Copy-n-Paste</a></li>
-<li><a href="#metadata">Metadata</a></li>
-</ul>
-</li>
+<li><a href="#known-issues">Known Issues</a></li>
 <li><a href="#ideas-for-future-versions">Ideas for Future Versions</a></li>
 <li><a href="#contact-information">Contact Information</a></li>
 </ul>
@@ -666,15 +661,50 @@ pre.editor-colors .fold-marker:after {
 <p>Theme Manager 3.1 requires the Microsoft .Net Framework 4.5 or higher (This is also a requirement for ArcGIS 10.4+ and other software, and has been a core component of Windows software since 2013, so you probably have it. If not, it can be downloaded for free from Microsoft.</p>
 <p>Theme Manager can be used on a computer without any GIS software, but to get full access to all the features you must have ArcGIS Desktop version 10.5 (or higher) installed (and licensed) on your computer. There is a different version of Theme Manager for each version for ArcGIS. If you have installed mismatched versions, Theme Manager will run but you will get error and you will not have access to any of the features that require ArcGIS. Theme Manager will work with ArcGIS Pro, but some features (mainly previewing themes and loading/searching/displaying metadata in a geodatabase) do not work.</p>
 <p>Theme Manager 3.0 is available for ArcGIS 9.3 through ArcGIS 10.6.</p>
-<h2 id="using-esri-metadata-stylesheets">Using ESRI Metadata Stylesheets</h2>
-<p>Stylesheets are required to stylize the metadata in XML format to an easier to read HTML format. Esri provides Stylesheets which work with FGDC, ISO, and ESRI formatted XML metadata, however
-these stylesheets require the use of a esri code library not generally available to custom
-applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installed, you can use the ESRI stylesheets with Theme Manager if you follow <a href="https://github.com/regan-sarwas/ThemeManager/blob/master/ThemeManager/Docs/Stylesheets.md">these instructions</a>.</p>
+<h2 id="using-esri-metadata-stylesheets">Using Esri Metadata Stylesheets</h2>
+<p>Theme Manager comes with two stylesheets to convert XML metadata into an HTML file suitable for display.
+Esri provides a few more comprehensive stylesheets that Theme Manager users may want to use.
+Unfortunately, the Esri stylesheets require processing by an Esri library (dll) that is not part of the developer's SDK,
+so it is not available for general access by Theme Manager.</p>
+<p>If you want to use the Esri stylesheets with Theme Manager, you must have ArcGIS Desktop or ArcGIS Pro
+installed on your computer. Then follow these steps:</p>
+<ol>
+<li><p>Copy the dll to Theme Manager</p>
+<ul>
+<li><p><strong>Desktop</strong>: Copy the file <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">C:\Program Files (x86)\ArcGIS\Desktop10.5\bin\ESRI.ArcGIS.MetadataEditor.dll</code> (or similar) to the location where Theme Manager is installed. The dll must be in the same folder as ThemeManager.exe.</p>
+</li>
+<li><p><strong>Pro</strong>: Copy <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">C:\Program Files\ArcGIS\Pro\bin\Extensions\Metadata\ArcGIS.Desktop.Metadata.dll</code> to the location where Theme Manager is installed. The dll must be in the same folder as ThemeManager.exe. <strong>Note</strong>: You will need a special build of Theme Manager specifically for Pro.</p>
+</li>
+</ul>
+</li>
+<li><p>Create a folder called <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">Esri</code> in Theme Manager's stylesheet folder. The stylesheet folder
+is typically called <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">StyleSheets</code> in the folder where Theme Manager is installed. However, it
+can be given a different name by editing the <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">StyleSheetDirectory</code> setting in <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">ThemeManager.exe.config</code></p>
+</li>
+<li><p>Copy the Esri Stylesheets to Theme Manager</p>
+<ul>
+<li><p><strong>Desktop</strong>: Copy the files <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">ArcGIS.xsl</code> and/or <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">ArcGIS_ItemDescription.xsl</code> from the folder
+<code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">C:\Program Files (x86)\ArcGIS\Desktop10.5\Metadata\Stylesheets</code> (or similar) to Theme Manager's
+<code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">StyleSheets\Esri</code> folder. The files can be renamed to something more intuitive for display
+in the stylesheet picker in Theme Manager, but the files must retain the <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">.xsl</code> extension.
+You also need to copy the folder <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">C:\Program Files (x86)\ArcGIS\Desktop10.5\Metadata\Stylesheets\ArcGIS_Imports</code> (or similar, and all it contents) to <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">StyleSheets\Esri\ArcGIS_Imports</code>. These files are referenced by the main files, and cannot be renamed or put in a different sub folder.</p>
+</li>
+<li><p><strong>Pro</strong>: Copy the files <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">ArcGISPro.xsl</code> and/or <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">ArcGISProFull.xsl</code> from the folder
+<code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">C:\Program Files\ArcGIS\Pro\Resources\Metadata\Stylesheets</code> to Theme Manager's
+<code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">StyleSheets\Esri</code> folder. The files can be renamed to something more intuitive for display
+in the stylesheet picker in Theme Manager, but the files must retain the <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">.xsl</code> extension.
+You also need to copy the folder <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">C:\Program Files\ArcGIS\Pro\Resources\Metadata\Stylesheets\sArcGIS_Imports</code> (and all it contents) to <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">StyleSheets\Esri\ArcGIS_Imports</code>. These files are referenced by the main files, and cannot be renamed or put in a different sub folder.</p>
+</li>
+<li><p>You can use Pro stylesheets with Desktop and visa-versa. Fortunately, the names of the files in <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">ArcGIS_Imports</code> have different names for the different versions, except <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">ArcGIS_Imports\XML.xslt</code> which is the same in both versions.</p>
+</li>
+</ul>
+</li>
+</ol>
 <h2 id="using-theme-manager-on-a-network">Using Theme Manager on a Network</h2>
 <p>A single install of Theme Manager can be used by multiple users if the application is unzipped to a shared folder on a network drive. If the domain administrators have not designated the server or shared folder as a trusted location, you will be prompted to accept a security warning when you launch the application. In some cases you may be denied the ability to run the application from the network. This is a site specific domain security issue beyond the programmer's control. If it is a problem at your site, contact your domain administrator, or copy the application to a local (trusted) location and execute it from there. If you have administrative control on your computer there are also ways to run off this security warning, but that is beyond the scope of this document – consult the Google.</p>
 <h2 id="accessing-theme-manager-from-arcmap">Accessing Theme Manager from ArcMap</h2>
 <p>Theme Manager is a stand-alone windows application. It is not an ArcGIS extension. It is typically launched via a shortcut on your desktop.</p>
-<p>To launch the application from ArcMap requires installing an ArcMap Add-In, installing Theme Manager in a well known location, and putting that location into the code for the Add-In. An Add-In may be available for your site (contact your GIS Specialist, or the programmer), if not an Add-In can be created using the ESRI tutorials. Put the following code in the <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">OnClick()</code> method of the tool you create.</p>
+<p>To launch the application from ArcMap requires installing an ArcMap Add-In, installing Theme Manager in a well known location, and putting that location into the code for the Add-In. An Add-In may be available for your site (contact your GIS Specialist, or the programmer), if not an Add-In can be created using the Esri tutorials. Put the following code in the <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">OnClick()</code> method of the tool you create.</p>
 <pre class="editor-colors lang-c#"><div class="line"><span class="syntax--text syntax--plain syntax--null-grammar"><span class="leading-whitespace">    </span>//Change the following path to your installation location</span></div><div class="line"><span class="syntax--text syntax--plain syntax--null-grammar"><span class="leading-whitespace">    </span>string directory = "X:\Path\To\ThemeManager\Folder";</span></div><div class="line"><span class="syntax--text syntax--plain syntax--null-grammar"><span class="leading-whitespace">    </span>System.Diagnostics.ProcessStartInfo startInfo =</span></div><div class="line"><span class="syntax--text syntax--plain syntax--null-grammar"><span class="leading-whitespace">        </span>newSystem.Diagnostics.ProcessStartInfo(directory + "\ThemeManager.exe");</span></div><div class="line"><span class="syntax--text syntax--plain syntax--null-grammar"><span class="leading-whitespace">    </span>startInfo.WorkingDirectory = directory;</span></div><div class="line"><span class="syntax--text syntax--plain syntax--null-grammar"><span class="leading-whitespace">    </span>Process.Start(startInfo);</span></div></pre>
 <p>[^1]: Provided you have write permission in that location – However, you do not need write permission to the installation location in order to run Theme Manager.</p>
 <h1 id="whats-new">What's New</h1>
@@ -683,12 +713,12 @@ applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installe
 <ul>
 <li>Now uses real <a href="https://www.w3.org/TR/xslt-10">W3C specification for XSLT version 1.0</a> stylesheets.</li>
 <li>Removes dependency on vulnerable MSXML2.0 and the obscure MS draft XSL transformation.</li>
-<li>Can use ESRI ArcMap 10.0+, or ArcGIS Pro metadata stylesheets (if ArcGIS is installed).</li>
+<li>Can use Esri ArcMap 10.0+, or ArcGIS Pro metadata stylesheets (if ArcGIS is installed).</li>
 <li>Attributes can be extracted from ISO (19139) metadata.</li>
 <li>HTML tags are stripped from extracted metadata attributes when adding to Theme node.</li>
 <li>Can extract attributes, search and display Metadata for ArcGIS services (Map, Image, and Feature).</li>
 <li>Better logic for finding metadata for data sources.</li>
-<li>Removed option (in preferences to preload metadata).</li>
+<li>Removed option <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">KeepMetaDataInMemory</code> (this was a half baked idea, and never fully implemented).</li>
 <li>Metadata is always guaranteed fresh, no caching.</li>
 <li>Reading and saving Author data on the Themelist is supported.</li>
 <li>Cleaner formating of display when metadata is missing or has errors.</li>
@@ -706,7 +736,7 @@ applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installe
 <li>Drag and drop multiple themes to add them to ArcMap.</li>
 <li>Drag and drop multiple layer files to add them to a theme list.</li>
 <li>Double clicking on a theme will open that theme (typically in ArcMap).</li>
-<li>A theme can be any document (but only ESRI layer files (*.lyr) and Map documents (*.mxd, *.mxt) provide sub-theme expansion and automatic metadata discovery.</li>
+<li>A theme can be any document (but only Esri layer files (*.lyr) and Map documents (*.mxd, *.mxt) provide sub-theme expansion and automatic metadata discovery.</li>
 <li>ArcMap document when added as themes will reveal all their layers in the tree view</li>
 <li>Themes can be reloaded if the source document has changed.</li>
 <li>Layers/Maps can have group layers nested arbitrarily deep.</li>
@@ -731,12 +761,12 @@ applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installe
 <h3 id="search-results-tab">Search Results Tab</h3>
 <p>The search results tab creates a new category for each collection of themes that are found when you request a search. Search Results can be organized, deleted, searched and saved the same as the favorites tab.</p>
 <h3 id="metadata-tab">Metadata Tab</h3>
-<p>Each theme list, category, theme and sub-theme can have associated metadata. Metadata is either a URL to a web page, a file path to an XML document, or an ArcCatalog path to a data source in a file geodatabase that has embedded metadata for that data source. If the associated metadata can be found and is a valid file, then it will be displayed in the metadata tab. The format of XML based metadata can be changed by picking a different style sheet from the pick list on the toolbar. The style sheets are included in a subfolder with the application. Style sheets in this folder can be removed, edited or added to in order to change the choices or display of the metadata. The style sheets provided are based on FGDC and ESRI's 9.3 metadata tags. Some of the tags used in the ESRI's version 10 metadata are not recognized by the style sheets.</p>
+<p>Each theme list, category, theme and sub-theme can have associated metadata. Metadata is either a URL to a web page, a file path to an XML document, or an ArcCatalog path to a data source in a file geodatabase that has embedded metadata for that data source. If the associated metadata can be found and is a valid file, then it will be displayed in the metadata tab. The format of XML based metadata can be changed by picking a different style sheet from the pick list on the toolbar. The style sheets are included in a subfolder with the application. Style sheets in this folder can be removed, edited or added to in order to change the choices or display of the metadata. The style sheets provided are based on FGDC and Esri's 9.3 metadata tags. Some of the tags used in the Esri's version 10 metadata are not recognized by the style sheets.</p>
 <p>URL and file based metadata do not require an ArcGIS license to display, but metadata in a geodatabase requires an ArcGIS license.</p>
 <h3 id="preview-panel">Preview Panel</h3>
-<p>Themes based on ESRI files (*.lyr and *.mxd) can be displayed in the preview panel with the same symbology as they would in ArcMap. Simple navigation tools (zoom, pan) are available in the toolbar. You can also use the mouse to zoom and pan. The preview panel requires access to the ArcGIS libraries.</p>
+<p>Themes based on Esri files (*.lyr and *.mxd) can be displayed in the preview panel with the same symbology as they would in ArcMap. Simple navigation tools (zoom, pan) are available in the toolbar. You can also use the mouse to zoom and pan. The preview panel requires access to the ArcGIS libraries.</p>
 <h3 id="properties-panel">Properties Panel</h3>
-<p>The attributes of the item (theme list, category, theme or sub theme) currently selected in the active tree view are displayed in the properties tab. The properties tab provides a means of editing these items. For properties that contain file names/paths, a browse button is available to find the file, or the text field will accept a file dragged/dropped from Windows file explorer. Some properties cannot be edited because they are controlled by theme manager, or because the item is in a read only theme list.</p>
+<p>The attributes of the item (theme list, category, theme or sub theme) currently selected in the active tree view are displayed in the properties tab. The properties tab provides a means of editing these items. For properties that contain file names/paths, a browse button is available to find the file, or the text field will accept a file dragged/dropped from Windows file explorer. Some properties cannot be edited because they are controlled by Theme Manager, or because the item is in a read only theme list.</p>
 <p>Most properties for themes and sub-themes are populated automatically when the theme is added to Theme Manager; however, these properties can become out of date if the theme's layer file changes. The property panel provides a <strong>reload</strong> button that will reread a theme's layer file and update the data source, data type, and any sub-themes. The property panels for theme lists and categories also provide a reload button which will reload all the themes contained below them.</p>
 <p>Several of the properties for a theme can be harvested from the metadata (if found). However, the properties can be edited independent of the metadata if you wish. If you wish to populate the fields based on the metadata, you will need to click the <strong>sync</strong> button.</p>
 <h2 id="adding-themes-to-arcmap">Adding Themes to ArcMap</h2>
@@ -770,7 +800,7 @@ applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installe
 <p>A new empty theme list can be created by selecting New Theme List from the File menu. It can also be created by selecting the new document icon on the toolbar, and then selecting the New Theme List command in the pop-up menu. In both cases, an empty theme list called New Theme List will be added to the theme tab. The themes tab will be made active, and the New Theme List will be selected. The name and other properties of the new theme list can be edited in the properties panel when the theme list is selected. The file name can only be specified by selecting the Save As command. The Save As command will be automatically invoked by the save command if the theme list has been modified. You will be prompted to save when you quit Theme Manager.</p>
 <p>You can also create a new theme list from an existing theme list, or an existing category of themes by selecting the item, and then clicking the File then Save As in the main menu, or by right clicking on the item and selecting Save As on the pop-up context menu.</p>
 <h2 id="adding-themes">Adding Themes</h2>
-<p>Themes can be added to a theme list with the File ⭢ Add Theme command in the main menu, or by selecting the new document icon in the toolbar, and then select New Theme. You can only create a new theme if you have a theme list or category selected, in the themes tab, and If the theme list is not read only. The New Theme command will create an empty theme with the name <strong>New Theme</strong> as a child of the selected item. The name and other properties of the theme can be edited by selecting the new theme and then making sure the Properties tab is active. Usually the only properties that need to be edited are the Theme name, and the File. Use the browse (…) button to select an ESRI layer file (*.lyr), and the rest of the properties will be automatically populated.</p>
+<p>Themes can be added to a theme list with the File ⭢ Add Theme command in the main menu, or by selecting the new document icon in the toolbar, and then select New Theme. You can only create a new theme if you have a theme list or category selected, in the themes tab, and If the theme list is not read only. The New Theme command will create an empty theme with the name <strong>New Theme</strong> as a child of the selected item. The name and other properties of the theme can be edited by selecting the new theme and then making sure the Properties tab is active. Usually the only properties that need to be edited are the Theme name, and the File. Use the browse (…) button to select an Esri layer file (*.lyr), and the rest of the properties will be automatically populated.</p>
 <p>If you have a layer file already selected in the windows file explorer, then you can drag the file and drop it on the file text box in the theme's property tab.</p>
 <p>You can also select one or more files (of any type) in the windows file explorer, and then drag and drop them onto a theme or category in the themes tab, and a new theme will be created for each of the files that were selected.</p>
 <h2 id="organizing-themes">Organizing Themes</h2>
@@ -854,11 +884,11 @@ applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installe
 <li><p>Windows7: <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">C:\Users\{USERNAME}\AppData\Roaming\National Park Service\ThemeManager.exe\3.0.0.0\session.xml</code></p>
 </li>
 </ul>
-<p>This file is automatically saved only when Theme Manager exits normally. It is not saved if Theme Manager crashes, or you kill it. If this file does not exist, Theme Manager tries to find a previous version (not applicable until there are versions beyond 3.0.0.0). If no previous version is found, TM searches the registry for information save by a Theme Manager 2.2 or earlier. If nothing is found in the registry, a list of default theme lists are loaded. This behavior will change before the final release to ensure that the default theme list is always loaded.</p>
+<p>This file is automatically saved only when Theme Manager exits normally. It is not saved if Theme Manager crashes, or you kill it. If this file does not exist, Theme Manager tries to find a previous version (not applicable until there are versions beyond 3.0.0.0). If no previous version is found, Theme Manager searches the registry for information save by a Theme Manager 2.2 or earlier. If nothing is found in the registry, a list of default theme lists are loaded. This behavior will change before the final release to ensure that the default theme list is always loaded.</p>
 <p>If Theme Manager runs into problems when starting up, the session may not be properly restored, however, when you quit the program, this incomplete session will be saved, overwriting your previous session. This can result in a saved session with no theme lists, obviously confusing the casual user. If this happens, the session file should be deleted to allow Theme Manager to recreate it by searching the registry. This problem is partially corrected in versions after 10/20/2010 which will not overwrite your session file if you have no theme lists attached.</p>
 <p>I may implement automatically saving backups of this file in a future version.</p>
 <h3 id="contents-of-thememanagerexeconfig">Contents of ThemeManager.exe.config</h3>
-<p>The following is a list of the settings and valid values found in the configuration file. Users and/or administrators can edit this file to change the default behavior of theme manager.</p>
+<p>The following is a list of the settings and valid values found in the configuration file. Users and/or administrators can edit this file to change the default behavior of Theme Manager.</p>
 <table>
 <thead>
 <tr>
@@ -919,7 +949,7 @@ applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installe
 </tr>
 <tr>
 <td>SavedSessionFile</td>
-<td>Name of the file to state of theme manager between sessions.</td>
+<td>Name of the file to state of Theme Manager between sessions.</td>
 <td>valid file name</td>
 </tr>
 <tr>
@@ -1040,11 +1070,6 @@ applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installe
 <td>AgeComboIndex</td>
 <td>Current pick list choice</td>
 <td>0 (1 Day) to 10 (5 Years)</td>
-</tr>
-<tr>
-<td>KeepMetaDataInMemory</td>
-<td>See Advanced Options</td>
-<td>true/false</td>
 </tr>
 <tr>
 <td>InPlaceNodeEditing</td>
@@ -1229,7 +1254,7 @@ applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installe
 </tr>
 </thead>
 <tbody><tr>
-<td>Keep Theme Manage on top of other windows</td>
+<td>Keep Theme Manager on top of other windows</td>
 <td>No</td>
 <td>With yes, Theme Manager application will float above all other windows on the screen</td>
 </tr>
@@ -1237,11 +1262,6 @@ applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installe
 <td>Display introduction when no theme is selected</td>
 <td>Yes</td>
 <td>With yes, the quick start tutorial (or whatever is in starup.html) will display in the metadata panel at startup and whenever a nothing is selected.</td>
-</tr>
-<tr>
-<td>Keep metadata in memory</td>
-<td>No</td>
-<td>With yes, once metadata is read from a file or database it will be kept in memory until the program quits. This makes the program faster, but increases memory usage. I have a sneaking suspicion that this option doesn't work, and metadata is never cleared from memory until Theme Manager quits. This won't matter unless you have a lot of themes, and your search the metadata of all themes.</td>
 </tr>
 <tr>
 <td>Check for ArcView before ArcInfo License</td>
@@ -1360,42 +1380,29 @@ applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installe
 </tr>
 </tbody></table>
 <h1 id="known-issues">Known Issues</h1>
-<h2 id="general-issues">General Issues</h2>
 <ul>
-<li>Help is no good.</li>
-<li>If you run the TM for ArcGIS 9.3 on a computer with ArcGIS10 or visa-versa, or you run either version on a machine with an earlier version of ArcGIS, or without ArcGIS, you get an confusing error dialog whenever you try to preview any item, and all non-file based metadata is determined to be invalid. Error dialog should be replaced with text in preview panel, and metadata error report should identify Missing ArcGIS as the problem.</li>
-<li>The labels and text boxes do not reposition themselves correctly if the user sets the system font size to be larger than 100%. This results in overlapping labels and text boxes. Work around: curse the developer while you live with the overlapping text, or change the text back to normal size.</li>
-<li>Preview/Metadata display does not change if theme properties (i.e. path to layer file) is changed. Work around: refresh the preview by clicking on another theme, then click back.</li>
-<li>When a Theme or Category is deleted, the metadata/preview/properties panel is not updated. Work around: refresh the info panel by clicking on another theme, then click back.</li>
-<li>When loading a previous session (after a Theme Manager upgrade), the search is based on the newest folder, not the newest session file all the potential folders. If the folders are modified outside Theme Manager, then the wrong session file may be loaded. Workaround is to copy the correct old session file into the newest folder.</li>
-<li>After saving a category as a theme list, the delete key will not delete any items in the tree view until a cut command is executed. Once a cut has been done, the delete key works again. This also happens with Add To Favorites Workaround: use cut when this happens</li>
-<li>Setting some advanced options causes the toolbars to disappear. Workaround: quit and restart theme manager, or turn the toolbars off, then on again in the advanced options.</li>
-<li>Occasional cross threading errors and null reference exceptions when reloading and/or syncing themes multiple times. This was introduced when reloading and syncing were done in the background to provide progress bar and cancel button in foreground. Problem is rare, sporadic, and will be challenging to solve. In the meantime it can usually be cleared by trying again, or quitting/restarting theme manager.</li>
-<li>If Theme Manager is unable to obtain an ArcGIS license. All future attempts will also fail for a different reason (usually: <strong>An item with the same key has already been added</strong>) even if the license server was only temporarily unavailable. Workaround is to quit and restart theme manager if you need a license.</li>
-</ul>
-<h2 id="drag-n-drop-and-copy-n-paste">Drag-n-Drop and Copy-n-Paste</h2>
-<ul>
-<li>Copy and Paste of sub themes is not being prohibited. Workaround: Don't do it. You will have sub-themes posing as themes, but not usable as themes.</li>
-<li>Cannot paste to root of favorites. Workaround: use 'Add to favorites'</li>
-</ul>
-<h2 id="metadata">Metadata</h2>
-<ul>
-<li>The style sheets provided are based on FGDC and ESRI's 9.3 metadata tags. Some of the tags used in the ESRI's version 10 metadata are not recognized by the style sheets.</li>
-<li>Metadata display does not update when metadata properties (i.e. path) are changed. Work around: refresh the metadata by clicking on another theme, then click back.</li>
+<li>If you run Theme Manager on a computer without ArcGIS or with a different version of ArcGIS than it was built for, you will get a confusing <em>Unhandled Exception</em> error dialog whenever you try to do an operation requiring ArcGIS (preview a theme, reading or rendering metadata in a geodatabase, adding or reloading a theme based on a layer file or map document). The error dialog should clearly state the problem or be replaced with a clear explanation in the preview or metadata tabs. <strong>Note</strong> previewing metadata does not show the error dialog, but the explanation in the display should be clearer.</li>
+<li>If Theme Manager is unable to obtain an ArcGIS license, even temporarily, some actions will fail with a confusing and misleading error dialog. Workaround is reconnect to a license manager and restart Theme Manager.</li>
+<li>You cannot paste an item to the root of favorites. Workaround: use <strong>Add to Favorites</strong></li>
+<li>If the user adjust the system font size, labels and text boxes do not adjust their position accordingly and they may overlap.</li>
+<li>Toolbar icons are fuzzy on high resolution displays.</li>
+<li>Preview display does not update if theme properties (i.e. path to layer file) are changed. Work around: refresh the preview by clicking on another theme, then click back.</li>
+<li>Metadata display does not update if theme properties (i.e. path to metadata) are changed. Work around: refresh the metadata by clicking on another theme, then click back.</li>
+<li>Sometimes when a theme or category is deleted a new Theme or Category is not selected. In this case, the metadata/preview/properties panel is not updated. Work around: refresh the panel by clicking on another theme or category.</li>
+<li>If the <a href="#session-information">session files</a> are moved, or incorrectly altered, Theme Manager may not behave properly until you quit and save new session information. If you lost session information (i.e. favorites), you can recreate it or manually edit the session configuration files with a text editor.</li>
+<li>Setting some advanced options causes the toolbars to disappear. Workaround: quit and restart Theme Manager, or turn the toolbars off, then on again in the advanced options.</li>
+<li>Occasional cross threading and null reference errors occur when reloading themes or syncing metadata. This was introduced when reloading and syncing were done in the background to provide a progress bar and cancel button. The problem is rare, sporadic, and a challenge to fix. In the meantime it can usually be cleared by trying again, or quitting/restarting Theme Manager.</li>
 </ul>
 <h1 id="ideas-for-future-versions">Ideas for Future Versions</h1>
-<p>The following is a brainstorming list and not a planning document. Some of the ideas are so easy they may get slipped into a patch before 3.1, whereas some are so hard or of limited use that they may never get implemented. If you have any other ideas please send it along (see Contact Information below).</p>
+<p>The following is a brainstorming list and not a planning document. Some of the ideas are so easy they may get slipped into a patch before the next major version, whereas some are so hard or of limited use that they may never get implemented. If you have any other ideas please <a href="#contact-information">contact us</a>.</p>
 <ul>
-<li>Save the state of the theme list trees (what's expanded) between sessions</li>
 <li>Save/Restore a list of categories to hide (general solution needs shortcuts)</li>
 <li>Load a default list of categories to hide based on organization (park) affiliation.</li>
 <li>Store favorites and search results as <strong>shortcuts</strong>, not clones</li>
 <li>Search results to show pointer back to source (need <strong>shortcuts</strong>)</li>
-<li>Save a version 3.0 theme list (*.tml) back to a version 2.2 MS Access file (*.mdb).</li>
 <li>Additional admin reports</li>
-<li>When browsing for theme metadata, use the ESRI ArcCatalog browser and not the windows file browser. This will allow finding feature classes (and the associated metadata) as well as xml file based metadata.</li>
+<li>When browsing for theme metadata, use the Esri ArcCatalog browser and not the windows file browser. This will allow finding feature classes (and the associated metadata) as well as xml file based metadata.</li>
 <li>Check out license in background at startup.</li>
-<li>Preload metadata in the background (check memory utilization and disable with setting)</li>
 <li>Save/restore the xml theme list (*.tml) in a compressed format (*.tmz)</li>
 <li>Allow theme/category drop on favorites tab (== add to favorites)</li>
 <li>Try to get data source modification date for geodatabase sources</li>
@@ -1413,6 +1420,5 @@ applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installe
 <li>Expand WMS Group Layers in tree view</li>
 </ul>
 <h1 id="contact-information">Contact Information</h1>
-<pre class="editor-colors lang-bash"><div class="line"><span class="leading-whitespace">    </span><span class="syntax--source syntax--shell"><span class="syntax--entity syntax--name syntax--function">Alaska</span> Region GIS Team</span></div><div class="line"><span class="syntax--source syntax--shell"><span class="leading-whitespace">    </span><span class="syntax--entity syntax--name syntax--function">National</span> Park Service</span></div><div class="line"><span class="syntax--source syntax--shell"><span class="leading-whitespace">    </span><span class="syntax--entity syntax--name syntax--function">240</span> West 5th Avenue</span></div><div class="line"><span class="syntax--source syntax--shell"><span class="leading-whitespace">    </span><span class="syntax--entity syntax--name syntax--function">Anchorage</span> Alaska 99505</span></div></pre>
-<p><a href="mailto:akro_gis_helpdesk@nps.gov?subject=ThemeManager3.0">akro_gis_helpdesk@nps.gov</a></p></body>
+<p>Alaska Region GIS Team<br>National Park Service<br>240 West 5th Avenue<br>Anchorage Alaska 99501<br><a href="mailto:akro_gis_helpdesk@nps.gov?subject=ThemeManager3.0">akro_gis_helpdesk@nps.gov</a></p></body>
       </html>
