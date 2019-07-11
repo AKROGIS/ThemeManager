@@ -47,9 +47,6 @@ Theme Manager Help
     * [Menus](#menus)
     * [Other](#other)
 * [Known Issues](#known-issues)
-  * [Genera Issues](#general-issues)
-  * [Drag-n-Drop and Copy-n-Paste](#drag-n-drop-and-copy-n-paste)
-  * [Metadata](#metadata)
 * [Ideas for Future Versions](#ideas-for-future-versions)
 * [Contact Information](#contact-information)
 
@@ -502,43 +499,29 @@ The advanced options are available by clicking the advanced options button on th
 
 # Known Issues
 
-## General Issues
-
-- Help is no good.
-- If you run the TM for ArcGIS 9.3 on a computer with ArcGIS10 or visa-versa, or you run either version on a machine with an earlier version of ArcGIS, or without ArcGIS, you get an confusing error dialog whenever you try to preview any item, and all non-file based metadata is determined to be invalid. Error dialog should be replaced with text in preview panel, and metadata error report should identify Missing ArcGIS as the problem.
-- The labels and text boxes do not reposition themselves correctly if the user sets the system font size to be larger than 100%. This results in overlapping labels and text boxes. Work around: curse the developer while you live with the overlapping text, or change the text back to normal size.
-- Preview/Metadata display does not change if theme properties (i.e. path to layer file) is changed. Work around: refresh the preview by clicking on another theme, then click back.
-- When a Theme or Category is deleted, the metadata/preview/properties panel is not updated. Work around: refresh the info panel by clicking on another theme, then click back.
-- When loading a previous session (after a Theme Manager upgrade), the search is based on the newest folder, not the newest session file all the potential folders. If the folders are modified outside Theme Manager, then the wrong session file may be loaded. Workaround is to copy the correct old session file into the newest folder.
-- After saving a category as a theme list, the delete key will not delete any items in the tree view until a cut command is executed. Once a cut has been done, the delete key works again. This also happens with Add To Favorites Workaround: use cut when this happens
-- Setting some advanced options causes the toolbars to disappear. Workaround: quit and restart theme manager, or turn the toolbars off, then on again in the advanced options.
-- Occasional cross threading errors and null reference exceptions when reloading and/or syncing themes multiple times. This was introduced when reloading and syncing were done in the background to provide progress bar and cancel button in foreground. Problem is rare, sporadic, and will be challenging to solve. In the meantime it can usually be cleared by trying again, or quitting/restarting theme manager.
-- If Theme Manager is unable to obtain an ArcGIS license. All future attempts will also fail for a different reason (usually: **An item with the same key has already been added**) even if the license server was only temporarily unavailable. Workaround is to quit and restart theme manager if you need a license.
-
-## Drag-n-Drop and Copy-n-Paste
-
-- Copy and Paste of sub themes is not being prohibited. Workaround: Don't do it. You will have sub-themes posing as themes, but not usable as themes.
-- Cannot paste to root of favorites. Workaround: use 'Add to favorites'
-
-## Metadata
-
-- The style sheets provided are based on FGDC and ESRI's 9.3 metadata tags. Some of the tags used in the ESRI's version 10 metadata are not recognized by the style sheets.
-- Metadata display does not update when metadata properties (i.e. path) are changed. Work around: refresh the metadata by clicking on another theme, then click back.
+- If you run Theme Manager on a computer without ArcGIS or with a different version of ArcGIS than it was built for, you will get a confusing _Unhandled Exception_ error dialog whenever you try to do an operation requiring ArcGIS (preview a theme, reading or rendering metadata in a geodatabase, adding or reloading a theme based on a layer file or map document). The error dialog should clearly state the problem or be replaced with a clear explanation in the preview or metadata tabs.  **Note** previewing metadata does not show the error dialog, but the explanation in the display should be clearer.
+- If Theme Manager is unable to obtain an ArcGIS license, even temporarily, some actions will fail with a confusing and misleading error dialog. Workaround is reconnect to a license manager and restart Theme Manager.
+- You cannot paste an item to the root of favorites. Workaround: use **Add to Favorites**
+- If the user adjust the system font size, labels and text boxes do not adjust their position accordingly and they may overlap.
+- Toolbar icons are fuzzy on high resolution displays.
+- Preview display does not update if theme properties (i.e. path to layer file) are changed. Work around: refresh the preview by clicking on another theme, then click back.
+- Metadata display does not update if theme properties (i.e. path to metadata) are changed. Work around: refresh the metadata by clicking on another theme, then click back.
+- Sometimes when a theme or category is deleted a new Theme or Category is not selected. In this case, the metadata/preview/properties panel is not updated. Work around: refresh the panel by clicking on another theme or category.
+- If the [session files](#session-information) are moved, or incorrectly altered, Theme Manager may not behave properly until you quit and save new session information.  If you lost session information (i.e. favorites), you can recreate it or manually edit the session configuration files with a text editor.
+- Setting some advanced options causes the toolbars to disappear. Workaround: quit and restart Theme Manager, or turn the toolbars off, then on again in the advanced options.
+- Occasional cross threading and null reference errors occur when reloading themes or syncing metadata. This was introduced when reloading and syncing were done in the background to provide a progress bar and cancel button. The problem is rare, sporadic, and a challenge to fix. In the meantime it can usually be cleared by trying again, or quitting/restarting Theme Manager.
 
 # Ideas for Future Versions
 
-The following is a brainstorming list and not a planning document. Some of the ideas are so easy they may get slipped into a patch before 3.1, whereas some are so hard or of limited use that they may never get implemented. If you have any other ideas please send it along (see Contact Information below).
+The following is a brainstorming list and not a planning document. Some of the ideas are so easy they may get slipped into a patch before the next major version, whereas some are so hard or of limited use that they may never get implemented. If you have any other ideas please [contact us](#contact-information).
 
-- Save the state of the theme list trees (what's expanded) between sessions
 - Save/Restore a list of categories to hide (general solution needs shortcuts)
 - Load a default list of categories to hide based on organization (park) affiliation.
 - Store favorites and search results as **shortcuts**, not clones
 - Search results to show pointer back to source (need **shortcuts**)
-- Save a version 3.0 theme list (\*.tml) back to a version 2.2 MS Access file (\*.mdb).
 - Additional admin reports
 - When browsing for theme metadata, use the ESRI ArcCatalog browser and not the windows file browser. This will allow finding feature classes (and the associated metadata) as well as xml file based metadata.
 - Check out license in background at startup.
-- Preload metadata in the background (check memory utilization and disable with setting)
 - Save/restore the xml theme list (\*.tml) in a compressed format (\*.tmz)
 - Allow theme/category drop on favorites tab (== add to favorites)
 - Try to get data source modification date for geodatabase sources
