@@ -46,21 +46,21 @@
     </STYLE>
 			</HEAD>
 			<BODY link="#666600" vlink="#999900" alink="#FF6666" >
-				<table  width="500" cellpadding="0" cellspacing="0" border="0" >
+				<table  cellpadding="0" cellspacing="0" border="0" >
 					<tr>
 						<td colspan="2" class="header">
-							<img border="0" src="AKSO_header.GIF" alt="National Park Service, U.S. Department of the Interior"  height="95" width="500"/>
+							<img border="0" src="https://akrgis.nps.gov/apps/ThemeManager/images/akso_header.gif" alt="National Park Service, U.S. Department of the Interior"  height="95" width="500"/>
 						</td>
 					</tr>
 					<tr>
 						<td class="titlebar">
 							<DIV CLASS="title">
-        							 Title: <xsl:value-of select="metadata/idinfo/citation/citeinfo/title"/>
+        						<xsl:value-of select="metadata/idinfo/citation/citeinfo/title"/>
 							</DIV>
 						</td>
 					</tr>
 					<tr align="left">
-						<td width="700" class="main" >
+						<td class="main" >
 							<DIV CLASS="value">
 								<SPAN CLASS="name">Abstract: </SPAN>
 								<xsl:value-of select="metadata/idinfo/descript/abstract"/>
@@ -145,7 +145,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td width="500">
+						<td>
 							<font size="1"  color="Black" face="Arial, Helvetica, sans-serif"><i>AKSO Theme Manager Metadata Stylesheet</i></font>
 						</td>
 					</tr>
