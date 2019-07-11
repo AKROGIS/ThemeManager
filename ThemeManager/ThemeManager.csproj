@@ -297,8 +297,7 @@
     <None Include="app.config" />
     <None Include="Docs\Change Log.md" />
     <None Include="Docs\Help.md" />
-    <None Include="Docs\Installation.md" />
-    <None Include="Docs\Stylesheets.md" />
+    <None Include="Docs\TaskList.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -337,7 +336,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Docs\_TaskList.txt" />
     <None Include="Html\Help.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
