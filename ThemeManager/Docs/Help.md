@@ -76,9 +76,39 @@ Theme Manager 3.0 is available for ArcGIS 9.3 through ArcGIS 10.6.
 
 ## Using Esri Metadata Stylesheets
 
-Stylesheets are required to stylize the metadata in XML format to an easier to read HTML format. Esri provides Stylesheets which work with FGDC, ISO, and ESRI formatted XML metadata, however
-these stylesheets require the use of a esri code library not generally available to custom
-applications like Theme Manager. Nevertheless, if you have ArcGIS 10.4+ installed, you can use the ESRI stylesheets with Theme Manager if you follow [these instructions](https://github.com/regan-sarwas/ThemeManager/blob/master/ThemeManager/Docs/Stylesheets.md).
+Theme Manager comes with two stylesheets to convert XML metadata into an HTML file suitable for display.
+Esri provides a few more comprehensive stylesheets that Theme Manager users may want to use.
+Unfortunately, the Esri stylesheets require processing by an Esri library (dll) that is not part of the developer's SDK,
+so it is not available for general access by Theme Manager.
+
+If you want to use the Esri stylesheets with Theme Manager, you must have ArcGIS Desktop or ArcGIS Pro
+installed on your computer. Then follow these steps:
+
+1. Copy the dll to Theme Manager
+
+  * **Desktop**: Copy the file `C:\Program Files (x86)\ArcGIS\Desktop10.5\bin\ESRI.ArcGIS.MetadataEditor.dll` (or similar) to the location where Theme Manager is installed. The dll must be in the same folder as ThemeManager.exe.
+
+  * **Pro**: Copy `C:\Program Files\ArcGIS\Pro\bin\Extensions\Metadata\ArcGIS.Desktop.Metadata.dll` to the location where Theme Manager is installed. The dll must be in the same folder as ThemeManager.exe. **Note**: You will need a special build of Theme Manager specifically for Pro.
+
+2. Create a folder called `Esri` in Theme Manager's stylesheet folder. The stylesheet folder
+   is typically called `StyleSheets` in the folder where Theme Manager is installed. However, it
+   can be given a different name by editing the `StyleSheetDirectory` setting in `ThemeManager.exe.config`
+
+3. Copy the Esri Stylesheets to Theme Manager
+
+  * **Desktop**: Copy the files `ArcGIS.xsl` and/or `ArcGIS_ItemDescription.xsl` from the folder
+   `C:\Program Files (x86)\ArcGIS\Desktop10.5\Metadata\Stylesheets` (or similar) to Theme Manager's
+   `StyleSheets\Esri` folder. The files can be renamed to something more intuitive for display
+   in the stylesheet picker in Theme Manager, but the files must retain the `.xsl` extension.
+   You also need to copy the folder `C:\Program Files (x86)\ArcGIS\Desktop10.5\Metadata\Stylesheets\ArcGIS_Imports` (or similar, and all it contents) to `StyleSheets\Esri\ArcGIS_Imports`. These files are referenced by the main files, and cannot be renamed or put in a different sub folder.
+
+   * **Pro**: Copy the files `ArcGISPro.xsl` and/or `ArcGISProFull.xsl` from the folder
+   `C:\Program Files\ArcGIS\Pro\Resources\Metadata\Stylesheets` to Theme Manager's
+   `StyleSheets\Esri` folder. The files can be renamed to something more intuitive for display
+   in the stylesheet picker in Theme Manager, but the files must retain the `.xsl` extension.
+   You also need to copy the folder `C:\Program Files\ArcGIS\Pro\Resources\Metadata\Stylesheets\sArcGIS_Imports` (and all it contents) to `StyleSheets\Esri\ArcGIS_Imports`. These files are referenced by the main files, and cannot be renamed or put in a different sub folder.
+
+   * You can use Pro stylesheets with Desktop and visa-versa. Fortunately, the names of the files in `ArcGIS_Imports` have different names for the different versions, except `ArcGIS_Imports\XML.xslt` which is the same in both versions.
 
 ## Using Theme Manager on a Network
 
