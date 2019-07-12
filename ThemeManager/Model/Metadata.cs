@@ -381,6 +381,8 @@ namespace NPS.AKRO.ThemeManager.Model
         /// </remarks>
         private static string StripSimpleHtmlTags(string input)
         {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
             var noTags = Regex.Replace(input, @"<[^>]+>|&nbsp;", "").Trim();
             var minimalWhiteSpace = Regex.Replace(noTags, @"\s{2,}", " ");
             return minimalWhiteSpace;
