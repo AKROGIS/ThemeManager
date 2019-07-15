@@ -20,7 +20,7 @@ namespace NPS.AKRO.ThemeManager.Model
             string workspaceProgId = null, string container = null, string containerType = null,
             string dataSourceName = null, string datasetName = null, string datasetType = null)
         {
-            Path = path;
+            Path = string.IsNullOrWhiteSpace(path) ? null : path;
             Type = type;
             Format = format;
             Version = version;
@@ -153,7 +153,7 @@ namespace NPS.AKRO.ThemeManager.Model
             if (xEle.Name != "data")
                 throw new ArgumentException("Invalid XElement");
             ThemeData data = new ThemeData(
-                xEle.Value,
+                xEle.Value, // returns an empty string when there is no value
                 (string)xEle.Attribute("type"),
                 (string)xEle.Attribute("format"),
                 (string)xEle.Attribute("version"),
