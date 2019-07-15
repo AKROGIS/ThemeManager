@@ -848,7 +848,7 @@ namespace NPS.AKRO.ThemeManager.Model
                  (Description != null) ? new XElement("description", Description) : null,
                  (Type == TmNodeType.Theme) ? new XElement("pubdate", PubDate) : null,
                  HasAuthor ? Author.AsXElement : null,
-                 Data.ToXElement(),
+                 IsCategory ? null : Data.ToXElement(),
                  HasMetadata ? Metadata.ToXElement() : null
                  );
             return xele;
