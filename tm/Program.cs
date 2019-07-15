@@ -30,9 +30,11 @@ namespace tm
             themeList.SuspendUpdates();
             themeList.Build();
             Reload(themeList);
+            Console.WriteLine("Saving Updated Theme List");
+            themeList.SaveAs(path.Replace(".tml", "1.tml"));
             Sync(themeList);
             Console.WriteLine("Saving Updated Theme List");
-            themeList.SaveAs(path);
+            themeList.SaveAs(path.Replace(".tml", "2.tml"));
             Console.WriteLine("Done.");
         }
 
