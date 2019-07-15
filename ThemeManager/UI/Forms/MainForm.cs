@@ -1458,6 +1458,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 form.reloadThemeButton.Visible = true;
                 form.themeFileButton.Visible = true;
             }
+            form.syncThemeButton.Enabled = node.HasMetadata || node.HasChildren;
         }
 
 

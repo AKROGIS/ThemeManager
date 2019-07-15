@@ -155,7 +155,7 @@
             this.reloadAllbutton.TabIndex = 46;
             this.reloadAllbutton.Text = "Reload All Themes";
             this.toolTip1.SetToolTip(this.reloadAllbutton, "Re-reads all themes in the theme list and rebuilds the sub-themes; finds and load" +
-                    "s metadata for themes and sub-themes");
+        "s metadata for themes and sub-themes");
             this.reloadAllbutton.UseVisualStyleBackColor = true;
             this.reloadAllbutton.Click += new System.EventHandler(this.reloadAllbutton_Click);
             // 
@@ -168,17 +168,17 @@
             this.syncAllButton.TabIndex = 45;
             this.syncAllButton.Text = "Synchronize All Metadata";
             this.toolTip1.SetToolTip(this.syncAllButton, "Synchronizes the Publication Date Tags, Summary and Description with the metadata" +
-                    " for all themes and sub-themes in this theme list.");
+        " for all themes and sub-themes in this theme list.");
             this.syncAllButton.UseVisualStyleBackColor = true;
             this.syncAllButton.Click += new System.EventHandler(this.syncAllButton_Click);
             // 
             // themelistAuthorAddress2
             // 
-            this.themelistAuthorAddress2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themelistAuthorAddress2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themelistAuthorAddress2.Location = new System.Drawing.Point(98, 290);
             this.themelistAuthorAddress2.Name = "themelistAuthorAddress2";
-            this.themelistAuthorAddress2.Size = new System.Drawing.Size(389, 23);
+            this.themelistAuthorAddress2.Size = new System.Drawing.Size(389, 31);
             this.themelistAuthorAddress2.TabIndex = 40;
             // 
             // label21
@@ -186,17 +186,17 @@
             this.label21.AutoSize = true;
             this.label21.Location = new System.Drawing.Point(8, 351);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(84, 15);
+            this.label21.Size = new System.Drawing.Size(126, 25);
             this.label21.TabIndex = 44;
             this.label21.Text = "Author\'s Email";
             // 
             // themelistAuthorEmail
             // 
-            this.themelistAuthorEmail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themelistAuthorEmail.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themelistAuthorEmail.Location = new System.Drawing.Point(98, 348);
             this.themelistAuthorEmail.Name = "themelistAuthorEmail";
-            this.themelistAuthorEmail.Size = new System.Drawing.Size(389, 23);
+            this.themelistAuthorEmail.Size = new System.Drawing.Size(389, 31);
             this.themelistAuthorEmail.TabIndex = 43;
             // 
             // label22
@@ -204,17 +204,17 @@
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(14, 206);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(78, 15);
+            this.label22.Size = new System.Drawing.Size(116, 25);
             this.label22.TabIndex = 42;
             this.label22.Text = "Author\'s Title";
             // 
             // themelistAuthorPhone
             // 
-            this.themelistAuthorPhone.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themelistAuthorPhone.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themelistAuthorPhone.Location = new System.Drawing.Point(98, 319);
             this.themelistAuthorPhone.Name = "themelistAuthorPhone";
-            this.themelistAuthorPhone.Size = new System.Drawing.Size(389, 23);
+            this.themelistAuthorPhone.Size = new System.Drawing.Size(389, 31);
             this.themelistAuthorPhone.TabIndex = 41;
             // 
             // label23
@@ -222,17 +222,17 @@
             this.label23.AutoSize = true;
             this.label23.Location = new System.Drawing.Point(3, 322);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(89, 15);
+            this.label23.Size = new System.Drawing.Size(134, 25);
             this.label23.TabIndex = 40;
             this.label23.Text = "Author\'s Phone";
             // 
             // themelistAuthorAddress1
             // 
-            this.themelistAuthorAddress1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themelistAuthorAddress1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themelistAuthorAddress1.Location = new System.Drawing.Point(98, 261);
             this.themelistAuthorAddress1.Name = "themelistAuthorAddress1";
-            this.themelistAuthorAddress1.Size = new System.Drawing.Size(389, 23);
+            this.themelistAuthorAddress1.Size = new System.Drawing.Size(389, 31);
             this.themelistAuthorAddress1.TabIndex = 39;
             // 
             // label20
@@ -240,17 +240,17 @@
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(-5, 264);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(97, 15);
+            this.label20.Size = new System.Drawing.Size(149, 25);
             this.label20.TabIndex = 38;
             this.label20.Text = "Author\'s Address";
             // 
             // themelistAuthorOrg
             // 
-            this.themelistAuthorOrg.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themelistAuthorOrg.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themelistAuthorOrg.Location = new System.Drawing.Point(98, 232);
             this.themelistAuthorOrg.Name = "themelistAuthorOrg";
-            this.themelistAuthorOrg.Size = new System.Drawing.Size(389, 23);
+            this.themelistAuthorOrg.Size = new System.Drawing.Size(389, 31);
             this.themelistAuthorOrg.TabIndex = 37;
             // 
             // label14
@@ -258,17 +258,17 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(14, 235);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(78, 15);
+            this.label14.Size = new System.Drawing.Size(119, 25);
             this.label14.TabIndex = 36;
             this.label14.Text = "Author\'s Org.";
             // 
             // themelistAuthorTitle
             // 
-            this.themelistAuthorTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themelistAuthorTitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themelistAuthorTitle.Location = new System.Drawing.Point(98, 203);
             this.themelistAuthorTitle.Name = "themelistAuthorTitle";
-            this.themelistAuthorTitle.Size = new System.Drawing.Size(389, 23);
+            this.themelistAuthorTitle.Size = new System.Drawing.Size(389, 31);
             this.themelistAuthorTitle.TabIndex = 35;
             // 
             // label13
@@ -276,17 +276,17 @@
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(8, 177);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(87, 15);
+            this.label13.Size = new System.Drawing.Size(131, 25);
             this.label13.TabIndex = 34;
             this.label13.Text = "Author\'s Name";
             // 
             // themelistAuthorName
             // 
-            this.themelistAuthorName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themelistAuthorName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themelistAuthorName.Location = new System.Drawing.Point(98, 174);
             this.themelistAuthorName.Name = "themelistAuthorName";
-            this.themelistAuthorName.Size = new System.Drawing.Size(389, 23);
+            this.themelistAuthorName.Size = new System.Drawing.Size(389, 31);
             this.themelistAuthorName.TabIndex = 33;
             // 
             // label16
@@ -294,15 +294,15 @@
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(25, 94);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(70, 15);
+            this.label16.Size = new System.Drawing.Size(106, 25);
             this.label16.TabIndex = 29;
             this.label16.Text = "Description:";
             // 
             // themelistDescription
             // 
             this.themelistDescription.AcceptsReturn = true;
-            this.themelistDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themelistDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themelistDescription.Location = new System.Drawing.Point(98, 91);
             this.themelistDescription.Multiline = true;
             this.themelistDescription.Name = "themelistDescription";
@@ -326,11 +326,11 @@
             // themelistMetadata
             // 
             this.themelistMetadata.AllowDrop = true;
-            this.themelistMetadata.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themelistMetadata.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themelistMetadata.Location = new System.Drawing.Point(98, 61);
             this.themelistMetadata.Name = "themelistMetadata";
-            this.themelistMetadata.Size = new System.Drawing.Size(353, 23);
+            this.themelistMetadata.Size = new System.Drawing.Size(353, 31);
             this.themelistMetadata.TabIndex = 15;
             this.themelistMetadata.DragDrop += new System.Windows.Forms.DragEventHandler(this.textbox_DragDrop);
             this.themelistMetadata.DragEnter += new System.Windows.Forms.DragEventHandler(this.metadata_DragEnter);
@@ -340,7 +340,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(15, 65);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(80, 15);
+            this.label4.Size = new System.Drawing.Size(120, 25);
             this.label4.TabIndex = 16;
             this.label4.Text = "Url/Metadata:";
             // 
@@ -349,7 +349,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(67, 35);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(28, 15);
+            this.label5.Size = new System.Drawing.Size(42, 25);
             this.label5.TabIndex = 13;
             this.label5.Text = "File:";
             // 
@@ -358,29 +358,29 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(27, 6);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(68, 15);
+            this.label6.Size = new System.Drawing.Size(100, 25);
             this.label6.TabIndex = 12;
             this.label6.Text = "Theme List:";
             // 
             // themelistFile
             // 
-            this.themelistFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themelistFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themelistFile.Enabled = false;
             this.themelistFile.Location = new System.Drawing.Point(98, 31);
             this.themelistFile.Name = "themelistFile";
-            this.themelistFile.Size = new System.Drawing.Size(389, 23);
+            this.themelistFile.Size = new System.Drawing.Size(389, 31);
             this.themelistFile.TabIndex = 11;
             this.themelistFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.textbox_DragDrop);
             this.themelistFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.file_DragEnter);
             // 
             // themelistName
             // 
-            this.themelistName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themelistName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themelistName.Location = new System.Drawing.Point(98, 3);
             this.themelistName.Name = "themelistName";
-            this.themelistName.Size = new System.Drawing.Size(389, 23);
+            this.themelistName.Size = new System.Drawing.Size(389, 31);
             this.themelistName.TabIndex = 10;
             // 
             // themeListFileButton
@@ -402,7 +402,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(594, 18);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(31, 15);
+            this.label1.Size = new System.Drawing.Size(48, 25);
             this.label1.TabIndex = 32;
             this.label1.Text = "Age:";
             // 
@@ -412,7 +412,7 @@
             this.themelistAge.Location = new System.Drawing.Point(631, 15);
             this.themelistAge.Name = "themelistAge";
             this.themelistAge.ReadOnly = true;
-            this.themelistAge.Size = new System.Drawing.Size(42, 23);
+            this.themelistAge.Size = new System.Drawing.Size(42, 31);
             this.themelistAge.TabIndex = 31;
             // 
             // authorDataGridView
@@ -441,7 +441,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(550, 218);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(47, 15);
+            this.label8.Size = new System.Drawing.Size(71, 25);
             this.label8.TabIndex = 19;
             this.label8.Text = "Author:";
             // 
@@ -472,7 +472,7 @@
             this.reloadThemesButton.TabIndex = 48;
             this.reloadThemesButton.Text = "Reload Themes";
             this.toolTip1.SetToolTip(this.reloadThemesButton, "Re-reads all themes below this category and rebuilds the sub-themes; finds and lo" +
-                    "ads metadata for themes and sub-themes");
+        "ads metadata for themes and sub-themes");
             this.reloadThemesButton.UseVisualStyleBackColor = true;
             this.reloadThemesButton.Click += new System.EventHandler(this.reloadThemesbutton_Click);
             // 
@@ -485,7 +485,7 @@
             this.syncThemesButton.TabIndex = 47;
             this.syncThemesButton.Text = "Synchronize Metadata";
             this.toolTip1.SetToolTip(this.syncThemesButton, "Synchronizes the Publication Date Tags, Summary and Description with the metadata" +
-                    " for all themes and sub-themes below this category.");
+        " for all themes and sub-themes below this category.");
             this.syncThemesButton.UseVisualStyleBackColor = true;
             this.syncThemesButton.Click += new System.EventHandler(this.syncThemesButton_Click);
             // 
@@ -494,14 +494,14 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(25, 64);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(70, 15);
+            this.label15.Size = new System.Drawing.Size(106, 25);
             this.label15.TabIndex = 27;
             this.label15.Text = "Description:";
             // 
             // categoryDescription
             // 
-            this.categoryDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.categoryDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.categoryDescription.Location = new System.Drawing.Point(98, 61);
             this.categoryDescription.Multiline = true;
             this.categoryDescription.Name = "categoryDescription";
@@ -525,11 +525,11 @@
             // categoryMetadata
             // 
             this.categoryMetadata.AllowDrop = true;
-            this.categoryMetadata.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.categoryMetadata.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.categoryMetadata.Location = new System.Drawing.Point(98, 32);
             this.categoryMetadata.Name = "categoryMetadata";
-            this.categoryMetadata.Size = new System.Drawing.Size(370, 23);
+            this.categoryMetadata.Size = new System.Drawing.Size(370, 31);
             this.categoryMetadata.TabIndex = 23;
             this.categoryMetadata.DragDrop += new System.Windows.Forms.DragEventHandler(this.textbox_DragDrop);
             this.categoryMetadata.DragEnter += new System.Windows.Forms.DragEventHandler(this.metadata_DragEnter);
@@ -539,7 +539,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(15, 35);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(80, 15);
+            this.label7.Size = new System.Drawing.Size(120, 25);
             this.label7.TabIndex = 24;
             this.label7.Text = "Url/Metadata:";
             // 
@@ -548,17 +548,17 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(37, 6);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(58, 15);
+            this.label9.Size = new System.Drawing.Size(88, 25);
             this.label9.TabIndex = 20;
             this.label9.Text = "Category:";
             // 
             // categoryName
             // 
-            this.categoryName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.categoryName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.categoryName.Location = new System.Drawing.Point(98, 3);
             this.categoryName.Name = "categoryName";
-            this.categoryName.Size = new System.Drawing.Size(406, 23);
+            this.categoryName.Size = new System.Drawing.Size(406, 31);
             this.categoryName.TabIndex = 18;
             // 
             // categoryHide
@@ -566,7 +566,7 @@
             this.categoryHide.AutoSize = true;
             this.categoryHide.Location = new System.Drawing.Point(591, 290);
             this.categoryHide.Name = "categoryHide";
-            this.categoryHide.Size = new System.Drawing.Size(51, 19);
+            this.categoryHide.Size = new System.Drawing.Size(75, 29);
             this.categoryHide.TabIndex = 35;
             this.categoryHide.Text = "Hide";
             this.categoryHide.UseVisualStyleBackColor = true;
@@ -576,7 +576,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(648, 289);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(31, 15);
+            this.label2.Size = new System.Drawing.Size(48, 25);
             this.label2.TabIndex = 34;
             this.label2.Text = "Age:";
             // 
@@ -586,7 +586,7 @@
             this.categoryAge.Location = new System.Drawing.Point(685, 286);
             this.categoryAge.Name = "categoryAge";
             this.categoryAge.ReadOnly = true;
-            this.categoryAge.Size = new System.Drawing.Size(42, 23);
+            this.categoryAge.Size = new System.Drawing.Size(42, 31);
             this.categoryAge.TabIndex = 33;
             // 
             // themePanel
@@ -625,18 +625,18 @@
             this.label26.AutoSize = true;
             this.label26.Location = new System.Drawing.Point(19, 95);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(73, 15);
+            this.label26.Size = new System.Drawing.Size(112, 25);
             this.label26.TabIndex = 42;
             this.label26.Text = "Data Source:";
             // 
             // themeDataSource
             // 
-            this.themeDataSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themeDataSource.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themeDataSource.Location = new System.Drawing.Point(98, 92);
             this.themeDataSource.Name = "themeDataSource";
             this.themeDataSource.ReadOnly = true;
-            this.themeDataSource.Size = new System.Drawing.Size(389, 23);
+            this.themeDataSource.Size = new System.Drawing.Size(389, 31);
             this.themeDataSource.TabIndex = 41;
             // 
             // reloadThemeButton
@@ -648,7 +648,7 @@
             this.reloadThemeButton.TabIndex = 40;
             this.reloadThemeButton.Text = "Reload";
             this.toolTip1.SetToolTip(this.reloadThemeButton, "Re-read this theme and rebuilds the sub-themes; finds and loads metadata for them" +
-                    "e and sub-themes");
+        "e and sub-themes");
             this.reloadThemeButton.UseVisualStyleBackColor = true;
             this.reloadThemeButton.Click += new System.EventHandler(this.reloadThemeButton_Click);
             // 
@@ -657,14 +657,14 @@
             this.label25.AutoSize = true;
             this.label25.Location = new System.Drawing.Point(32, 212);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(61, 15);
+            this.label25.Size = new System.Drawing.Size(92, 25);
             this.label25.TabIndex = 39;
             this.label25.Text = "Summary:";
             // 
             // themeSummary
             // 
-            this.themeSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themeSummary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themeSummary.Location = new System.Drawing.Point(98, 209);
             this.themeSummary.Multiline = true;
             this.themeSummary.Name = "themeSummary";
@@ -676,14 +676,14 @@
             this.label24.AutoSize = true;
             this.label24.Location = new System.Drawing.Point(57, 183);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(35, 15);
+            this.label24.Size = new System.Drawing.Size(51, 25);
             this.label24.TabIndex = 37;
             this.label24.Text = "Tags:";
             // 
             // themeTags
             // 
-            this.themeTags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themeTags.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themeTags.Location = new System.Drawing.Point(98, 180);
             this.themeTags.Multiline = true;
             this.themeTags.Name = "themeTags";
@@ -699,25 +699,25 @@
             this.syncThemeButton.TabIndex = 29;
             this.syncThemeButton.Text = "Sync";
             this.toolTip1.SetToolTip(this.syncThemeButton, "Synchronizes the Publication Date, Tags, Summary and Description with the metadat" +
-                    "a for this theme and all its sub-themes.");
+        "a for this theme and all its sub-themes.");
             this.syncThemeButton.UseVisualStyleBackColor = true;
             this.syncThemeButton.Click += new System.EventHandler(this.syncThemeButton_Click);
             // 
             // themePubDate
             // 
-            this.themePubDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themePubDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themePubDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.themePubDate.Location = new System.Drawing.Point(98, 152);
             this.themePubDate.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
             this.themePubDate.Name = "themePubDate";
-            this.themePubDate.Size = new System.Drawing.Size(337, 23);
+            this.themePubDate.Size = new System.Drawing.Size(337, 31);
             this.themePubDate.TabIndex = 27;
             // 
             // themeDescription
             // 
-            this.themeDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themeDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themeDescription.Location = new System.Drawing.Point(98, 238);
             this.themeDescription.Multiline = true;
             this.themeDescription.Name = "themeDescription";
@@ -730,7 +730,7 @@
             this.label19.AutoSize = true;
             this.label19.Location = new System.Drawing.Point(-2, 156);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(97, 15);
+            this.label19.Size = new System.Drawing.Size(145, 25);
             this.label19.TabIndex = 35;
             this.label19.Text = "Publication Date:";
             // 
@@ -739,17 +739,17 @@
             this.label18.AutoSize = true;
             this.label18.Location = new System.Drawing.Point(29, 65);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(63, 15);
+            this.label18.Size = new System.Drawing.Size(95, 25);
             this.label18.TabIndex = 33;
             this.label18.Text = "Data Type:";
             // 
             // themeDataType
             // 
-            this.themeDataType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themeDataType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themeDataType.Location = new System.Drawing.Point(98, 62);
             this.themeDataType.Name = "themeDataType";
-            this.themeDataType.Size = new System.Drawing.Size(329, 23);
+            this.themeDataType.Size = new System.Drawing.Size(329, 31);
             this.themeDataType.TabIndex = 26;
             // 
             // label17
@@ -757,7 +757,7 @@
             this.label17.AutoSize = true;
             this.label17.Location = new System.Drawing.Point(23, 241);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(70, 15);
+            this.label17.Size = new System.Drawing.Size(106, 25);
             this.label17.TabIndex = 31;
             this.label17.Text = "Description:";
             // 
@@ -777,11 +777,11 @@
             // themeMetadata
             // 
             this.themeMetadata.AllowDrop = true;
-            this.themeMetadata.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themeMetadata.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themeMetadata.Location = new System.Drawing.Point(98, 121);
             this.themeMetadata.Name = "themeMetadata";
-            this.themeMetadata.Size = new System.Drawing.Size(351, 23);
+            this.themeMetadata.Size = new System.Drawing.Size(351, 31);
             this.themeMetadata.TabIndex = 23;
             this.themeMetadata.DragDrop += new System.Windows.Forms.DragEventHandler(this.textbox_DragDrop);
             this.themeMetadata.DragEnter += new System.Windows.Forms.DragEventHandler(this.metadata_DragEnter);
@@ -791,7 +791,7 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(33, 125);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(60, 15);
+            this.label10.Size = new System.Drawing.Size(91, 25);
             this.label10.TabIndex = 24;
             this.label10.Text = "Metadata:";
             // 
@@ -811,11 +811,11 @@
             // themeFile
             // 
             this.themeFile.AllowDrop = true;
-            this.themeFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themeFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themeFile.Location = new System.Drawing.Point(98, 31);
             this.themeFile.Name = "themeFile";
-            this.themeFile.Size = new System.Drawing.Size(351, 23);
+            this.themeFile.Size = new System.Drawing.Size(351, 31);
             this.themeFile.TabIndex = 19;
             this.themeFile.DragDrop += new System.Windows.Forms.DragEventHandler(this.textbox_DragDrop);
             this.themeFile.DragEnter += new System.Windows.Forms.DragEventHandler(this.file_DragEnter);
@@ -825,7 +825,7 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(67, 35);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(28, 15);
+            this.label11.Size = new System.Drawing.Size(42, 25);
             this.label11.TabIndex = 21;
             this.label11.Text = "File:";
             // 
@@ -834,17 +834,17 @@
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(48, 6);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(47, 15);
+            this.label12.Size = new System.Drawing.Size(69, 25);
             this.label12.TabIndex = 20;
             this.label12.Text = "Theme:";
             // 
             // themeName
             // 
-            this.themeName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.themeName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.themeName.Location = new System.Drawing.Point(98, 3);
             this.themeName.Name = "themeName";
-            this.themeName.Size = new System.Drawing.Size(389, 23);
+            this.themeName.Size = new System.Drawing.Size(389, 31);
             this.themeName.TabIndex = 18;
             // 
             // themeHide
@@ -852,7 +852,7 @@
             this.themeHide.AutoSize = true;
             this.themeHide.Location = new System.Drawing.Point(591, 433);
             this.themeHide.Name = "themeHide";
-            this.themeHide.Size = new System.Drawing.Size(51, 19);
+            this.themeHide.Size = new System.Drawing.Size(75, 29);
             this.themeHide.TabIndex = 31;
             this.themeHide.Text = "Hide";
             this.themeHide.UseVisualStyleBackColor = true;
@@ -862,7 +862,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(648, 432);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(31, 15);
+            this.label3.Size = new System.Drawing.Size(48, 25);
             this.label3.TabIndex = 40;
             this.label3.Text = "Age:";
             // 
@@ -872,12 +872,12 @@
             this.themeAge.Location = new System.Drawing.Point(685, 429);
             this.themeAge.Name = "themeAge";
             this.themeAge.ReadOnly = true;
-            this.themeAge.Size = new System.Drawing.Size(42, 23);
+            this.themeAge.Size = new System.Drawing.Size(42, 31);
             this.themeAge.TabIndex = 39;
             // 
             // PropertiesForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(656, 840);
             this.Controls.Add(this.themeHide);
@@ -946,7 +946,6 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
         internal System.Windows.Forms.TextBox themeDataType;
-        private System.Windows.Forms.Button syncThemeButton;
         private System.Windows.Forms.ToolTip toolTip1;
         internal System.Windows.Forms.DateTimePicker themePubDate;
         private System.Windows.Forms.DataGridViewComboBoxColumn Attribute;
@@ -985,5 +984,6 @@
         private System.Windows.Forms.Label label26;
         internal System.Windows.Forms.TextBox themeDataSource;
         internal System.Windows.Forms.Button reloadThemeButton;
+        internal System.Windows.Forms.Button syncThemeButton;
     }
 }
