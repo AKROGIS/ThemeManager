@@ -127,6 +127,8 @@ namespace NPS.AKRO.ThemeManager.Model
 
         internal bool IsCad => Type != null && Type.Contains(" CAD ");
 
+        internal bool IsSdc => WorkspaceProgId == "esriDataSourcesFile.SDCWorkspaceFactory.1";
+
         internal bool IsInGeodatabase =>
             WorkspaceProgId == "esriDataSourcesGDB.FileGDBWorkspaceFactory.1" || 
             WorkspaceProgId == "esriDataSourcesGDB.AccessWorkspaceFactory.1" ||

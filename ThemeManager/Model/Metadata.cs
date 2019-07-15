@@ -234,6 +234,23 @@ namespace NPS.AKRO.ThemeManager.Model
                 }
             }
 
+            // SDC - Smart Data Compression for ESRI Street Map and Sample datasets.
+            if (data.IsSdc && data.WorkspacePath != null && data.Container != null)
+            {
+                string sdcFile = System.IO.Path.Combine(data.WorkspacePath, data.Container);
+                if (File.Exists(sdcFile))
+                {
+                    string metadataPath = sdcFile + ".xml";
+                    if (File.Exists(metadataPath))
+                    {
+                        newMetadata.Path = metadataPath;
+                        newMetadata.Type = MetadataType.FilePath;
+                        newMetadata.Format = MetadataFormat.Xml;
+                    }
+                    return newMetadata;
+                }
+            }
+
             // GeoDatabases - Metadata is not a separate XML file, it is internal to the database
             //   For SDE datasets to work, the original connection file (*.sde) must be available
             //     to all theme manager users, i.e. not in a local profile (the typical default location)
