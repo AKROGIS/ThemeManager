@@ -147,7 +147,10 @@ This section assumes you have used previous versions of Theme Manager. If you ar
 - Removed option `KeepMetaDataInMemory` (this was a half baked idea, and never fully implemented).
 - Metadata is always guaranteed fresh, no caching.
 - Reading and saving Author data on the Themelist is supported.
-- Cleaner formating of display when metadata is missing or has errors.
+- Cleaner formatting of display when metadata is missing or has errors.
+- Improvements to reloading, syncing and saving theme lists.
+- Resize text boxes on theme properties form to show more metadata details.
+
 
 ## Theme Manager 3.0
 Theme Manager 3.0 is a complete re-write of the previous versions of Theme Manager. As a result, there is a completely new look and feel to the application. Most of the core functionality is the same but it may be accessed in a slightly different manner. This section will not provide a complete cross walk of all the new ways to access previous functionality. Chances are that you have already discovered most of what you need to know from experimenting. Only the major differences are listed below.

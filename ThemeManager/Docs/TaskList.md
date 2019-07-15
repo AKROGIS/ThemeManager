@@ -129,13 +129,13 @@ Improvements in 3.1
 * Removed option (in preferences to preload metadata).
 * Metadata is always guaranteed fresh, no caching.
 * Reading and saving Author data on the Themelist is supported
+* Sync All metadata on a category or group layer does not stop (with no metadata) and not process children
+* Resize text boxes on properties form (for longer metadata details)
 
 Improvements in 3.2?
 ====================
 * Async
 * Responsive to retina displays; high resolution icons
-* Sync All metadata on a category or group layer does not stop (with no metadata) and not process children
-* Resize text boxes on properties form (for longer metadata details)
 * Advanced Search default to sub tree, warning on takes a long time, default to search all, arbitary XPath
 * Drop support for ArcGIS 9.x and 10.0 (ThemeManager/ArcGIS/EsriLicenseManager.cs)
 * Better Error message when esri library's can be found, or are the wrong version.
