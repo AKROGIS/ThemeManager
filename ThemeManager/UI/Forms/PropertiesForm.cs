@@ -113,15 +113,15 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 MessageBox.Show("Internal Error:  Unable to find the node to sync.");
                 return;
             }
-            if (string.IsNullOrEmpty(node.Metadata.Path))
-            {
-                MessageBox.Show("Theme has no metadata");
-                return;
-            }
             if (node.HasChildren)
                 SyncThemes(node);
             else
             {
+                if (string.IsNullOrEmpty(node.Metadata.Path))
+                {
+                    MessageBox.Show("Theme has no metadata");
+                    return;
+                }
                 try
                 {
                     // May need to load/verify metadata which could throw.
@@ -131,7 +131,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Metadata Error: {ex.Message}.");
-                 }
+                }
             }
         }
 
