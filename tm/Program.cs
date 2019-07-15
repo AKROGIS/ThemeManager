@@ -57,7 +57,15 @@ namespace tm
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"\nError reloading node {node.Name}: {ex.Message}");
+                    Console.WriteLine($"\nError reloading node {node.CategoryPath()}/{node.Name}: {ex.Message}");
+                }
+                if (!node.HasData)
+                {
+                    Console.WriteLine($"\nNode {node.CategoryPath()}/{node.Name} has no data");
+                }
+                if (!node.HasMetadata)
+                {
+                    Console.WriteLine($"\nNode {node.CategoryPath()}/{node.Name} ({node.Data?.Type}) has no metadata");
                 }
                 Console.Write(".");
             }
@@ -78,7 +86,7 @@ namespace tm
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"\nError syncing metadata for node {node.Name}: {ex.Message}");
+                    Console.WriteLine($"\nError syncing metadata for node {node.CategoryPath()}/{node.Name}: {ex.Message}");
                 }
                 Console.Write(".");
             }
