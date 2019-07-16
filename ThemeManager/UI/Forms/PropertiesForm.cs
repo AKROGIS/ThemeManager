@@ -36,7 +36,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         private void metadataBrowseButton_Click(object sender, EventArgs e)
         {
             openFileDialog1.DefaultExt = "xml";
-            openFileDialog1.Filter = "Metadata|*.xml";
+            openFileDialog1.Filter = "Metadata (*.xml)|*.xml|Web Page (*.htm;*.html)|*.htm;*.html;*.url|All files (*.*)|*.*";
             TextBox tb = ((Button)sender).Tag as TextBox;
             Debug.Assert(tb != null, "browse Button has no text box in it's tag field");
             if (tb == null)
