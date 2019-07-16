@@ -36,7 +36,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         private void metadataBrowseButton_Click(object sender, EventArgs e)
         {
             openFileDialog1.DefaultExt = "xml";
-            openFileDialog1.Filter = "Metadata (*.xml)|*.xml|Web Page (*.htm;*.html)|*.htm;*.html;*.url|All files (*.*)|*.*";
+            openFileDialog1.Filter = "Metadata (*.xml)|*.xml|Web Page (*.htm;*.html;*.url)|*.htm;*.html;*.url|All files (*.*)|*.*";
             TextBox tb = ((Button)sender).Tag as TextBox;
             Debug.Assert(tb != null, "browse Button has no text box in it's tag field");
             if (tb == null)
@@ -45,12 +45,31 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             DialogResult res = openFileDialog1.ShowDialog(this);
             if (res == DialogResult.OK)
             {
-                tb.Text = openFileDialog1.FileName;
+                var filename = openFileDialog1.FileName;
+                if (filename.EndsWith(".url", StringComparison.OrdinalIgnoreCase))
+                    filename = TryParsePathFromUrl(filename);
+                tb.Text = filename;
                 Debug.Assert(tb.DataBindings.Count == 1, "more or less than 1 data binding on text field");
                 if (tb.DataBindings.Count > 0)
                     tb.DataBindings[0].WriteValue();
                 tb.Focus();
             }
+        }
+
+        private string TryParsePathFromUrl(string filename)
+        {
+            var foundUrlSection = false;
+            foreach (var line in File.ReadAllLines(filename))
+            {
+                if (!foundUrlSection && line.StartsWith("[InternetShortcut]", StringComparison.OrdinalIgnoreCase))
+                {
+                    foundUrlSection = true;
+                    continue;
+                }
+                if (foundUrlSection && line.StartsWith("URL=", StringComparison.OrdinalIgnoreCase))
+                    return line.Replace("URL=", "");
+            }
+            return filename;
         }
 
         private void reloadThemeButton_Click(object sender, EventArgs e)
