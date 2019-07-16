@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -909,6 +910,7 @@ namespace NPS.AKRO.ThemeManager.Model
                     if (Format == MetadataFormat.Xml || Format == MetadataFormat.Undefined)
                     {
                         var uri = new Uri(Path);
+                        ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
                         HttpClient client = new HttpClient();
                         var response = client.GetAsync(uri).Result;
                         if (response.IsSuccessStatusCode)
