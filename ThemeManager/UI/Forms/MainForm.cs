@@ -304,6 +304,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     CurrentTreeView = themesTreeView;
                     themesTreeView.SelectNode(node);
                     themesTreeView.SelectedNode.Expand();
+                    node.TmNode.PropertyChanged += nodePropertyChanged;
                 }
                 else
                 {
@@ -311,6 +312,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     themesTreeView.Nodes.Remove(node);
                     //themesTreeView.SelectNode(prevNode);
                 }
+            }
+        }
+
+        private void nodePropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsDirty")
+            {
+                saveToolStripButton.Enabled = EnableSaveCommand();
             }
         }
 
@@ -1516,20 +1525,23 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         private void RestoreThemeLists()
         {
             foreach (TmTreeNode treeNode in themesTreeView.Nodes.OfType<TmTreeNode>())
+            {
                 LoadIfNodeIsUnloadedThemeList(treeNode);
+                treeNode.TmNode.PropertyChanged += nodePropertyChanged;
+            }
         }
 
         private void RestoreThemeListsInBackground()
         {
             foreach (TmTreeNode treeNode in themesTreeView.Nodes.OfType<TmTreeNode>())
             {
-                RestoreThemeListsWorker worker = new RestoreThemeListsWorker(treeNode, null);
+                RestoreThemeListsWorker worker = new RestoreThemeListsWorker(treeNode, (node) => node.TmNode.PropertyChanged += nodePropertyChanged);
                 Thread t = new Thread(worker.DoWork);
                 t.Start();
             }
         }
 
-        public delegate void WorkerCallback();
+        internal delegate void WorkerCallback(TmTreeNode node);
 
         class RestoreThemeListsWorker
         {
@@ -1546,7 +1558,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             {
                 LoadIfNodeIsUnloadedThemeList(_node);
                 if (_func != null)
-                    _func();
+                    _func(_node);
             }
         }
 

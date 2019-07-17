@@ -153,15 +153,29 @@ namespace NPS.AKRO.ThemeManager.Model
         /// True if this themelist has items in it that have changed.
         /// </summary>
         public bool IsDirty
-            { get { return _status == ThemeListStatus.Dirty; }
-                private set
+        {
+            get
+            {
+                return _status == ThemeListStatus.Dirty;
+            }
+            private set
+            {
+                if (value == true)
                 {
-                    if (value == true) // && _status == ThemeListStatus.Loaded)
+                    if (_status != ThemeListStatus.Dirty)
+                    {
                         _status = ThemeListStatus.Dirty;
-                    if (value == false && _status == ThemeListStatus.Dirty)
-                        _status = ThemeListStatus.Loaded;
+                        OnPropertyChanged("IsDirty");
+                    }
+                }
+
+                if (value == false && _status == ThemeListStatus.Dirty)
+                {
+                    _status = ThemeListStatus.Loaded;
+                    OnPropertyChanged("IsDirty");
                 }
             }
+        }
 
         public bool IsThemeList { get { return Type == TmNodeType.ThemeList; } }
         public bool IsValidThemeList { get { return IsThemeList && _dataStore != null; } }
