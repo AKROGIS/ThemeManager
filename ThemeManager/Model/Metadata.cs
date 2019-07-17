@@ -414,6 +414,16 @@ namespace NPS.AKRO.ThemeManager.Model
             return Regex.Replace(input, @"\s{2,}", " ");
         }
 
+        /// <summary>
+        /// Return the input with all newlines as windows (\r\n) style newlines
+        /// </summary>
+        private static string NormalizeToWindowsNewline(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
+            return input.Replace("\r\n","\n").Replace("\n","\r\n");
+        }
+
         #endregion
 
 
@@ -681,7 +691,7 @@ namespace NPS.AKRO.ThemeManager.Model
                     .Select(element => element.Value)
                     .FirstOrDefault(value => !string.IsNullOrEmpty(value) &&
                                              !value.StartsWith("REQUIRED:"));  // Unpopulated data from FGDC template
-                description = StripSimpleHtmlTags(description);
+                description = NormalizeToWindowsNewline(StripSimpleHtmlTags(description)); // The description might be multiline (\r\n is required for winforms)
 
                 // PublicationDate
                 //   FGDC: /metadata/idinfo/citation/citeinfo/pubdate
