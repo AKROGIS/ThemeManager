@@ -401,9 +401,17 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             if (string.IsNullOrWhiteSpace(input))
                 return input;
-            var noTags = Regex.Replace(input, @"<[^>]+>|&nbsp;", "").Trim();
-            var minimalWhiteSpace = Regex.Replace(noTags, @"\s{2,}", " ");
-            return minimalWhiteSpace;
+            return Regex.Replace(input, @"<[^>]+>|&nbsp;", "").Trim();
+        }
+
+        /// <summary>
+        /// Return the multiple white space (including new lines) condensed to a single space
+        /// </summary>
+        private static string MinimizeWhiteSpace(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return input;
+            return Regex.Replace(input, @"\s{2,}", " ");
         }
 
         #endregion
@@ -710,7 +718,7 @@ namespace NPS.AKRO.ThemeManager.Model
                     .Select(element => element.Value)
                     .FirstOrDefault(value => !string.IsNullOrEmpty(value) &&
                                              !value.StartsWith("REQUIRED:"));   // Unpopulated data from FGDC template
-                summary = StripSimpleHtmlTags(summary);
+                summary = MinimizeWhiteSpace(StripSimpleHtmlTags(summary));
 
                 // Tags (aka Keywords)
                 //   FGDC: metadata/idinfo/keywords/*/*key
@@ -730,7 +738,7 @@ namespace NPS.AKRO.ThemeManager.Model
                                     !value.StartsWith("00") &&       // keyword in otherKeys for all new ArcGIS metadata
                                     !value.StartsWith("REQUIRED:"))  // Unpopulated data from FGDC template
                     .Distinct().Concat(", ");
-                tags = StripSimpleHtmlTags(tags);  // Also condenses whitespace
+                tags = MinimizeWhiteSpace(StripSimpleHtmlTags(tags));
             }
 
             return new GeneralInfo {
