@@ -159,7 +159,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.listsTabControl.Location = new System.Drawing.Point(0, 0);
             this.listsTabControl.Name = "listsTabControl";
             this.listsTabControl.SelectedIndex = global::NPS.AKRO.ThemeManager.Properties.Settings.Default.mainFormTabpage1;
-            this.listsTabControl.Size = new System.Drawing.Size(232, 517);
+            this.listsTabControl.Size = new System.Drawing.Size(232, 486);
             this.listsTabControl.TabIndex = 11;
             this.toolTip1.SetToolTip(this.listsTabControl, "A list of all themes in your databases");
             // 
@@ -169,7 +169,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.tabPage1.Location = new System.Drawing.Point(4, 34);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(224, 479);
+            this.tabPage1.Size = new System.Drawing.Size(224, 448);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Themes";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -186,7 +186,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.themesTreeView.Location = new System.Drawing.Point(3, 3);
             this.themesTreeView.Name = "themesTreeView";
             this.themesTreeView.SelectedImageIndex = 0;
-            this.themesTreeView.Size = new System.Drawing.Size(218, 473);
+            this.themesTreeView.Size = new System.Drawing.Size(218, 442);
             this.themesTreeView.Sorted = true;
             this.themesTreeView.TabIndex = 8;
             this.themesTreeView.Tag = "Themes";
@@ -346,6 +346,8 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.treeViewImageList.Images.SetKeyName(23, "theme_dataframe");
             this.treeViewImageList.Images.SetKeyName(24, "Theme_pdf");
             this.treeViewImageList.Images.SetKeyName(25, "Theme_doc");
+            this.treeViewImageList.Images.SetKeyName(26, "Theme_xls");
+            this.treeViewImageList.Images.SetKeyName(27, "Theme_ppt");
             // 
             // tabPage2
             // 
@@ -599,7 +601,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // toolStripContainer1.ContentPanel
             // 
             this.toolStripContainer1.ContentPanel.Controls.Add(this.splitContainer);
-            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(807, 521);
+            this.toolStripContainer1.ContentPanel.Size = new System.Drawing.Size(807, 490);
             this.toolStripContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.toolStripContainer1.Location = new System.Drawing.Point(0, 0);
             this.toolStripContainer1.Name = "toolStripContainer1";
@@ -609,9 +611,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             // toolStripContainer1.TopToolStripPanel
             // 
+            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.menuStrip1);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolStrip1);
             this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.toolStrip2);
-            this.toolStripContainer1.TopToolStripPanel.Controls.Add(this.menuStrip1);
             // 
             // statusStrip
             // 
@@ -653,7 +655,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             // 
             this.splitContainer.Panel2.Controls.Add(this.infoTabControl);
             this.splitContainer.Panel2MinSize = 0;
-            this.splitContainer.Size = new System.Drawing.Size(807, 521);
+            this.splitContainer.Size = new System.Drawing.Size(807, 490);
             this.splitContainer.SplitterDistance = 236;
             this.splitContainer.SplitterWidth = 5;
             this.splitContainer.TabIndex = 12;
@@ -670,7 +672,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.infoTabControl.Location = new System.Drawing.Point(0, 0);
             this.infoTabControl.Name = "infoTabControl";
             this.infoTabControl.SelectedIndex = global::NPS.AKRO.ThemeManager.Properties.Settings.Default.mainFormTabpage2;
-            this.infoTabControl.Size = new System.Drawing.Size(561, 517);
+            this.infoTabControl.Size = new System.Drawing.Size(558, 486);
             this.infoTabControl.TabIndex = 0;
             // 
             // tabPage4
@@ -679,7 +681,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.tabPage4.Location = new System.Drawing.Point(4, 34);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(553, 479);
+            this.tabPage4.Size = new System.Drawing.Size(550, 448);
             this.tabPage4.TabIndex = 0;
             this.tabPage4.Text = "Metadata";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -690,7 +692,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.webBrowser.Location = new System.Drawing.Point(3, 3);
             this.webBrowser.MinimumSize = new System.Drawing.Size(23, 23);
             this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(547, 473);
+            this.webBrowser.Size = new System.Drawing.Size(544, 442);
             this.webBrowser.TabIndex = 0;
             // 
             // tabPage5
@@ -700,7 +702,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.tabPage5.Location = new System.Drawing.Point(4, 29);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(553, 453);
+            this.tabPage5.Size = new System.Drawing.Size(550, 453);
             this.tabPage5.TabIndex = 1;
             this.tabPage5.Text = "Preview";
             // 
@@ -712,7 +714,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.previewLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.previewLabel.Location = new System.Drawing.Point(3, 3);
             this.previewLabel.Name = "previewLabel";
-            this.previewLabel.Size = new System.Drawing.Size(547, 447);
+            this.previewLabel.Size = new System.Drawing.Size(544, 447);
             this.previewLabel.TabIndex = 0;
             this.previewLabel.Text = "Select a theme";
             this.previewLabel.UseVisualStyleBackColor = false;
@@ -723,7 +725,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.tabPage6.Location = new System.Drawing.Point(4, 29);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(553, 453);
+            this.tabPage6.Size = new System.Drawing.Size(550, 453);
             this.tabPage6.TabIndex = 2;
             this.tabPage6.Text = "Properties";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -736,7 +738,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.propertiesLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.propertiesLabel.Location = new System.Drawing.Point(3, 3);
             this.propertiesLabel.Name = "propertiesLabel";
-            this.propertiesLabel.Size = new System.Drawing.Size(547, 447);
+            this.propertiesLabel.Size = new System.Drawing.Size(544, 447);
             this.propertiesLabel.TabIndex = 1;
             this.propertiesLabel.Text = "Select a theme";
             this.propertiesLabel.UseVisualStyleBackColor = false;
@@ -997,9 +999,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.toolStripSeparator4,
             this.searchTextBox,
             this.searchToolStripButton});
-            this.toolStrip2.Location = new System.Drawing.Point(383, 33);
+            this.toolStrip2.Location = new System.Drawing.Point(3, 64);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(424, 33);
+            this.toolStrip2.Size = new System.Drawing.Size(440, 33);
             this.toolStrip2.TabIndex = 2;
             // 
             // styleSheetComboBox
@@ -1030,7 +1032,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.searchTextBox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.searchTextBox.ForeColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.searchTextBox.Name = "searchTextBox";
-            this.searchTextBox.Size = new System.Drawing.Size(150, 31);
+            this.searchTextBox.Size = new System.Drawing.Size(150, 33);
             this.searchTextBox.Text = "Search";
             this.searchTextBox.ToolTipText = "Search Text";
             this.searchTextBox.Enter += new System.EventHandler(this.searchToolStripTextBox_Enter);
@@ -1042,7 +1044,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.searchToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
             this.searchToolStripButton.Image = global::NPS.AKRO.ThemeManager.Properties.Resources.search;
             this.searchToolStripButton.Name = "searchToolStripButton";
-            this.searchToolStripButton.Size = new System.Drawing.Size(28, 28);
+            this.searchToolStripButton.Size = new System.Drawing.Size(28, 30);
             this.searchToolStripButton.Text = "Search";
             this.searchToolStripButton.ToolTipText = "Search";
             this.searchToolStripButton.Click += new System.EventHandler(this.fastSearchToolStripMenuItem_Click);

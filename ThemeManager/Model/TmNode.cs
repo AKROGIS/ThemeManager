@@ -614,6 +614,18 @@ namespace NPS.AKRO.ThemeManager.Model
                 return;
             }
 
+            if (ext == ".xls" || ext == ".xlsx")
+            {
+                Data.Type = "MS Excel";
+                return;
+            }
+
+            if (ext == ".ppt" || ext == ".pptx")
+            {
+                Data.Type = "MS Powerpoint";
+                return;
+            }
+
             if (ext == ".mxd" || ext == ".mxt")
             {
                 Data.Type = "ArcMap Document";
@@ -731,6 +743,10 @@ namespace NPS.AKRO.ThemeManager.Model
                 return "_pdf"; //new
             if (datatype == "MS WORD")
                 return "_doc"; //new
+            if (datatype == "MS EXCEL")
+                return "_xls"; //new
+            if (datatype == "MS POWERPOINT")
+                return "_ppt"; //new
             if (datatype == "MAP DATA FRAME")
                 return "_dataframe"; //new
             if (datatype == "KML" || datatype == "KMZ" || datatype == "GOOGLE EARTH DOCUMENT")
