@@ -180,14 +180,18 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             data.Columns.Add(new DataColumn("Category", typeof(string)));
             data.Columns.Add(new DataColumn("Theme", typeof(string)));
             data.Columns.Add(new DataColumn("Type", typeof(string)));
+            data.Columns.Add(new DataColumn("Data Type", typeof(string)));
+            data.Columns.Add(new DataColumn("Data Path", typeof(string)));
             foreach (var theme in themeList.Recurse(x => x.Children)
-                                            .Where(n => n.IsTheme || n.IsSubTheme && 
-                                                   string.IsNullOrEmpty(n.Metadata.Path)))
+                                            .Where(n => (n.IsTheme || n.IsSubTheme) && 
+                                                   string.IsNullOrWhiteSpace(n.Metadata.Path)))
             {
                 DataRow row = data.NewRow();
                 row["Category"] = theme.CategoryPath();
                 row["Theme"] = theme.Name;
                 row["Type"] = (theme.IsTheme) ? "Theme" : "SubTheme";
+                row["Data Type"] = theme.Data.Type;
+                row["Data Path"] = theme.Data.DataSource;
                 data.Rows.Add(row);
                 if (bw.CancellationPending)
                     return data;
