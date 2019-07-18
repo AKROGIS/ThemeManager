@@ -33,27 +33,50 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         {
             reportComboBox.DataSource = new BindingList<Tool>()
                 {
-                    new Tool {Name="List all themes", 
-                              Description = "Creates a list all themes in the theme list",
-                              Command = ListThemes},
-                    new Tool {Name="List missing themes",
-                              Description = "Creates a list of theme which do not have a file.",
-                              Command = ListThemesNotFound},
-                    new Tool {Name="List themes with no metadata path",
-                              Description = "List themes with missing metadata",
-                              Command = ListThemesWithNoMetadata},
-                    new Tool {Name="List themes with problem metadata",
-                              Description = "List themes with missing metadata",
-                              Command = ListMetadataProblems},
-                    new Tool {Name="List (sub)themes by workspace/dataset",
-                              Description = "List all themes and sub themes, and describe thier workspace and dataset names and types",
-                              Command = ListDataSources},
+                    new Tool {
+                        Name ="All themes", 
+                        Description = "List all themes and their layer (or source) file.",
+                        Command = ListThemes
+                    },
+                    new Tool {
+                        Name ="Themes without a file",
+                        Description = "List themes that do not have (or have a missing) layer (or other) file (slow).",
+                        Command = ListThemesNotFound
+                    },
+                    new Tool {
+                        Name ="Themes with unknown type",
+                        Description = "List themes for which the data type could not be translated to an icon.",
+                        Command = ListThemesWithUnknownIcon
+                    },
+                    new Tool {
+                        Name ="All data sources",
+                        Description = "List data sources (and other properties) for all themes and sub themes.",
+                        Command = ListDataSources
+                    },
+                    new Tool {
+                        Name ="All metadata",
+                        Description = "List the metadata path and type for all themes and sub-themes.",
+                        Command = ListMetadata
+                    },
+                    new Tool {
+                        Name ="Themes with no metadata path",
+                        Description = "List themes and sub-themes with no path to metadata.",
+                        Command = ListThemesWithNoMetadataPath
+                    },
+                    new Tool {
+                        Name ="Themes with no metadata info",
+                        Description = "List themes and sub-themes that have a metadata path, but no info (tags, summary..).",
+                        Command = ListThemesWithNoMetadataInfo
+                    },
+                    new Tool {
+                        Name ="Check all metadata",
+                        Description = "Verifies that all metadata files can be read (slow).",
+                        Command = ListMetadataProblems
+                    },
+                    /*
                     new Tool {Name="List themes with missing data",
                               Description = "List themes with missing data",
                               Command = null},
-                    new Tool {Name="List themes with unknown data type",
-                              Description = "List themes for which the data type could not be translated to an icon",
-                              Command = ListThemesWithUnknownIcon},
                     new Tool {Name="List data types used in themes",
                               Description = "List data types used in themes",
                               Command = null},
@@ -63,6 +86,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     new Tool {Name="List themes using relative paths",
                               Description = "List themes using relative paths",
                               Command = null}
+                    */
                 };
 
             reportComboBox.DisplayMember = "Name";
@@ -174,24 +198,77 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             return data;
         }
 
-        internal DataTable ListThemesWithNoMetadata(TmNode themeList, BackgroundWorker bw)
+        internal DataTable ListMetadata(TmNode themeList, BackgroundWorker bw)
         {
             DataTable data = new DataTable();
             data.Columns.Add(new DataColumn("Category", typeof(string)));
             data.Columns.Add(new DataColumn("Theme", typeof(string)));
             data.Columns.Add(new DataColumn("Type", typeof(string)));
-            data.Columns.Add(new DataColumn("Data Type", typeof(string)));
-            data.Columns.Add(new DataColumn("Data Path", typeof(string)));
+            data.Columns.Add(new DataColumn("Metadata Path", typeof(string)));
+            data.Columns.Add(new DataColumn("Metadata Type", typeof(string)));
+            data.Columns.Add(new DataColumn("Metadata Format", typeof(string)));
             foreach (var theme in themeList.Recurse(x => x.Children)
-                                            .Where(n => (n.IsTheme || n.IsSubTheme) && 
-                                                   string.IsNullOrWhiteSpace(n.Metadata.Path)))
+                                           .Where(n => (n.IsTheme || n.IsSubTheme) && 
+                                                       !string.IsNullOrWhiteSpace(n.Metadata.Path)))
             {
                 DataRow row = data.NewRow();
                 row["Category"] = theme.CategoryPath();
                 row["Theme"] = theme.Name;
                 row["Type"] = (theme.IsTheme) ? "Theme" : "SubTheme";
-                row["Data Type"] = theme.Data.Type;
-                row["Data Path"] = theme.Data.DataSource;
+                row["Metadata Path"] = theme.Metadata.Path;
+                row["Metadata Type"] = theme.Metadata.Type;
+                row["Metadata Format"] = theme.Metadata.Format;
+                data.Rows.Add(row);
+                if (bw.CancellationPending)
+                    return data;
+            }
+            return data;
+        }
+
+        internal DataTable ListThemesWithNoMetadataPath(TmNode themeList, BackgroundWorker bw)
+        {
+            DataTable data = new DataTable();
+            data.Columns.Add(new DataColumn("Category", typeof(string)));
+            data.Columns.Add(new DataColumn("Theme", typeof(string)));
+            data.Columns.Add(new DataColumn("Type", typeof(string)));
+            data.Columns.Add(new DataColumn("Theme Type", typeof(string)));
+            data.Columns.Add(new DataColumn("Data Source Path", typeof(string)));
+            foreach (var theme in themeList.Recurse(x => x.Children)
+                                           .Where(n => (n.IsTheme || n.IsSubTheme) && 
+                                                       string.IsNullOrWhiteSpace(n.Metadata.Path)))
+            {
+                DataRow row = data.NewRow();
+                row["Category"] = theme.CategoryPath();
+                row["Theme"] = theme.Name;
+                row["Type"] = (theme.IsTheme) ? "Theme" : "SubTheme";
+                row["Theme Type"] = theme.Data.Type;
+                row["Data Source Path"] = theme.Data.DataSource;
+                data.Rows.Add(row);
+                if (bw.CancellationPending)
+                    return data;
+            }
+            return data;
+        }
+
+        internal DataTable ListThemesWithNoMetadataInfo(TmNode themeList, BackgroundWorker bw)
+        {
+            DataTable data = new DataTable();
+            data.Columns.Add(new DataColumn("Category", typeof(string)));
+            data.Columns.Add(new DataColumn("Theme", typeof(string)));
+            data.Columns.Add(new DataColumn("Type", typeof(string)));
+            data.Columns.Add(new DataColumn("Metadata Path", typeof(string)));
+            foreach (var theme in themeList.Recurse(x => x.Children)
+                                           .Where(n => (n.IsTheme || n.IsSubTheme) && 
+                                                       !string.IsNullOrWhiteSpace(n.Metadata.Path) &&
+                                                       string.IsNullOrWhiteSpace(n.Description) &&
+                                                       string.IsNullOrWhiteSpace(n.Summary) &&
+                                                       string.IsNullOrWhiteSpace(n.Tags)))
+            {
+                DataRow row = data.NewRow();
+                row["Category"] = theme.CategoryPath();
+                row["Theme"] = theme.Name;
+                row["Type"] = (theme.IsTheme) ? "Theme" : "SubTheme";
+                row["Metadata Path"] = theme.Metadata.Path;
                 data.Rows.Add(row);
                 if (bw.CancellationPending)
                     return data;
@@ -246,18 +323,19 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             data.Columns.Add(new DataColumn("Category", typeof(string)));
             data.Columns.Add(new DataColumn("Theme", typeof(string)));
             data.Columns.Add(new DataColumn("Type", typeof(string)));
-            data.Columns.Add(new DataColumn("Data Path", typeof(string)));
-            data.Columns.Add(new DataColumn("Data Type", typeof(string)));
+            data.Columns.Add(new DataColumn("Theme Path", typeof(string)));
+            data.Columns.Add(new DataColumn("Theme Type", typeof(string)));
             foreach (var theme in themeList.Recurse(x => x.Children)
-                                            .Where(n => (n.IsTheme || n.IsSubTheme) &&
-                                                   (n.ImageKey == "Theme" || n.ImageKey == "Themelock" || n.ImageKey == "Themenew")))
+                                           .Where(n => (n.IsTheme || n.IsSubTheme) && 
+                                                       (n.ImageKey == "Theme" || n.ImageKey == "Themelock" || n.ImageKey == "Themenew" ||
+                                                        n.Data.Type.Contains("Error", StringComparison.OrdinalIgnoreCase))))
             {
                 DataRow row = data.NewRow();
                 row["Category"] = theme.CategoryPath();
                 row["Theme"] = theme.Name;
                 row["Type"] = (theme.IsTheme) ? "Theme" : "SubTheme";
-                row["Data Path"] = theme.Data.Path;
-                row["Data Type"] = theme.Data.Type;
+                row["Theme Path"] = theme.Data.Path;
+                row["Theme Type"] = theme.Data.Type;
                 data.Rows.Add(row);
                 if (bw.CancellationPending)
                     return data;
@@ -271,17 +349,17 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             data.Columns.Add(new DataColumn("Category", typeof(string)));
             data.Columns.Add(new DataColumn("Theme", typeof(string)));
             data.Columns.Add(new DataColumn("Type", typeof(string)));
-            data.Columns.Add(new DataColumn("Data Path", typeof(string)));
-            data.Columns.Add(new DataColumn("Data Set Name", typeof(string)));
-            data.Columns.Add(new DataColumn("Data Type", typeof(string)));
+            data.Columns.Add(new DataColumn("Theme Path", typeof(string)));
+            data.Columns.Add(new DataColumn("Layer Name", typeof(string)));
+            data.Columns.Add(new DataColumn("Theme Type", typeof(string)));
+            data.Columns.Add(new DataColumn("Data Source Path", typeof(string)));
+            data.Columns.Add(new DataColumn("Workspace Path", typeof(string)));
             data.Columns.Add(new DataColumn("Workspace Type", typeof(string)));
             data.Columns.Add(new DataColumn("Workspace ProgID", typeof(string)));
-            data.Columns.Add(new DataColumn("Workspace Path", typeof(string)));
             data.Columns.Add(new DataColumn("Container", typeof(string)));
             data.Columns.Add(new DataColumn("Container Type", typeof(string)));
             data.Columns.Add(new DataColumn("Data Source", typeof(string)));
-            data.Columns.Add(new DataColumn("Data Set Type", typeof(string)));
-            data.Columns.Add(new DataColumn("Data Source Path", typeof(string)));
+            data.Columns.Add(new DataColumn("Data Source Type", typeof(string)));
             foreach (var theme in themeList.Recurse(x => x.Children)
                                             .Where(n => (n.IsTheme || n.IsSubTheme)))
             {
@@ -292,17 +370,17 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 row["Category"] = theme.CategoryPath();
                 row["Theme"] = theme.Name;
                 row["Type"] = (theme.IsTheme) ? "Theme" : "SubTheme";
-                row["Data Path"] = theme.Data.Path;
-                row["Data Set Name"] = theme.Data.DataSetName;
-                row["Data Type"] = theme.Data.Type;
+                row["Theme Path"] = theme.Data.Path;
+                row["Layer Name"] = theme.Data.DataSetName;
+                row["Theme Type"] = theme.Data.Type;
+                row["Data Source Path"] = theme.Data.DataSource;
+                row["Workspace Path"] = theme.Data.WorkspacePath;
                 row["Workspace Type"] = theme.Data.WorkspaceType;
                 row["Workspace ProgID"] = theme.Data.WorkspaceProgId;
-                row["Workspace Path"] = theme.Data.WorkspacePath;
                 row["Container"] = theme.Data.Container;
                 row["Container Type"] = theme.Data.ContainerType;
                 row["Data Source"] = theme.Data.DataSourceName;
-                row["Data Set Type"] = theme.Data.DataSetType;
-                row["Data Source Path"] = theme.Data.DataSource;
+                row["Data Source Type"] = theme.Data.DataSetType;
                 data.Rows.Add(row);
                 if (bw.CancellationPending)
                     return data;
