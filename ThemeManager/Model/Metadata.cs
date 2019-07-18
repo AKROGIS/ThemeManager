@@ -500,6 +500,14 @@ namespace NPS.AKRO.ThemeManager.Model
         internal string ErrorMessage { get; private set; }
 
         /// <summary>
+        /// The format of the content in Metadata.Path.
+        /// </summary>
+        /// <remarks>
+        /// See Metadata.Format for more info.
+        /// </remarks>
+        public MetadataFormat Format { get; private set; }
+
+        /// <summary>
         /// The path to the metadata resource.
         /// </summary>
         /// <remarks>
@@ -527,6 +535,14 @@ namespace NPS.AKRO.ThemeManager.Model
                 }
             }
         }
+
+        /// <summary>
+        /// The meaning of the string in Metadata.Path.
+        /// </summary>
+        /// <remarks>
+        /// See Metadata.Type for the meaning of the value in the string.
+        /// </remarks>
+        public MetadataType Type { get; private set; }
 
         #endregion
 
@@ -841,9 +857,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region  Private Properties
 
-        private MetadataFormat Format { get; set; }
         private string Schema { get; }  // Unused but supported as part of the TML file
-        private MetadataType Type { get; set; }
         private string Version { get; }  // Unused but supported as part of the TML file
 
         #endregion
