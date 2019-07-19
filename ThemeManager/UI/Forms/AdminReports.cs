@@ -208,13 +208,13 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             data.Columns.Add(new DataColumn("Metadata Type", typeof(string)));
             data.Columns.Add(new DataColumn("Metadata Format", typeof(string)));
             foreach (var theme in themeList.Recurse(x => x.Children)
-                                           .Where(n => (n.IsTheme || n.IsSubTheme) && 
+                                           .Where(n => (n.IsTheme || n.IsSubTheme || n.IsCategory) && 
                                                        !string.IsNullOrWhiteSpace(n.Metadata.Path)))
             {
                 DataRow row = data.NewRow();
                 row["Category"] = theme.CategoryPath();
                 row["Theme"] = theme.Name;
-                row["Type"] = (theme.IsTheme) ? "Theme" : "SubTheme";
+                row["Type"] = (theme.IsTheme) ? "Theme" : (theme.IsCategory) ? "Category" : "SubTheme"; ;
                 row["Metadata Path"] = theme.Metadata.Path;
                 row["Metadata Type"] = theme.Metadata.Type;
                 row["Metadata Format"] = theme.Metadata.Format;
