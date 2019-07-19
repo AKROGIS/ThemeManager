@@ -264,7 +264,7 @@ namespace NPS.AKRO.ThemeManager.Model
             }
 
             // Esri Web services
-            if (data.IsEsriMapService || data.IsEsriImageService)
+            if ((data.IsEsriMapService || data.IsEsriImageService) && data.DataSource != null)
             {
                 newMetadata.Path = Regex.Replace(data.DataSource, "/arcgis/services/", "/arcgis/rest/services/", RegexOptions.IgnoreCase);
                 newMetadata.Path = newMetadata.Path + "/info/metadata";
@@ -272,7 +272,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 newMetadata.Format = MetadataFormat.Xml;
                 return newMetadata;
             }
-            if (data.IsEsriFeatureService)
+            if (data.IsEsriFeatureService && data.WorkspacePath != null)
             {
                 newMetadata.Path = Regex.Replace(data.WorkspacePath, "/arcgis/services/", "/arcgis/rest/services/", RegexOptions.IgnoreCase);
                 newMetadata.Path = newMetadata.Path + "/info/metadata";
