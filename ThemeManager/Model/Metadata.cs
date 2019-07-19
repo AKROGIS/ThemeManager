@@ -266,14 +266,16 @@ namespace NPS.AKRO.ThemeManager.Model
             // Esri Web services
             if (data.IsEsriMapService || data.IsEsriImageService)
             {
-                newMetadata.Path = data.DataSource + "/info/metadata";
+                newMetadata.Path = Regex.Replace(data.DataSource, "/arcgis/services/", "/arcgis/rest/services/", RegexOptions.IgnoreCase);
+                newMetadata.Path = newMetadata.Path + "/info/metadata";
                 newMetadata.Type = MetadataType.Url;
                 newMetadata.Format = MetadataFormat.Xml;
                 return newMetadata;
             }
             if (data.IsEsriFeatureService)
             {
-                newMetadata.Path = data.WorkspacePath + "/info/metadata";
+                newMetadata.Path = Regex.Replace(data.WorkspacePath, "/arcgis/services/", "/arcgis/rest/services/", RegexOptions.IgnoreCase);
+                newMetadata.Path = newMetadata.Path + "/info/metadata";
                 newMetadata.Type = MetadataType.Url;
                 newMetadata.Format = MetadataFormat.Xml;
                 return newMetadata;
