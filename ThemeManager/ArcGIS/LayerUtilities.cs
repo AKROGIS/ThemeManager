@@ -1,6 +1,8 @@
 ﻿using ESRI.ArcGIS.Carto;
+using ESRI.ArcGIS.Catalog;
 using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
+using ESRI.ArcGIS.Geoprocessing;
 using ESRI.ArcGIS.GISClient;
 using System;
 using System.Text;
@@ -65,19 +67,19 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         internal static string GetLayerTypeFromLayer(ILayer layer)
         {
             // ESRI's COM objects are multi-typed, so a layer will match multiple types in the
-            // following list.  Types need to be in order of prefered discovery.
-            // the following are all of the coclasses in ESRI.ArcGIS.Carto that implement ILayer
+            // following list.  Types need to be in order of preferred discovery.
+            // the following are all of the co-classes in ESRI.ArcGIS.Carto that implement ILayer
             // There are additional types in extension libraries that implement ILayer
             // that are not checked (would require loading extension libraries/licenses)
             if (layer is GroupLayer)
                 return "Group Layer";
             if (layer is FeatureLayer)
                 return "Feature Layer";
-            // Data Type: 
-            if (layer is TinLayer)  // TIN is Tin, MapServer, Terrain, Topology, Network, Mosaic, GraphicsSub, CompositeGraphics and Dummy*
+            // Data Type: TIN is Tin, MapServer, Terrain, Topology, Network, Mosaic, GraphicsSub, CompositeGraphics and Dummy*
+            if (layer is TinLayer)
                 return "Tin Layer";
             //Data Type: ArcGIS Image Service is ImageServer, MapServer, Raster, Terrain, Topology, Network, Mosaic, GraphicsSub, CompositeGraphics and Dummy*
-            if (layer is ImageServerLayer) // 
+            if (layer is ImageServerLayer)
                 return "ImageServer Layer";
             if (layer is IMSMapLayer)
                 return "IMS Map Layer";
@@ -119,7 +121,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 return "Dimension Layer";
             if (layer is CadastralFabricLayer)
                 return "Cadastral Fabric Layer";
-            //Version 10 only
             if (layer is CadastralFabricSubLayer)
                 return "Cadastral Fabric SubLayer";
             if (layer is CadAnnotationLayer)
@@ -128,13 +129,10 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 return "Cad Feature Layer";
             if (layer is CoverageAnnotationLayer)
                 return "Coverage Annotation Layer";
-            //Version 10 only
             if (layer is BasemapLayer)
                 return "BaseMap Layer";
-            //Version 10 only
             if (layer is RasterBasemapLayer)
                 return "Raster Basemap Layer";
-            //Version 10 only
             if (layer is MosaicLayer)
                 return "Mosaic Layer";
             if (layer is FDOGraphicsLayer)
@@ -143,7 +141,55 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 return "FDO Graphics Sublayer";
             if (layer is NITFGraphicsLayer)
                 return "NITF Graphics Layer";
-            if (layer is GraphicsSubLayer)
+            if (layer is BasemapSubLayer)
+                return "Basemap SubLayer";
+            if (layer is CadLayer)
+                return "CAD Layer";
+            if (layer is LasDatasetLayer)
+                return "LAS Dataset Layer";
+            if (layer is MapServerRESTLayer)
+                return "MapServer REST Layer";
+            if (layer is MapServerRESTSubLayer)
+                return "MapServer REST SubLayer";
+            if (layer is SearchResultsLayer)
+                return "Search Results Layer";
+            if (layer is ProcessLayer)
+                return "Process Layer";
+            // The following classes implement ILayer, but they are in extension libraries
+            /*
+            if (layer is GeoVideoLayer) //ESRI.ArcGIS.GlobeCore
+                return "GeoVideo Layer";
+            if (layer is GlobeGraphicsLayer) //ESRI.ArcGIS.GlobeCore
+                return "Globe Graphics Layer";
+            if (layer is GlobeLayer) //ESRI.ArcGIS.GlobeCore
+                return "Globe Layer";
+            if (layer is GlobeServerLayer) //ESRI.ArcGIS.GlobeCore
+                return "GlobeServer Layer";
+            if (layer is GraphicsLayer3D) //ESRI.ArcGIS.3DAnalyst
+                return "3D Graphics Layer";
+            if (layer is JoinedControlPointLayer) //ESRI.ArcGIS.CadastralUI
+                return "Joined Control Point Layer";
+            if (layer is JoinedLinePointLayer) //ESRI.ArcGIS.CadastralUI
+                return "Joined Line Point Layer";
+            if (layer is JoinedParcelLayer) //ESRI.ArcGIS.CadastralUI
+                return "Joined Parcel Layer";
+            if (layer is JoinedParcelLineLayer) //ESRI.ArcGIS.CadastralUI
+                return "Joined Parcel Line Layer";
+            if (layer is JoinedPointLayer) //ESRI.ArcGIS.CadastralUI
+                return "Joined Point Layer";
+            if (layer is KmlLayer) //ESRI.ArcGIS.GlobeCore
+                return "KML Layer";
+            if (layer is NALayer) //ESRI.ArcGIS.NetworkAnalyst
+                return "Network Analysis Layer";
+            if (layer is PacketJoinedLayer) //ESRI.ArcGIS.CadastralUI
+                return "Packet Joined Layer";
+            if (layer is SchematicLayer) //ESRI.ArcGIS.Schematic
+                return "Schematic Layer";
+            if (layer is TemporalFeatureLayer) //ESRI.ArcGIS.TrackingAnalyst
+                return "Temporal Feature Layer";
+            */
+            if (layer is WMTSLayer)
+                return "WM Tile Service Layer"; if (layer is GraphicsSubLayer)
                 return "Graphics SubLayer";
             if (layer is CompositeGraphicsLayer)
                 return "Composite Graphics Layer";
