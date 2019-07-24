@@ -348,6 +348,8 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.treeViewImageList.Images.SetKeyName(25, "Theme_doc");
             this.treeViewImageList.Images.SetKeyName(26, "Theme_xls");
             this.treeViewImageList.Images.SetKeyName(27, "Theme_ppt");
+            this.treeViewImageList.Images.SetKeyName(28, "Theme_mosaic");
+            this.treeViewImageList.Images.SetKeyName(29, "Theme_las");
             // 
             // tabPage2
             // 
@@ -672,7 +674,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.infoTabControl.Location = new System.Drawing.Point(0, 0);
             this.infoTabControl.Name = "infoTabControl";
             this.infoTabControl.SelectedIndex = global::NPS.AKRO.ThemeManager.Properties.Settings.Default.mainFormTabpage2;
-            this.infoTabControl.Size = new System.Drawing.Size(558, 486);
+            this.infoTabControl.Size = new System.Drawing.Size(557, 486);
             this.infoTabControl.TabIndex = 0;
             // 
             // tabPage4
@@ -681,7 +683,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.tabPage4.Location = new System.Drawing.Point(4, 34);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(550, 448);
+            this.tabPage4.Size = new System.Drawing.Size(549, 448);
             this.tabPage4.TabIndex = 0;
             this.tabPage4.Text = "Metadata";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -692,7 +694,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.webBrowser.Location = new System.Drawing.Point(3, 3);
             this.webBrowser.MinimumSize = new System.Drawing.Size(23, 23);
             this.webBrowser.Name = "webBrowser";
-            this.webBrowser.Size = new System.Drawing.Size(544, 442);
+            this.webBrowser.Size = new System.Drawing.Size(543, 442);
             this.webBrowser.TabIndex = 0;
             // 
             // tabPage5
@@ -702,7 +704,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.tabPage5.Location = new System.Drawing.Point(4, 29);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(550, 453);
+            this.tabPage5.Size = new System.Drawing.Size(549, 453);
             this.tabPage5.TabIndex = 1;
             this.tabPage5.Text = "Preview";
             // 
@@ -714,7 +716,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.previewLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.previewLabel.Location = new System.Drawing.Point(3, 3);
             this.previewLabel.Name = "previewLabel";
-            this.previewLabel.Size = new System.Drawing.Size(544, 447);
+            this.previewLabel.Size = new System.Drawing.Size(543, 447);
             this.previewLabel.TabIndex = 0;
             this.previewLabel.Text = "Select a theme";
             this.previewLabel.UseVisualStyleBackColor = false;
@@ -725,7 +727,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.tabPage6.Location = new System.Drawing.Point(4, 29);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(550, 453);
+            this.tabPage6.Size = new System.Drawing.Size(549, 453);
             this.tabPage6.TabIndex = 2;
             this.tabPage6.Text = "Properties";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -738,7 +740,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             this.propertiesLabel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.propertiesLabel.Location = new System.Drawing.Point(3, 3);
             this.propertiesLabel.Name = "propertiesLabel";
-            this.propertiesLabel.Size = new System.Drawing.Size(544, 447);
+            this.propertiesLabel.Size = new System.Drawing.Size(543, 447);
             this.propertiesLabel.TabIndex = 1;
             this.propertiesLabel.Text = "Select a theme";
             this.propertiesLabel.UseVisualStyleBackColor = false;

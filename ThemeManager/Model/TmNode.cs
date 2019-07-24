@@ -714,8 +714,11 @@ namespace NPS.AKRO.ThemeManager.Model
             if (datatype.Contains("WCS"))
                 return "_wms"; //must be done before raster, else theme will get the raster icon
 
+            // Need to do this before a raster check to avoid a raster icon.
+            if (datatype.Contains("MOSAICDATASET"))
+                return "_mosaic"; //new
             // Need to insert this New check before the *Poly* check else raster catalogs will be tagged as _poly
-            if ((datatype.Contains("RASTER") || datatype.Contains("MOSAIC")) && !datatype.Contains("IMAGESERVER"))
+            if (datatype.Contains("RASTER") && !datatype.Contains("IMAGESERVER"))
                 return "_raster"; //8
 
             //if (datatype.Contains("POLY") || datatype.Contains("REGION")) //problem polyline matches *poly*
@@ -754,6 +757,8 @@ namespace NPS.AKRO.ThemeManager.Model
                 return "_dataframe"; //new
             if (datatype == "KML" || datatype == "KMZ" || datatype == "GOOGLE EARTH DOCUMENT")
                 return "_ge"; //new
+            if (datatype.Contains("LAS DATASET"))
+                return "_las"; //new
             if (datatype == "NOT FOUND")
                 return "_notfound"; //new
 
@@ -766,7 +771,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 return "_poly";  //6
             if (datatype.Contains("MAPSERVER") || datatype.Contains("IMAGESERVER") || datatype.Contains("WCS"))
                 return "_wms"; //11
-            if (datatype.Contains("RASTER") || datatype.Contains("MOSAIC"))
+            if (datatype.Contains("RASTER"))
                 return "_raster"; //8
             if (datatype.Contains("DIMENSION"))
                 return "_dim"; //new
