@@ -353,9 +353,10 @@ namespace NPS.AKRO.ThemeManager.Model
             get { return _description; }
             set
             {
-                if (value != _description)
+                var cleanValue = String.IsNullOrWhiteSpace(value) ? null : value;
+                if (cleanValue != _description)
                 {
-                    _description = value;
+                    _description = cleanValue;
                     if (ThemeList != null)
                         ThemeList.IsDirty = true;
                     OnPropertyChanged("Description");
@@ -369,9 +370,10 @@ namespace NPS.AKRO.ThemeManager.Model
             get { return _summary; }
             set
             {
-                if (value != _summary)
+                var cleanValue = String.IsNullOrWhiteSpace(value) ? null : value;
+                if (cleanValue != _summary)
                 {
-                    _summary = value;
+                    _summary = cleanValue;
                     if (ThemeList != null)
                         ThemeList.IsDirty = true;
                     OnPropertyChanged("Summary");
@@ -385,9 +387,10 @@ namespace NPS.AKRO.ThemeManager.Model
             get { return _tags; }
             set
             {
-                if (value != _tags)
+                var cleanValue = String.IsNullOrWhiteSpace(value) ? null : value;
+                if (cleanValue != _tags)
                 {
-                    _tags = value;
+                    _tags = cleanValue;
                     if (ThemeList != null)
                         ThemeList.IsDirty = true;
                     OnPropertyChanged("Tags");
@@ -1143,11 +1146,11 @@ namespace NPS.AKRO.ThemeManager.Model
             Name = (string)xele.Attribute("name");
             XElement data;
             data = xele.Element("tags");
-            Tags = data == null ? null : data.Value;
+            Tags = data == null ? null : string.IsNullOrWhiteSpace(data.Value) ? null : data.Value;
             data = xele.Element("summary");
-            Summary = data == null ? null : data.Value;
+            Summary = data == null ? null : string.IsNullOrWhiteSpace(data.Value) ? null : data.Value;
             data = xele.Element("description");
-            Description = data == null ? null : data.Value;
+            Description = data == null ? null : string.IsNullOrWhiteSpace(data.Value) ? null : data.Value;
             data = xele.Element("pubdate");
             if (data != null)
             {
