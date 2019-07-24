@@ -1293,9 +1293,9 @@ namespace NPS.AKRO.ThemeManager.Model
         public void SyncWithMetadata(bool recurse)
         {
             var info = Metadata.GetGeneralInfo();
-            Tags = info.Tags ?? "";
-            Summary = info.Summary ?? "";
-            Description = info.Description ?? "";
+            Tags = info.Tags ?? Tags;
+            Summary = info.Summary ?? Summary;
+            Description = info.Description ?? Description;
             if (info.PublicationDate.HasValue)
                 PubDate = info.PublicationDate.Value;
             else
