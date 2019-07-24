@@ -829,6 +829,9 @@ namespace NPS.AKRO.ThemeManager.Model
         internal void UpdateWithDataSource(ThemeData data)
         {
             Metadata newMetadata = FromDataSource(data);
+            if (Path != null && newMetadata.Path == null)
+                // This item has a non-standard metadata path (set manually), do not delete it.
+                return;
             Path = newMetadata.Path;
             Type = newMetadata.Type;
             Format = newMetadata.Format;
