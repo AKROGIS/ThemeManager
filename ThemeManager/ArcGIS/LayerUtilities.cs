@@ -73,6 +73,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             // that are not checked (would require loading extension libraries/licenses)
             if (layer is GroupLayer)
                 return "Group Layer";
+            if (layer is RasterLayer)
+                return "Raster Layer";
             if (layer is FeatureLayer)
                 return "Feature Layer";
             // Data Type: TIN is Tin, MapServer, Terrain, Topology, Network, Mosaic, GraphicsSub, CompositeGraphics and Dummy*
@@ -103,14 +105,12 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 return "MapServer Identify Sublayer";
             if (layer is MapServerQuerySublayer)
                 return "MapServer Query Sublayer";
-            if (layer is MapServerLayer)
-                return "MapServer Layer";
-            if (layer is RasterLayer)
-                return "Raster Layer";
             if (layer is RasterCatalogLayer)
                 return "Raster Catalog Layer";
             if (layer is GdbRasterCatalogLayer)
                 return "Gdb Raster Catalog Layer";
+            if (layer is LasDatasetLayer)
+                return "LAS Dataset Layer";
             if (layer is TerrainLayer)
                 return "Terrain Layer";
             if (layer is TopologyLayer)
@@ -133,8 +133,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 return "BaseMap Layer";
             if (layer is RasterBasemapLayer)
                 return "Raster Basemap Layer";
-            if (layer is MosaicLayer)
-                return "Mosaic Layer";
             if (layer is FDOGraphicsLayer)
                 return "FDO Graphics Layer";
             if (layer is FDOGraphicsSublayer)
@@ -145,8 +143,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 return "Basemap SubLayer";
             if (layer is CadLayer)
                 return "CAD Layer";
-            if (layer is LasDatasetLayer)
-                return "LAS Dataset Layer";
             if (layer is MapServerRESTLayer)
                 return "MapServer REST Layer";
             if (layer is MapServerRESTSubLayer)
@@ -155,6 +151,10 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 return "Search Results Layer";
             if (layer is ProcessLayer)
                 return "Process Layer";
+            if (layer is MosaicLayer)
+                return "Mosaic Layer";
+            if (layer is MapServerLayer)
+                return "MapServer Layer";
             // The following classes implement ILayer, but they are in extension libraries
             /*
             if (layer is GeoVideoLayer) //ESRI.ArcGIS.GlobeCore
