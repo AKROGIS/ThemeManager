@@ -879,7 +879,7 @@ namespace NPS.AKRO.ThemeManager.Model
                  (Tags != null) ? new XElement("tags", Tags) : null,
                  (Summary != null) ? new XElement("summary", Summary) : null,
                  (Description != null) ? new XElement("description", Description) : null,
-                 (Type == TmNodeType.Theme) ? new XElement("pubdate", PubDate) : null,
+                 (Type == TmNodeType.Theme && PubDate != DefaultPubDate) ? new XElement("pubdate", PubDate) : null,
                  HasAuthor ? Author.AsXElement : null,
                  IsCategory ? null : Data.ToXElement(),
                  HasMetadata ? Metadata.ToXElement() : null
