@@ -176,7 +176,7 @@ namespace NPS.AKRO.ThemeManager.Model
             }
 
             // Grids, TINs, and other directory based feature classes
-            if (data.DataSource != null && Directory.Exists(data.DataSource))
+            if (data.IsRasterBand && data.DataSource != null && Directory.Exists(data.DataSource))
             {
                 string metadataPath = System.IO.Path.Combine(data.DataSource, "metadata.xml");
                 if (File.Exists(metadataPath))
@@ -192,6 +192,21 @@ namespace NPS.AKRO.ThemeManager.Model
             if (data.IsShapefile)
             {
                 string metadataPath = data.DataSource + ".shp.xml";
+                if (File.Exists(metadataPath))
+                {
+                    newMetadata.Path = metadataPath;
+                    newMetadata.Type = MetadataType.FilePath;
+                    newMetadata.Format = MetadataFormat.Xml;
+                }
+                return newMetadata;
+            }
+
+            // File based Raster band metadata
+            //   DataSource will contain the Band Name, while metadata will not
+            if (data.IsRasterBand && data.WorkspacePath != null && data.Container != null)
+            {
+                string rasterName = System.IO.Path.Combine(data.WorkspacePath, data.Container);
+                string metadataPath = rasterName + ".xml";
                 if (File.Exists(metadataPath))
                 {
                     newMetadata.Path = metadataPath;
@@ -258,6 +273,10 @@ namespace NPS.AKRO.ThemeManager.Model
             if (data.IsInGeodatabase)
             {
                 newMetadata.Path = data.DataSource;
+                if (data.IsRasterBand)
+                {
+                    newMetadata.Path = data.DataSource?.Replace("\\" + data.DataSourceName, "");
+                }
                 newMetadata.Type = MetadataType.EsriDataPath;
                 newMetadata.Format = MetadataFormat.Xml;
                 return newMetadata;
