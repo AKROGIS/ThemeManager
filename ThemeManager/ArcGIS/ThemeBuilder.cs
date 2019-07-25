@@ -138,6 +138,18 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 data.Container = null;
                 data.ContainerType = null;
             }
+            else if (LayerUtilities.HasWMTSConnectionName(layer))
+            {
+                data.DataSource = LayerUtilities.GetURLFromWMTSLayer(layer);
+                data.DataSourceName = data.DataSource;
+                data.DataSetName = data.DataSource;
+                data.DataSetType = LayerUtilities.GetAllPropertiesFromWMSLayer(layer);
+                data.WorkspacePath = null;
+                data.WorkspaceProgId = null;
+                data.WorkspaceType = null;
+                data.Container = null;
+                data.ContainerType = null;
+            }
             else if (LayerUtilities.HasDataSourceName(layer))
             {
                 data.DataSource = LayerUtilities.GetDataSourceName(layer);

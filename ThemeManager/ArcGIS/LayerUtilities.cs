@@ -393,21 +393,45 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             return wmsObjectName.ConnectionProperties.GetProperty("URL").ToString();
         }
 
+        internal static string GetURLFromWMTSLayer(ILayer layer)
+        {
+            IWMTSConnectionName wmtsObjectName = GetWMTSConnectionName(layer);
+            if (wmtsObjectName == null)
+                return "!Error - WMTS Connection Object Name Not Found";
+            return wmtsObjectName.ConnectionProperties.GetProperty("URL").ToString();
+        }
+
         internal static string GetAllPropertiesFromWMSLayer(ILayer layer)
         {
-            IWMSConnectionName wmsObjectName = GetWMSConnectionName(layer);
-            if (wmsObjectName == null)
+            object keys = null, values = null;
+            if (HasWMSConnectionName(layer))
+            {
+                IWMSConnectionName wmsObjectName = GetWMSConnectionName(layer);
+                if (wmsObjectName != null)
+                    wmsObjectName.ConnectionProperties.GetAllProperties(out keys, out values);
+            }
+
+            if (HasWMTSConnectionName(layer))
+            {
+                IWMTSConnectionName wmtsObjectName = GetWMTSConnectionName(layer);
+                if (wmtsObjectName != null)
+                    wmtsObjectName.ConnectionProperties.GetAllProperties(out keys, out values);
+            }
+            if (keys == null || values == null)
                 return "!Error - WMS Connection Object Name Not Found";
-            object keys, values;
-            wmsObjectName.ConnectionProperties.GetAllProperties(out keys, out values);
             string[] names = (string[])keys;
             object[] props = (object[])values;
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < names.Length; i++)
             {
-                sb.Append(names[i] + ":" + props[i].ToString() + "; ");
+                var prop = props[i] == null || string.IsNullOrWhiteSpace(props[i].ToString())
+                    ? "<NONE>"
+                    : props[i].ToString();
+                sb.Append(names[i] + ":" + prop + "; ");
             }
-            return sb.ToString();
+
+            var res = sb.ToString();
+            return res;
         }
 
         internal static IDatasetName GetDataSetName(ILayer layer)
@@ -441,9 +465,21 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             return ((IDataLayer)layer).DataSourceName as IWMSConnectionName;
         }
 
+        internal static IWMTSConnectionName GetWMTSConnectionName(ILayer layer)
+        {
+            if (layer == null || !(layer is IDataLayer))
+                return null;
+            return ((IDataLayer)layer).DataSourceName as IWMTSConnectionName;
+        }
+
         internal static bool HasWMSConnectionName(ILayer layer)
         {
             return (GetWMSConnectionName(layer) == null) ? false : true;
+        }
+
+        internal static bool HasWMTSConnectionName(ILayer layer)
+        {
+            return GetWMTSConnectionName(layer) != null;
         }
 
         internal static IIMSServiceDescription GetIMSServiceDescription(ILayer layer)
