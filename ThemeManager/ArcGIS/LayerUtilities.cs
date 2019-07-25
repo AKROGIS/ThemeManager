@@ -291,6 +291,16 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             IDatasetName datasetName = GetDataSetName(layer);
             if (datasetName == null)
                 return "!Error - Data Set Name Not Found";
+            if (datasetName is IRasterBandName)
+            {
+                // Then the datasetName.Name contains the raster container i.e. raster\band#
+                // We already got the container (raster) name, so we need to remove it in this case
+                var index = datasetName.Name.LastIndexOf('\\');
+                if (index > -1 && index < datasetName.Name.Length -1)
+                {
+                    return datasetName.Name.Substring(index+1);
+                }
+            }
             return datasetName.Name;
         }
 
@@ -323,7 +333,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             if (datasetName is IFeatureClassName && ((IFeatureClassName)datasetName).FeatureDatasetName != null)
                 return ((IFeatureClassName)datasetName).FeatureDatasetName.Type.ToString().Replace("esriDT", "");
             if (datasetName is IRasterBandName && ((IRasterBandName)datasetName).RasterDatasetName != null)
-                return ((IRasterBandName)datasetName).RasterDatasetName.Name.ToString().Replace("esriDT", "");
+                return ((IRasterBandName)datasetName).RasterDatasetName.Type.ToString().Replace("esriDT", "");
             return null;
         }
 
