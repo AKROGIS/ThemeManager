@@ -201,21 +201,6 @@ namespace NPS.AKRO.ThemeManager.Model
                 return newMetadata;
             }
 
-            // File based Raster band metadata
-            //   DataSource will contain the Band Name, while metadata will not
-            if (data.IsRasterBand && data.WorkspacePath != null && data.Container != null)
-            {
-                string rasterName = System.IO.Path.Combine(data.WorkspacePath, data.Container);
-                string metadataPath = rasterName + ".xml";
-                if (File.Exists(metadataPath))
-                {
-                    newMetadata.Path = metadataPath;
-                    newMetadata.Type = MetadataType.FilePath;
-                    newMetadata.Format = MetadataFormat.Xml;
-                }
-                return newMetadata;
-            }
-
             // ArcInfo Coverages
             if (data.IsCoverage && data.WorkspacePath != null && data.Container != null)
             {
@@ -279,6 +264,22 @@ namespace NPS.AKRO.ThemeManager.Model
                 }
                 newMetadata.Type = MetadataType.EsriDataPath;
                 newMetadata.Format = MetadataFormat.Xml;
+                return newMetadata;
+            }
+
+            // File based Raster band metadata
+            //   DataSource will contain the Band Name, while metadata will not
+            //   Needs to be done after geodatabase, else we miss rasterbands in geodatabases
+            if (data.IsRasterBand && data.WorkspacePath != null && data.Container != null)
+            {
+                string rasterName = System.IO.Path.Combine(data.WorkspacePath, data.Container);
+                string metadataPath = rasterName + ".xml";
+                if (File.Exists(metadataPath))
+                {
+                    newMetadata.Path = metadataPath;
+                    newMetadata.Type = MetadataType.FilePath;
+                    newMetadata.Format = MetadataFormat.Xml;
+                }
                 return newMetadata;
             }
 
