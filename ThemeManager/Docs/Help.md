@@ -10,6 +10,7 @@ Theme Manager Help
   * [Using Theme Manager on a Network](#using-theme-manager-on-a-network)
   * [Accessing Theme Manager from ArcMap](#accessing-theme-manager-from-arcmap)
 * [What's New](#whats-new)
+  * [Theme Manager 3.2](#theme-manager-32)
   * [Theme Manager 3.1](#theme-manager-31)
   * [Theme Manager 3.0](#theme-manager-30)
 * [Using Theme Manager](#using-theme-manager)
@@ -134,6 +135,15 @@ To launch the application from ArcMap requires installing an ArcMap Add-In, inst
 # What's New
 
 This section assumes you have used previous versions of Theme Manager. If you are a new user you can ignore it.
+
+## Theme Manager 3.2
+
+- Resize the text boxes in the Theme Properties tab
+- New and improved admin reports
+- Cleaned up writing of tml file to remove empty tags.
+- Add Icons for Lidar data sets and Mosaic datasets
+- Fixed a number of bugs determining data source and metadata
+- Allow html files as metadata
 
 ## Theme Manager 3.1
 
