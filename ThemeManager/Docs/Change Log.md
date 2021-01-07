@@ -1,7 +1,8 @@
 Theme Manager Change Log
 ========================
 
-After Theme Manager 3.0.12, this change log was not actively maintained.  It still contains some of the more important changes.  See the [Github repository](https://github.com/regan-sarwas/ThemeManager) for details of ongoing development.
+After Theme Manager 3.0.12, this change log was not actively maintained.  It still contains some of the more important changes.
+See the [Github repository](https://github.com/AKROGIS/ThemeManager/commits/master) for details of ongoing development.
 
 # Closed Issues
 

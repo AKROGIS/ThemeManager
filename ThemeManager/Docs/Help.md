@@ -57,7 +57,7 @@ Theme Manager simplifies access to GIS data. It provides the most benefit to occ
 
 # Quick Start
 
-A separate [Quick Start Tutorial](Startup.html) is available from the help menu
+A separate [Quick Start Tutorial](./Startup.html) is available from the help menu
 
 # Installation
 
@@ -69,7 +69,7 @@ The executable file (Theme Manager.exe) relies on various files and sub-folders 
 
 ## Requirements
 
-Theme Manager 3.1 requires the Microsoft .Net Framework 4.5 or higher (This is also a requirement for ArcGIS 10.4+ and other software, and has been a core component of Windows software since 2013, so you probably have it. If not, it can be downloaded for free from Microsoft.
+Theme Manager 3.1+ requires the Microsoft .Net Framework 4.5 or higher (This is also a requirement for ArcGIS 10.4+ and other software, and has been a core component of Windows software since 2013, so you probably have it. If not, it can be downloaded for free from Microsoft.
 
 Theme Manager can be used on a computer without any GIS software, but to get full access to all the features you must have ArcGIS Desktop version 10.5 (or higher) installed (and licensed) on your computer. There is a different version of Theme Manager for each version for ArcGIS. If you have installed mismatched versions, Theme Manager will run but you will get error and you will not have access to any of the features that require ArcGIS. Theme Manager will work with ArcGIS Pro, but some features (mainly previewing themes and loading/searching/displaying metadata in a geodatabase) do not work.
 
@@ -113,7 +113,7 @@ installed on your computer. Then follow these steps:
 
 ## Using Theme Manager on a Network
 
-A single install of Theme Manager can be used by multiple users if the application is unzipped to a shared folder on a network drive. If the domain administrators have not designated the server or shared folder as a trusted location, you will be prompted to accept a security warning when you launch the application. In some cases you may be denied the ability to run the application from the network. This is a site specific domain security issue beyond the programmer's control. If it is a problem at your site, contact your domain administrator, or copy the application to a local (trusted) location and execute it from there. If you have administrative control on your computer there are also ways to run off this security warning, but that is beyond the scope of this document – consult the Google.
+A single install of Theme Manager can be used by multiple users if the application is unzipped to a shared folder on a network drive. If the domain administrators have not designated the server or shared folder as a trusted location, you will be prompted to accept a security warning when you launch the application. In some cases you may be denied the ability to run the application from the network. This is a site specific domain security issue beyond the programmer's control. If it is a problem at your site, contact your domain administrator, or copy the application to a local (trusted) location and execute it from there. If you have administrative control on your computer there are also ways to turn off this security warning, but that is beyond the scope of this document – consult the Google.
 
 ## Accessing Theme Manager from ArcMap
 
@@ -587,4 +587,4 @@ Alaska Region GIS Team
 National Park Service  
 240 West 5th Avenue  
 Anchorage Alaska 99501  
-[akro_gis_helpdesk@nps.gov](mailto:akro_gis_helpdesk@nps.gov?subject=ThemeManager3.0)
+[akro_gis_helpdesk@nps.gov](mailto:akro_gis_helpdesk@nps.gov?subject=ThemeManager3.2)
