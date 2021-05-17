@@ -1,0 +1,172 @@
+Actions on any node in a treeview
+    Select
+    Rename
+    Delete
+    Cut
+    Copy
+    Paste
+    Move
+    Sort
+        Children
+        All
+        Visible
+    New node
+    Open (New branch)
+    Save
+    Save As
+    Edit
+    Launch
+    Search
+    Add to favorites
+    Drag and drop something from the OS or an app into tree
+    Drag and drop node into another program
+
+Actions in a treeview (not a node)
+    search - searches all nodes in the tree
+    add new branch from file
+Actions on a readonly node
+    search
+
+Description of all actions:
+    Select
+        Clicking on a node to indicate that it is the object of some 
+        future action.  Selecting a node makes it the selected node.
+        Receiver: TreeNode
+    Rename
+        Clicking on the selected node initiates in place editing to
+        change the name of a node. There are almost no restrictions
+        on node names, a name may contain any unicode character except
+        0001 (which is used as a node path separator).
+        Duplicate names are ok, but potentially confusing.
+        Renameing can also be done with the edit action
+        Receiver: TreeNode
+    Delete
+        Prunes the currently selected node (and all sub-nodes) from the
+        tree.  Shortcut - delete key.
+        If more than one node is to be deleted, issue a warning dialog
+        Receiver: TreeNode
+    Cut
+        Same as delete, but also places the node(s) on the clipboard.
+        Never shows the multi-delete warning. Shortcut: Ctrl-X
+        Receiver: TreeNode
+    Copy
+        Adds the currently selected node (and all sub-nodes) to the
+        clipboard.  The user can then paste them into this or
+        another tree.  Nodes can also be copieds by holding down the
+        Ctrl key while using drag and drop.
+        Receiver: TreeNode
+    Paste
+        Adds the node (and all sub-nodes) that are on the clipboard
+        as the last child of the currently selected node.
+        Receiver: TreeView::NodeCollection/TreeNode::NodeCollection
+    Move
+        moves a node (and all sub-nodes) to another location
+        in this or another tree.
+        Use drag and drop and/or cut/paste
+        Receiver: TreeView::NodeCollection/TreeNode::NodeCollection
+    Sort
+        Children
+            Sorts just the children of this node
+        All
+            Sorts just the children of this node and all sub-nodes
+        Visible
+            Sorts just the nodes that are visible below this node.
+            may do nothing if the current node is not expanded.
+        Each option cycles through one each of the following three sort
+        methods:
+            ascending case insensitive
+            decending case insensitive
+            unsorted - this is the loaded order or as manually moved
+        Receiver: TreeView::NodeCollection/TreeNode::NodeCollection
+    New node
+        Opens a property panel with suitable defaults for creating a
+        new node (Category or Theme).  The new node is added as the last
+        child of the currently selected node. The node can then be moved
+        to a better location.
+        Receiver: TreeView::NodeCollection/TreeNode::NodeCollection
+    Open (New branch)
+        Shows the Open file dialog, and allows the user to browse
+        to a Theme Manager archive (xml or mdb).  The root of this
+        archive is added as the last child of the currently selected
+        node or tree if no node is selected.
+        Receiver: Manager => TreeView::NodeCollection/TreeNode::NodeCollection
+    Save
+        Saves the current state of the app, and updates all archives
+        in the tree.
+        Receiver: Manager => TreeNode(s)
+    Save As
+        Shows the Save file dialog, and allows the user to save the
+        selected node (and all sub-nodes) in a Theme Manager
+        archive (xml or mdb).
+        Receiver: Manager => TreeNode => TMNode
+    Edit
+        Opens the properties panel for this node.  Allows viewing
+        (and changing if read/write) all the attributes of this node.
+        executed by double-click or context menu.
+        Receiver: TreeNode => TMNode
+    Search
+        Searches the currently selected node, or if none, the currently
+        visible tree.  If the search box is empty, the advanced search
+        box opens, otherwise a simple search is done with the contents
+        of the search box.
+        Receiver: TreeNode => TMNode::Metadata
+    Launch
+        Uses the OS functionality to preform the default open behaviour
+        This is the same as if the data contents of the node were
+        a double clicked file in the windows explorer.
+        Receiver: Manager => TreeNode(s)
+    Add to favorites
+        Uses the copy/paste function to add this and all sub nodes
+        as the last child of the favorites tree.  The node can then
+        be moved to a better location.
+        Receiver: see copy/paste
+    Drag and drop something from the OS or an app into tree
+        os folder - add all sub folders and files into the tree
+        os file - add new node with file
+        URL
+        ESRI layer file (type of OS file)
+        ESRI datasource
+            OS File, GDB(P/F/SDE), Web service, Coverage, CAD, ...
+    Drag and drop node into another program
+        Layerfile/ESRI datasource into ArcMap
+        KML into Google Earth
+        URL into ArcMap/GoogleEarth/Browser
+
+Node Properties
+    The treenode object in the treeview will take care of the node name
+    and location within the tree structure.  The Tag property of the
+    treenode will have a reference to a TMNode which will have the
+    following additional properties:
+        TMNode Type:
+            bool Readonly
+            Metadata Metadata
+            Data Data (if data is null this is a category node, 
+                       if data type is ThemeList or layerfile then sub-nodes
+                       come from the datasource)
+            Image icon
+        Metadata Type:
+            enum Format
+            enum Kind
+            string Link
+            //stream Contents
+            //xmlDoc XML
+            bool Contains(string text)
+            bool Contains(string path, string text)
+            stream AsHtml(Stylesheet stylesheet)
+        Data Type:
+            enum Format
+            enum Kind
+            string Link
+            //stream Contents
+        
+    (stored in treeview/treenode)
+    Location in tree (stored in treeview/treenode)
+    Readonly
+    
+Program features/options????
+    Multi node selection???
+    double click ot open or edit - user preference.
+    List of additional XML style sheets - user preference
+    mapping for Stylesheets and metadata type - currently we assume that all
+    metadata is in an XML format that the ESRI stylesheets will understand.
+    user preference - show warning for multi-delete.

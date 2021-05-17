@@ -1,0 +1,33 @@
+﻿Command,Target,Parameters,Model Result,Error,UI Result
+New Theme,NC,"{Index, Name, Data File, Metadata file}",Theme is added to the parent of the NC at index,"Theme data is invalid, Node Collection is readonly or wrong type.",
+,Node,"{Theme Name, Data File, Metadata file}",Theme is added to the end of the Node's Children (Node collection) or Error,Theme data is invalid or Node is readonly or wrong type.,
+New Category,,,,,
+New ThemeList,Node Collection,,,,
+Open,ThemeListCollection,"Filename, wait (bool)",Create new themelist in TLC.  If not wait then load themelist,,
+Save,ThemeList,,write themelist to disk,,
+Save As,Node,Filename/Extension (string),"Save node as a themelist, remove node, load themelist",,
+Cut,NC,Node,remove Node from NC,,
+Copy,,,,,
+Paste,,,,,
+Delete,Node,,"Get the nodes parent, and remove this node from the child list of the parent.",,
+Print,,,,,
+Sort - Asc,,,,,
+Sort - Dec,,,,,
+Remove Sort,,,,,
+Search,,,,,
+Launch,,,,,
+Add to Favorites,,,,,
+Edit Properties,,,,,
+Bulk PubDate Update,,,,,
+Load Stylesheets,,,,,
+Preload Metadata,,,Read Metadata from file to memory,,None
+Get ArcGIS License,,,None,,None
+Edit Preferences,,,None,,Display/Save prefs.  Prefs used at various decision points.
+Change New Age,,,None,,Update All Visible Icons
+Expand,,,None,,Display child nodes
+Collapse,,,None,,Hide Child nodes
+Change Stylesheet,,,None,,redraw metadata if visible
+Display Metadata,Node,,load metadata if necessary,,draw metadata if visible
+Display Map,Theme,,None,,display map if visible
+Display Properties,Node,,None,,Display properties
+Show Help,NA,,None,,Display help

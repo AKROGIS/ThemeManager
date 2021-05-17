@@ -1,0 +1,107 @@
+<node name="asd">
+    <node name="">
+        <node name=""></node>
+    </node>
+    <node name="">
+        <node name="">
+            <node name=""></node>
+            <node name=""></node>
+        </node>
+    </node>
+    <node name=""></node>
+    <node name=""></node>
+    <data format="" version="1" type="">link to data</layerfile>
+    <metadata format="" version="1" type="">link to metadata</metadata>
+    <description>tool tip and/or status bar text</description>
+    <pubdate>date</pubdate>
+</node>
+
+A node is a treenode in a treeview
+name is the text label that is displayed in the treenode
+
+The structure of the nodes in this XML file determine the heirarchy
+of the treeview in the UI
+
+link to data
+    - The text is a URL, filename, connection string, etc to a metadata document
+    - the "format" is the code for how to interpret the link text
+        i.e filesystem object, database object, esri GXObject
+    - the "type" describes the contents of the link
+        i.e. ESRI Layerfile, ESRI datasource, KML, Photo Library, ... 
+    - the format and dtd are used together to create a stream reader
+    - there is an optional XML DOM that can be created from the stream.
+
+link to metadata
+    - The text is a URL, filename, connection string, etc to a metadata document
+    - the "format" is the code for how to interpret the link text
+        i.e filesystem object, database object, esri GXObject
+    - the "type" describes the contents of the link
+        i.e. plaintext, html, xml, 
+    - the format and dtd are used together to create a stream reader
+    - there is an optional XML DOM that can be created from the stream.
+
+<ThemeManager>
+    <ListTree>
+        <nodes...> or <external...>
+    </ListTree>
+    <FavoritesTree>
+        <nodes...> or <external...>
+    </FavoritesTree>
+    <SearchResultsTree>
+        <nodes...> or <external...>
+    </SearchResultsTree>
+    <Preferences>
+        <TBD...>
+    </Preferences>
+    <Plugins>
+        <TBD...>
+    </Plugins>
+</ThemeManager>
+
+EXAMPLE
+=======
+<ThemeManager>
+    <ListTree>
+        <external type="xml" version="1" name="My Themes (xml)">C:\tmp\db1.xml</external>
+        <external type="xml" version="1" name="My Themes (mdb)">C:\Program Files (x86)\NPS\ThemeManager\NPSThemelist.mdb</external>
+        <external type="mdb" version="2" name="Regional Themes (xml)">C:\tmp\db2.xml</external>
+        <external type="mdb" version="2" name="Regional Themes (mdb)">X:\GIS\ThemeMgr\Albers-Network.mdb</external>
+    </ListTree>
+    <FavoritesTree>
+        <nodes...> or <external...>
+    </FavoritesTree>
+    <SearchResultsTree>
+        <nodes...> or <external...>
+    </SearchResultsTree>
+    <Preferences>
+        <TBD...>
+    </Preferences>
+    <Plugins>
+        <TBD...>
+    </Plugins>
+</ThemeManager>
+
+<node name="My Themes (xml)">
+    <data format="xml" version="1" type="ThemeList">C:\tmp\db1.xml</data>
+    <metadata format="xml" version="1" type="">link to metadata</metadata>
+    <description>tool tip and/or status bar text</description>
+    <pubdate>date</pubdate>
+</node>
+<node name="My Themes (mdb)">
+    <data format="mdb" version="2" type="ThemeList">C:\Program Files (x86)\NPS\ThemeManager\NPSThemelist.mdb</data>
+    <metadata format="xml" version="1" type="">link to metadata</metadata>
+    <description>tool tip and/or status bar text</description>
+    <pubdate>date</pubdate>
+</node>
+<node name="Regional Themes (xml)">
+    <data format="xml" version="1" type="ThemeList">C:\tmp\db2.xml</data>
+    <metadata format="xml" version="1" type="">link to metadata</metadata>
+    <description>tool tip and/or status bar text</description>
+    <pubdate>date</pubdate>
+</node>
+<node name="Regional Themes (mdb)">
+    <data format="mdb" version="2" type="ThemeList">X:\GIS\ThemeMgr\Albers-Network.mdb</data>
+    <metadata format="xml" version="1" type="">link to metadata</metadata>
+    <description>tool tip and/or status bar text</description>
+    <pubdate>date</pubdate>
+</node>
