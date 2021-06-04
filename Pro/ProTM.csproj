@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Esri.FileGDBAPI, Version=1.5.1.253, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Esri.FileGDBAPI.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -50,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fgdb.cs" />
     <Compile Include="ProTM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

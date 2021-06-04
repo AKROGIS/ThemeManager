@@ -19,9 +19,20 @@ namespace ThemeManager
             Host.Initialize();
 
             //InspectLayerFile(@"C:\tmp\plants.lyrx");
-            InspectLayerFolder(@"C:\tmp\ThemeMgrPro");
+            //InspectLayerFolder(@"C:\tmp\ThemeMgrPro");
+            TestFGDB();
         }
 
+        static void TestFGDB()
+        {
+            var gdb = new Fgdb(@"C:\tmp\akr_facility.gdb");
+            //gdb.PrintDataSetTypes();
+            //gdb.PrintAllRootDataSets();
+            //gdb.PrintRootDataSetsByType();
+            string xml = gdb.GetMetadata(@"\Roads_ln", "Feature Class");
+            Console.WriteLine(xml);
+            gdb.Close();
+        }
         static void InspectLayerFolder(string folderPath)
         {
             try
