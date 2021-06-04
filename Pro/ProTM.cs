@@ -25,12 +25,14 @@ namespace ThemeManager
 
         static void TestFGDB()
         {
-            var gdb = new Fgdb(@"C:\tmp\akr_facility.gdb");
+            var gdb = new Fgdb(@"C:\tmp\pro.gdb");
             //gdb.PrintDataSetTypes();
             //gdb.PrintAllRootDataSets();
-            //gdb.PrintRootDataSetsByType();
-            string xml = gdb.GetMetadata(@"\Roads_ln", "Feature Class");
-            Console.WriteLine(xml);
+            gdb.PrintAllDataSets();
+            //gdb.PrintDataSetsByType();
+            //gdb.PrintDataSetsByType(@"\test");
+            //string xml = gdb.GetMetadata(@"\Roads_ln", "Feature Class");
+            //Console.WriteLine(xml);
             gdb.Close();
         }
         static void InspectLayerFolder(string folderPath)

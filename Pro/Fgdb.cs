@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Esri.FileGDB;
 
 namespace ThemeManager
@@ -63,12 +65,70 @@ namespace ThemeManager
         {
             if (_geodatabase == null) { return; }
             Console.WriteLine("Data Set Types in {0}:", Path);
-            foreach (var datatype in _geodatabase.DataSetTypes)
+            foreach (var datatype in _geodatabase.DataSetTypes.OrderBy(i => i))
             {
                 Console.WriteLine("  {0}", datatype);
             }
         }
 
+        /*
+         List of Dataset types.  This is the list from a new empty geodatabase created with 10.8
+         The list remained the same after adding every possible new datset type from ArcCatalog right click new...
+            AbstractTable
+            Catalog Dataset
+            Coded Value Domain
+            Dataset
+            Domain
+            Extension Dataset
+            Feature Class
+            Feature Dataset
+            Folder
+            Geometric Network
+            Historical Marker
+            Item
+            Mosaic Dataset
+            Network Dataset
+            Parcel Fabric
+            Range Domain
+            Raster Catalog
+            Raster Dataset
+            Relationship Class
+            Replica
+            Replica Dataset
+            Representation Class
+            Resource
+            Schematic Dataset
+            Survey Dataset
+            Sync Dataset
+            Sync Replica
+            Table
+            Terrain
+            Tin
+            Toolbox
+            Topology
+            Workspace
+            Workspace Extension
+
+        The akr_facility.gdb (created with 10.6) also included the following four
+        additional dataset types, even though it has none of these data types:
+            Location Referencing Dataset
+            Parcel Dataset
+            Trace Network
+            Utility Network
+
+        I was able to create the following data types from ArcCatalog right click new...
+            Feature Class
+            Feature Dataset
+            Mosaic Dataset
+            Raster Catalog
+            Raster Dataset
+            Relationship Class
+            Table
+            Geometric Network
+            Parcel Fabric
+            Toolbox
+            Topology
+        */
         public void PrintAllRootDataSets()
         {
             PrintAllChildDataSets(@"\");
@@ -88,18 +148,40 @@ namespace ThemeManager
             }
         }
 
+        public void PrintAllDataSets()
+        {
+            Console.WriteLine("All Data Sets in {0}:", Path);
+            foreach (var dataset in GetAllDataSets().OrderBy(i => i))
+            {
+                Console.WriteLine("  {0}", dataset);
+            }
+        }
+
+        public IEnumerable<string> GetAllDataSets()
+        {
+            if (_geodatabase == null) { return new List<string>(); }
+            var items = new List<string>(_geodatabase.GetChildDatasets(@"\", ""));
+            var folders = _geodatabase.GetChildDatasets(@"\", "Feature Dataset");
+            foreach (var folder in folders)
+            {
+                items.AddRange(_geodatabase.GetChildDatasets(folder, ""));
+            }
+            return items;
+        }
+
         /// <summary>
         /// Very slow
         /// </summary>
-        public void PrintRootDataSetsByType()
+        public void PrintDataSetsByType(string parent = @"\")
         {
             if (_geodatabase == null) { return; }
-            foreach (var datatype in _geodatabase.DataSetTypes)
+            Console.WriteLine("Data Sets in {0}{1} by type:", Path, parent);
+            foreach (var datatype in _geodatabase.DataSetTypes.OrderBy(i => i))
             {
                 Console.WriteLine(datatype);
                 try
                 {
-                    foreach (var dataset in _geodatabase.GetChildDatasets(@"\", datatype))
+                    foreach (var dataset in _geodatabase.GetChildDatasets(parent, datatype))
                     {
                         Console.WriteLine(@"  {0}", dataset);
                     }
