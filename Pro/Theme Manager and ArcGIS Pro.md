@@ -77,14 +77,16 @@ however the three additional features listed above will be unavailable.
 What about building a version of Theme Manager specifically for ArcGIS Pro?
 The special ArcGIS 10.x features in Theme Manager can theoretically be swapped
 out for similar functionality in ArcGIS pro. Indeed, ArcGIS Pro comes with a
-software development kit (SDK) for adding functionality to ArcGIS Pro. Most of the functionality in the SDK is limited to in-process tasks via AddIns, plugins,
+software development kit (SDK) for adding functionality to ArcGIS Pro. Most of
+the functionality in the SDK is limited to in-process tasks via AddIns, plugins,
 and customizations. The SDK only supports limited features in a stand alone
 application via the [CoreHost](https://github.com/esri/arcgis-pro-sdk/wiki/proconcepts-CoreHost)
 library - primarily reading and writing geodatabases and geometries.
 Specifically it does not provide support for previewing `*lyrx` files or
 for extracting metadata from a data source. It also cannot read `*.lyr`
 or `*.mxd` files.  It can read `*.lyrx` files, but since those are just
-[Cartographic Information Model (CIM)](https://github.com/Esri/cim-spec) files in a JSON text file, there is nothing special about that.  However this does
+[Cartographic Information Model (CIM)](https://github.com/Esri/cim-spec) files
+in a JSON text file, there is nothing special about that.  However this does
 open the door to supporting other CIM documents (maps, layouts and reports)
 zipped up in the `*.aprx` file.
 
@@ -97,22 +99,22 @@ zipped up in the `*.aprx` file.
   Manger to open the layer file in ArcGIS Pro.
 * ArcGIS Pro "CoreHost" applications do not support graphic or UI functions.
 
-## Layer File Interegation
+## Layer File Interrogation
+
+* 10.x (map, python, and arcObjects) can read `*.lyr` but not `*.lyrx`.
+* Pro application can read `*.lyr` and `*.lyrx`.
+* Pro AddIns can read `*.lyrx` but not `*.lyr` files.
+* Pro Python can read `*.lyr` and `*.lyrx`, but can only save as `*.lyrx`.
+* Pro "CoreHost" can read `*.lyrx`, but not `*.lyr` files.
+
 ## Metadata with Pro
 
 * Pro CoreHost does not provide an interface for obtaining metadata from a
   data source.
-
-
-## Layer file limitations
-
-* 10.x (map, python, and arcObjects) can read *.lyr but not *.lyrx.
-* Pro application can read *.lyr and *.lyrx
-* Pro AddIns can read *.lyrx but not *.lyr files.
-* Pro Python can read *.lyr and *.lyrx, but can only save as *.lyrx.
-* Pro "corehost" (stand alone app) _can_ read *.lyrx files (just JSON) to build
-  Theme Manager data file (`*.tml`).
-* Pro "corehost" (stand alone app) can _NOT_ read *.lyr files to build `*.tml`.
+* In Pro, metadata can be retrieved from any item data source path with Python
+  and the arcpy module.
+* The File Geodatabase API can be used to retrieve metadata from any data source
+  in a file geodatabase without needing ArcGIS Pro or 10.x.
 
 ## Other Options
 
@@ -130,4 +132,36 @@ Online. They do not support layer files, or local map documents or projects
 
 ### ArcPy
 
+`arcpy` for Python and Pro can read `*.lyr` as well as `*.mxd` and save and
+`*.lyrx` and `*.mapx` files. `arcpy.mp.Layer` has various methods for querying
+a layer like `isGroup`, `longName`, and `datasource`, all of which map nicely to
+the properties Theme Manager needs. In addition,  arcpy can also read metadata
+from an item to an internal Python object that can be saved as XML:
+
+```python
+item_path = r'C:\Data\LocalArea.gdb\Streets'
+metadata = arcpy.metadata.Metadata(item_path)
+metadata.exportMetadata(export_19139_path) # no option to save as ArcGIS format
+# or convert to html; note does not work with esri provided stylesheets
+metadata.exportMetadata('myfile.html', 'CUSTOM', 'REMOVE_ALL_SENSITIVE_INFO',`custom_xml2html.xlst`)
+```
+
+The mapping module could also be used to create a blank project, load a layer
+file, and export hte map to a snapshot jpeg image, which could be displayed to
+the user as a static (no zooming) preview image.
+
+However, This is all done as an external process reading and writing temporary
+files to disk. Loading arcpy as an external process takes several seconds each
+time a task is required making it too slow without some optimizing work. Even if
+arcpy can be preloaded into Theme manager (I doubt it), it is still
+significantly slower than internal processes.
+
 ### File Geodatabase API
+
+Esri provides a library for reading file geodatabases in third party
+applications without a ArcGIS license.  This can be used to extract metadata
+from items in a fgdb without using Pro (or ArcMap 10.x).  The library adds
+about 20MB to the size of Theme Manager (only about 1MB), and only works with
+FGDBs, not SDE, PGDB (not supported by Pro), or file based metadata files.
+so different techniques will need to be used and may not be able to retrieve
+metadata in all cases.  However, the FGDB is the primary data source.
