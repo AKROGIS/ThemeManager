@@ -20,9 +20,20 @@ namespace ThemeManager
 
             //InspectLayerFile(@"C:\tmp\plants.lyrx");
             //InspectLayerFolder(@"C:\tmp\ThemeMgrPro");
-            TestFGDB();
+            //TestFGDB();
+            TestMetadataStyling();
         }
 
+        static void TestMetadataStyling()
+        {
+            var gdb = new Fgdb(@"C:\tmp\akr_facility.gdb");
+            string xml = gdb.GetMetadata(@"\Roads_ln", "Feature Class");
+            gdb.Close(); 
+            var styleSheetPath = @"C:\Program Files\ArcGIS\Pro\Resources\Metadata\Stylesheets\ArcGISPro.xsl";
+            var styleSheet = new StyleSheet(styleSheetPath, true);
+            var html = styleSheet.TransformText(xml);
+            Console.WriteLine(html);
+        }
         static void TestFGDB()
         {
             var gdb = new Fgdb(@"C:\tmp\pro.gdb");
