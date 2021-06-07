@@ -93,30 +93,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ThemeManager\ArcGIS\EsriLicenseInitializer.cs">
-      <Link>ArcGIS\EsriLicenseInitializer.cs</Link>
-    </Compile>
-    <Compile Include="..\ThemeManager\ArcGIS\EsriLicenseManager.cs">
-      <Link>ArcGIS\EsriLicenseManager.cs</Link>
-    </Compile>
-    <Compile Include="..\ThemeManager\ArcGIS\EsriMetadata.cs">
-      <Link>ArcGIS\EsriMetadata.cs</Link>
-    </Compile>
-    <Compile Include="..\ThemeManager\ArcGIS\LayerUtilities.cs">
-      <Link>ArcGIS\LayerUtilities.cs</Link>
-    </Compile>
-    <Compile Include="..\ThemeManager\ArcGIS\LicenseInitializer.cs">
-      <Link>ArcGIS\LicenseInitializer.cs</Link>
-    </Compile>
-    <Compile Include="..\ThemeManager\ArcGIS\LicenseInitializer.Designer.cs">
-      <Link>ArcGIS\LicenseInitializer.Designer.cs</Link>
-    </Compile>
-    <Compile Include="..\ThemeManager\ArcGIS\MapUtilities.cs">
-      <Link>ArcGIS\MapUtilities.cs</Link>
-    </Compile>
-    <Compile Include="..\ThemeManager\ArcGIS\ThemeBuilder.cs">
-      <Link>ArcGIS\ThemeBuilder.cs</Link>
-    </Compile>
     <Compile Include="..\ThemeManager\Extensions\LinqExtensions.cs">
       <Link>Extensions\LinqExtensions.cs</Link>
     </Compile>
@@ -134,6 +110,9 @@
     </Compile>
     <Compile Include="..\ThemeManager\Model\SearchParameters.cs">
       <Link>Model\SearchParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager\Model\ThemeBuilder.cs">
+      <Link>Model\ThemeBuilder.cs</Link>
     </Compile>
     <Compile Include="..\ThemeManager\Model\ThemeData.cs">
       <Link>Model\ThemeData.cs</Link>

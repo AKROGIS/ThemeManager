@@ -107,7 +107,7 @@
     <Compile Include="LicenseInitializer.Designer.cs" />
     <Compile Include="MapUtilities.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ThemeBuilder.cs" />
+    <Compile Include="ThemeManagerLayer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
