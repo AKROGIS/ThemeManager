@@ -170,18 +170,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArcGIS\EsriLicenseManager.cs" />
-    <Compile Include="ArcGIS\LayerUtilities.cs" />
-    <Compile Include="ArcGIS\MapUtilities.cs" />
-    <Compile Include="ArcGIS\ThemeBuilder.cs" />
     <Compile Include="Model\DateRange.cs" />
-    <Compile Include="ArcGIS\EsriLicenseInitializer.cs" />
-    <Compile Include="ArcGIS\EsriMetadata.cs" />
     <Compile Include="Extensions\FormExtensions.cs" />
-    <Compile Include="ArcGIS\LicenseInitializer.cs" />
-    <Compile Include="ArcGIS\LicenseInitializer.Designer.cs">
-      <DependentUpon>LicenseInitializer.cs</DependentUpon>
-    </Compile>
     <Compile Include="Extensions\LinqExtensions.cs" />
     <Compile Include="Extensions\NativeMethods.cs" />
     <Compile Include="UI\Forms\AboutForm.cs">
@@ -456,7 +446,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ArcGIS10x\ArcGIS10x.csproj">
+      <Project>{27ca5cf4-3a56-4efb-8daf-293b365cac4a}</Project>
+      <Name>ArcGIS10x</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>

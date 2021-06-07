@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tm", "tm\tm.csproj", "{28C3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProTM", "Pro\ProTM.csproj", "{7EDEAF5B-1192-49BF-BA82-EDF9F9A78740}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcGIS10x", "ArcGIS10x\ArcGIS10x.csproj", "{27CA5CF4-3A56-4EFB-8DAF-293B365CAC4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,14 @@ Global
 		{7EDEAF5B-1192-49BF-BA82-EDF9F9A78740}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7EDEAF5B-1192-49BF-BA82-EDF9F9A78740}.Release|x86.ActiveCfg = Release|Any CPU
 		{7EDEAF5B-1192-49BF-BA82-EDF9F9A78740}.Release|x86.Build.0 = Release|Any CPU
+		{27CA5CF4-3A56-4EFB-8DAF-293B365CAC4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27CA5CF4-3A56-4EFB-8DAF-293B365CAC4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27CA5CF4-3A56-4EFB-8DAF-293B365CAC4A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{27CA5CF4-3A56-4EFB-8DAF-293B365CAC4A}.Debug|x86.Build.0 = Debug|Any CPU
+		{27CA5CF4-3A56-4EFB-8DAF-293B365CAC4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27CA5CF4-3A56-4EFB-8DAF-293B365CAC4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27CA5CF4-3A56-4EFB-8DAF-293B365CAC4A}.Release|x86.ActiveCfg = Release|Any CPU
+		{27CA5CF4-3A56-4EFB-8DAF-293B365CAC4A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
