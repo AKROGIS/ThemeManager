@@ -1,7 +1,7 @@
 ﻿using ESRI.ArcGIS;
 using ESRI.ArcGIS.esriSystem;
-using NPS.AKRO.ThemeManager.Properties;
-using NPS.AKRO.ThemeManager.UI.Forms;
+//using NPS.AKRO.ThemeManager.Properties;
+//using NPS.AKRO.ThemeManager.UI.Forms;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,7 +11,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 {
     internal delegate void LmCallback();
 
-    static class EsriLicenseManager
+    static public class EsriLicenseManager
     {
         //Uncomment the first for Version ArcGIS 9.3, uncomment the second for ArcGIS 10
         //private static EsriLicenseInitializer _AOLicenseInitializer = new EsriLicenseInitializer();
@@ -58,11 +58,13 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         /// </summary>
         public static bool StartWithDialog()
         {
-            LoadingForm _dialog = new LoadingForm();
-            _dialog.Message = "Checking for an ArcGIS license.";
-            _dialog.Command = _dialog.LoadLicense;
-            _dialog.ShowDialog();
-            return Running;
+            // Make Start() a Cancelable Async call and handle dialog in Caller
+            //LoadingForm _dialog = new LoadingForm();
+            //_dialog.Message = "Checking for an ArcGIS license.";
+            //_dialog.Command = _dialog.LoadLicense;
+            //_dialog.ShowDialog();
+            //return Running;
+            return Start();
         }
 
         /// <summary>
@@ -112,8 +114,11 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                     //version 10 change:
                     RuntimeManager.Bind(ProductCode.Desktop);
 
-                    _AOLicenseInitializer.InitializeLowerProductFirst = Settings.Default.CheckForArcViewBeforeArcInfo;
+                    // TODO: Modernize License handler.  If this setting is still needed pass in a parameter from caller
+                    //_AOLicenseInitializer.InitializeLowerProductFirst = Settings.Default.CheckForArcViewBeforeArcInfo;
+                    _AOLicenseInitializer.InitializeLowerProductFirst = false;
 
+                    //TODO: Drop support for ARCGIS10.6-
                     //Uncomment Additional license/extensions you want to check out
 #if ARCGIS_10_1PLUS            
                     esriLicenseProductCode[] products = new[]

@@ -1,6 +1,5 @@
 using ESRI.ArcGIS;
-using System;
-using System.Windows.Forms;
+using System; 
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {
@@ -15,19 +14,20 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
     {
         if (RuntimeManager.Bind(ProductCode.EngineOrDesktop))
             return;
-        
-      //  ProductCode[] supportedRuntimes = new[]
-      //{ 
-      //  ProductCode.Desktop,
-      //  ProductCode.Engine,
-      //};
-      //foreach (ProductCode c in supportedRuntimes)
-      //{
-      //  if (RuntimeManager.Bind(c))
-      //    return;
-      //}
 
-      MessageBox.Show("Unable to find ArcGIS v10.  Some features will not work correctly.");
+            //  ProductCode[] supportedRuntimes = new[]
+            //{ 
+            //  ProductCode.Desktop,
+            //  ProductCode.Engine,
+            //};
+            //foreach (ProductCode c in supportedRuntimes)
+            //{
+            //  if (RuntimeManager.Bind(c))
+            //    return;
+            //}
+
+            // TODO: Remove dependency on Win Forms
+            System.Windows.Forms.MessageBox.Show("Unable to find ArcGIS v10.  Some features will not work correctly.");
     }
   }
 }

@@ -1,7 +1,7 @@
 ﻿using ESRI.ArcGIS.Catalog;
 using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
-using NPS.AKRO.ThemeManager.UI.Forms;
+//using NPS.AKRO.ThemeManager.UI.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +9,7 @@ using System.IO;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {
-    class EsriMetadata
+    public class EsriMetadata
     {
         private static Dictionary<string, string> _cache = new Dictionary<string, string>();
         private static GxCatalog _catalog;
@@ -243,15 +243,17 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         private static void LoadWithCatalogShowDialog(string path)
         {
-            LoadingForm _dialog = new LoadingForm();
-            _dialog.Message = "Loading ArcCatalog to try and find metadata.";
-            _dialog.Path = path;
-            _dialog.Command = _dialog.LoadMetadataWithCatalog;
-            _dialog.ShowDialog();
+            // Make LoadWithCatalog(path) and Cancelable Async call and handle dialog in Caller
+            //LoadingForm _dialog = new LoadingForm();
+            //_dialog.Message = "Loading ArcCatalog to try and find metadata.";
+            //_dialog.Path = path;
+            //_dialog.Command = _dialog.LoadMetadataWithCatalog;
+            //_dialog.ShowDialog();
+            LoadWithCatalog(path);
         }
 
         //may be called by a background thread with the "Loading" dialog
-        internal static void LoadWithCatalog(string path)
+        public static void LoadWithCatalog(string path)
         {
             Trace.TraceInformation("{0}:   Begin get ESRI Metadata With Catalog for {1}", DateTime.Now, path); Stopwatch time = new Stopwatch(); time.Start();
 
