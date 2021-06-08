@@ -1123,8 +1123,6 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.WebBrowser webBrowser;
-        private ESRI.ArcGIS.Controls.AxMapControl mapControl;
-        private ESRI.ArcGIS.Controls.AxToolbarControl mapToolbar;
         private System.Windows.Forms.HelpProvider helpProvider1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;

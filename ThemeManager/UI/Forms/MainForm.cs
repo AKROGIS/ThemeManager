@@ -1,5 +1,3 @@
-using ESRI.ArcGIS.Controls;
-using ESRI.ArcGIS.SystemUI;
 using Microsoft.Win32;
 using NPS.AKRO.ThemeManager.ArcGIS;
 using NPS.AKRO.ThemeManager.Extensions;
@@ -1128,184 +1126,35 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
         #region ArcGIS Preview Page
 
+        private PreviewPage _previewPage;
         private void DisplayPreview(TmNode node)
         {
             Trace.TraceInformation("Display map preview for node: " + (node == null ? "null" : node.ToString()));
 
+            if (_previewPage == null)
+            {
+                _previewPage = new PreviewPage(tabPage5, this);
+            }
+
             if (node == null || node.IsCategory || node.IsThemeList)
             {
-                ShowTextInPreviewPage("Select a theme");
+                _previewPage.ShowText("Select a theme");
             }
             else
             {
                 if (node.HasDataToPreview)
                 {
-                    if (mapControl == null)
-                    {
-                        try
-                        {
-                            CreateMapControl();
-                        }
-                        catch (Exception ex)
-                        {
-                            Trace.TraceError("Unable to create ESRI mapControl\n" + ex);
-                            mapControl = null;
-                        }
-                    }
-                    if (mapControl == null)
-                    {
-                        ShowTextInPreviewPage("Unable to initialize the ArcGIS Viewer.");
-                    }
-                    else
-                    {
-                        ShowMapInPreviewPage();
-                        string msg = LoadMapFileInPreviewControl(node.Data.Path);
-                        if (!string.IsNullOrEmpty(msg))
-                        {
-                            ShowTextInPreviewPage(msg);
-                        }
-                    }
+                    _previewPage.ShowMap(node.Data.Path);
                 }
                 else
                 {
-                    ShowTextInPreviewPage("Theme cannot be previewed, please select another theme");
-                }
+                    _previewPage.ShowText("Theme cannot be previewed, please select another theme");
+                }            }
             }
-        }
-
-        private void ShowTextInPreviewPage(string text)
-        {
-            if (tabPage5.Controls[0] != previewLabel)
-            {
-                tabPage5.Controls.Clear();
-                tabPage5.Controls.Add(previewLabel);
-            }
-            previewLabel.Text = text;
-        }
-
-        private void ShowMapInPreviewPage()
-        {
-            if (mapControl == null)
-                throw new Exception("mapControl is null");
-            if (mapToolbar == null)
-                throw new Exception("mapToolbar is null");
-            if (tabPage5.Controls[0] != mapToolbar)
-            {
-                tabPage5.Controls.Clear();
-                tabPage5.Controls.Add(mapToolbar);
-                tabPage5.Controls.Add(mapControl);
-            }
-        }
-
-        private void CreateMapControl()
-        {
-            Trace.TraceInformation("{0}: Start of CreateMapControl()", DateTime.Now); Stopwatch time = Stopwatch.StartNew();
-            ShowTextInPreviewPage("Loading preview image...");
-
-            if (!EsriLicenseManager.Running)
-                EsriLicenseManager.Start(true);
-            if (!EsriLicenseManager.Running)
-                throw new Exception("Could not initialize an ArcGIS license. \n" + EsriLicenseManager.Message);
-
-            Trace.TraceInformation("{0}: CreateMapControl()- Got License - Elapsed time: {1}", DateTime.Now, time.Elapsed);
-
-            mapToolbar = new AxToolbarControl();
-            ((ISupportInitialize)mapToolbar).BeginInit();
-            mapToolbar.Name = "mapToolbar";
-            //mapToolbar.Anchor = (AnchorStyles)(AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right);
-            mapToolbar.Location = new Point(0, 0);
-            mapToolbar.Size = new Size(600, 28);
-            //AutoScaleDimensions = new System.Drawing.SizeF(6f, 13F);
-            //AutoScaleMode = AutoScaleMode.Font;
-            ((ISupportInitialize)mapToolbar).EndInit();
-
-            mapControl = new AxMapControl();
-            ((ISupportInitialize)mapControl).BeginInit();
-            mapControl.Name = "mapControl";
-            mapControl.Anchor = (AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right);
-            mapControl.Location = new Point(0, 28);
-            mapControl.Size = new Size(tabPage5.ClientSize.Width, tabPage5.ClientSize.Height - 28);
-            ResizeBegin += MapViewer_ResizeBegin;
-            ResizeEnd += MapViewer_ResizeEnd;
-            ((ISupportInitialize)mapControl).EndInit();
-
-            // I can't add items until it is activated in a parent control
-            ShowMapInPreviewPage();
-            mapToolbar.AddItem("esriControls.ControlsMapZoomInTool", -1, -1, true, 0, esriCommandStyles.esriCommandStyleIconOnly);
-            mapToolbar.AddItem("esriControls.ControlsMapZoomOutTool", -1, -1, false, 0, esriCommandStyles.esriCommandStyleIconOnly);
-            mapToolbar.AddItem("esriControls.ControlsMapPanTool", -1, -1, false, 0, esriCommandStyles.esriCommandStyleIconOnly);
-            mapToolbar.AddItem("esriControls.ControlsMapFullExtentCommand", -1, -1, false, 0, esriCommandStyles.esriCommandStyleIconOnly);
-            mapToolbar.AddItem("esriControls.ControlsMapZoomToLastExtentBackCommand", -1, -1, false, 0, esriCommandStyles.esriCommandStyleIconOnly);
-            mapToolbar.AddItem("esriControls.ControlsMapZoomToLastExtentForwardCommand", -1, -1, false, 0, esriCommandStyles.esriCommandStyleIconOnly);
-
-            //tocControl.SetBuddyControl(mapControl);
-            mapToolbar.SetBuddyControl(mapControl);
-
-            time.Stop(); Trace.TraceInformation("{0}: End of CreateMapControl() - Elapsed time: {1}", DateTime.Now, time.Elapsed);
-        }
-
-        private void MapViewer_ResizeBegin(object sender, EventArgs e)
-        {
-            mapControl.SuppressResizeDrawing(true, 0);
-        }
-
-        private void MapViewer_ResizeEnd(object sender, EventArgs e)
-        {
-            mapControl.SuppressResizeDrawing(false, 0);
-        }
-
-        private string LoadMapFileInPreviewControl(string fileName)
-        {
-            string msg = string.Empty;
-            if (File.Exists(fileName))
-            {
-                string ext = Path.GetExtension(fileName).ToLower();
-                if (ext == ".mxd")
-                {
-                    if (mapControl.CheckMxFile(fileName))
-                    {
-                        try
-                        {
-                            mapControl.LoadMxFile(fileName);
-                            mapControl.Extent = mapControl.FullExtent;
-                        }
-                        catch (Exception ex)
-                        {
-                            msg = "ESRI Map Control generated an error.\nFile: " + fileName + "\nError: " + ex;
-                        }
-                    }
-                    else
-                        msg = "Map document not valid: " + fileName;
-                }
-                else
-                    if (ext == ".lyr")
-                    {
-                        try
-                        {
-                            mapControl.ClearLayers();
-                            mapControl.SpatialReference = null;
-                            mapControl.AddLayerFromFile(fileName);
-                            mapControl.get_Layer(0).Visible = true; //Make sure the layer is visible
-                            //Set the Spatial Ref to match the current layer, not the previous layer.
-                            //mapControl.SpatialReference = mapControl.get_Layer(0).SpatialReference;
-                            mapControl.Extent = mapControl.FullExtent;
-                        }
-                        catch (Exception ex)
-                        {
-                            msg = "ESRI Map Control generated an error.\nFile: " + fileName +"\nError: "+ex;
-                        }
-                    }
-                    else
-                        msg = "File must be a map document (.mxd) or a layer file (.lyr): " + fileName;
-            }
-            else
-                msg = "File not found: " + fileName;
-            return msg;
-        }
 
         #endregion
 
-        #region Properties Page
+            #region Properties Page
 
         private PropertiesForm propertiesForm;
 
