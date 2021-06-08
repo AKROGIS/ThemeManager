@@ -68,10 +68,15 @@ As of 2021-06-07 `ThemeManager\Model\StyleSheets.cs` "uses"
 ## Map Controls
 
 `ThemeManager\UI\Forms\MainForm.cs` has the following ArcObjects
-references. This should be moved to the ArcGIS namespace.
+references. This should be moved to the ArcGIS namespace. (Done 2021-06-07)
 
 * using ESRI.ArcGIS.Controls;
   * `AxToolbarControl()` at 1212
   * `AxMapControl()` at line 1222
 * using ESRI.ArcGIS.SystemUI;
   * `esriCommandStyles` on lines 1234 to 1239
+
+As of 2021-06-07 `ThemeManager\UI\Forms\Main.cs` "uses"
+`NPS.AKRO.ThemeManager.ArcGIS`.
+
+* `PreviewPage` created and used on lines 1129 to 1155.

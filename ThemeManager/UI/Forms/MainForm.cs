@@ -1127,6 +1127,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         #region ArcGIS Preview Page
 
         private PreviewPage _previewPage;
+
         private void DisplayPreview(TmNode node)
         {
             Trace.TraceInformation("Display map preview for node: " + (node == null ? "null" : node.ToString()));
@@ -1149,12 +1150,13 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 else
                 {
                     _previewPage.ShowText("Theme cannot be previewed, please select another theme");
-                }            }
+                }
             }
+        }
 
         #endregion
 
-            #region Properties Page
+        #region Properties Page
 
         private PropertiesForm propertiesForm;
 

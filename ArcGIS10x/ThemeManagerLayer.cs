@@ -74,7 +74,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         }
 
-        public TmLayer(ILayer layer)
+        internal TmLayer(ILayer layer)
         {
             _layer = layer;
             Initialize(_layer);
