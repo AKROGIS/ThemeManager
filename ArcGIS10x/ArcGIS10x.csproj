@@ -74,6 +74,9 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ESRI.ArcGIS.MetadataEditor">
+      <HintPath>.\ESRI.ArcGIS.MetadataEditor.dll</HintPath>
+    </Reference>
     <Reference Include="ESRI.ArcGIS.System, Version=10.8.0.0, Culture=neutral, PublicKeyToken=8fc3cc631e44ad86, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -102,6 +105,7 @@
     <Compile Include="EsriLicenseInitializer.cs" />
     <Compile Include="EsriLicenseManager.cs" />
     <Compile Include="EsriMetadata.cs" />
+    <Compile Include="GisInterface.cs" />
     <Compile Include="LayerUtilities.cs" />
     <Compile Include="LicenseInitializer.cs" />
     <Compile Include="LicenseInitializer.Designer.cs" />

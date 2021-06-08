@@ -1,9 +1,9 @@
 # ArcGIS Dependencies
 
 Most ArcGIS dependent code is in the `ThemeManager\ArcGIS` folder in the
-`NPS.AKRO.ThemeManager.ArcGIS` namepspace. However all of this code is dependent
-on ArcObjects. This namespace should be broken out into a class libary and a
-similar version of the library built for Pro, and for no GIS.
+`NPS.AKRO.ThemeManager.ArcGIS` namespace. However all of this code is dependent
+on ArcObjects. This namespace should be broken out into a class library (Done
+2021-06-07) and a similar version of the library built for Pro, and for no GIS.
 
 **Note:** The line numbers are for files circa May 2021 (commit `a757bb0`)
 
@@ -36,7 +36,7 @@ Pro and the ArcObjects development libraries available.
 
 `ThemeManager\Model\StyleSheets.cs` references the ArcGIS metadata
 library directly on lines 108 to 120. This should be moved to the
-ArcGIS namespace.
+ArcGIS namespace. (Done 2021-06-07)
 
 * ArcObjects
 
@@ -58,6 +58,12 @@ ArcGIS namespace.
   var esri = new ArcGIS.Desktop.Internal.Metadata.XsltExtFunctions();
   return ArcGIS.Desktop.Internal.Metadata.XsltExtFunctions.GetResString(match.Groups[1].Value);
   ```
+
+As of 2021-06-07 `ThemeManager\Model\StyleSheets.cs` "uses"
+`NPS.AKRO.ThemeManager.ArcGIS`.
+
+* `GisInterface.EsriProcessingArguments()` on line 62
+* `GisInterface.CleanEsriMetadataHtml(htmlText)` on line 85
 
 ## Map Controls
 

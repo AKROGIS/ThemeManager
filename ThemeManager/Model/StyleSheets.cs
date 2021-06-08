@@ -1,10 +1,10 @@
-﻿using NPS.AKRO.ThemeManager.Properties;
+﻿using NPS.AKRO.ThemeManager.ArcGIS;
+using NPS.AKRO.ThemeManager.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.XPath;
@@ -59,7 +59,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 XsltArgumentList xslArgList;
                 try
                 {
-                    xslArgList = EsriLibraryAvailable ? EsriProcessingArguments() : new XsltArgumentList();
+                    xslArgList = EsriLibraryAvailable ? GisInterface.EsriProcessingArguments() : new XsltArgumentList();
                 }
                 catch (FileNotFoundException)
                 {
@@ -82,44 +82,10 @@ namespace NPS.AKRO.ThemeManager.Model
                 htmlText = textWriter.ToString();
 
                 if (EsriStyleSheet) {
-                    // Use Regex to replace the localizable elements <res:xxx /> with the localized text
-                    var pattern = @"<res:(\w+)(?:\s?|\s\S*\s)/>";
-                    htmlText = Regex.Replace(htmlText, pattern, EsriLocalize, RegexOptions.None, TimeSpan.FromSeconds(0.25));
-                    // The following 2 fixes should be done in the stylesheets, and are only required(?) in the Esri Stylesheets
-                    //Add DOCTYPE
-                    htmlText = htmlText.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>",
-                        "<?xml version=\"1.0\" encoding=\"utf-8\"?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
-                    //Fix Thumbnail centering
-                    htmlText = htmlText.Replace(".noThumbnail {", ".noThumbnail {display:inline-block;");
+                    htmlText = GisInterface.CleanEsriMetadataHtml(htmlText);
                 }
             }
             return htmlText;
-        }
-
-        private static XsltArgumentList EsriProcessingArguments()
-        {
-            // Custom Esri extensions are needed to process the Esri Stylesheets
-            // This is based on examination of the Stylesheets and the Esri Libraries
-            // I could not find this documented by Esri, so it may be subject to change without notice
-            XsltArgumentList xslArgList = new XsltArgumentList();
-#if PRO
-            //This library requires .net framework 4.6.1, and it conflicts with other Desktop libraries
-            //So, to use this, all the project references (and using) all need to be changed to the match the Pro SDK
-            var esri = new ArcGIS.Desktop.Metadata.Editor.XsltExtensionFunctions();
-#else
-            var esri = new ESRI.ArcGIS.Metadata.Editor.XsltExtensionFunctions();
-#endif
-            xslArgList.AddExtensionObject("http://www.esri.com/metadata/", esri);
-            xslArgList.AddExtensionObject("http://www.esri.com/metadata/res/", esri);
-            return xslArgList;
-        }
-        private static string EsriLocalize(Match match)
-        {
-#if PRO
-            return ArcGIS.Desktop.Metadata.Editor.XsltExtensionFunctions.GetResString(match.Groups[1].Value);
-#else
-            return ESRI.ArcGIS.Metadata.Editor.XsltExtensionFunctions.GetResString(match.Groups[1].Value);
-#endif
         }
 
         private XslCompiledTransform GetCachedXslt()
