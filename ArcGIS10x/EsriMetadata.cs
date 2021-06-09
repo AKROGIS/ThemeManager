@@ -14,7 +14,12 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private static Dictionary<string, string> _cache = new Dictionary<string, string>();
         private static GxCatalog _catalog;
 
-        public static string GetContentsAsXml(string datapath)
+        internal async static Task<string> GetContentsAsXmlAsync(string datapath)
+        {
+            return await Task.Run( () => GetContentsAsXml(datapath) );
+        }
+
+        private static string GetContentsAsXml(string datapath)
         {
             if (datapath == null)
                 throw new ArgumentNullException("datapath");
@@ -226,8 +231,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             return null;
         }
 
-        //may be called by a background thread with the "Loading" dialog
-        public static void LoadWithCatalog(string path)
+        private static void LoadWithCatalog(string path)
         {
             Trace.TraceInformation("{0}:   Begin get ESRI Metadata With Catalog for {1}", DateTime.Now, path); Stopwatch time = new Stopwatch(); time.Start();
 

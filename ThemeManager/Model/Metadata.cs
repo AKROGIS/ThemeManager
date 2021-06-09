@@ -955,7 +955,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 }
                 if (Type == MetadataType.EsriDataPath)
                 {
-                    contents = EsriMetadata.GetContentsAsXml(Path);
+                    contents = GisInterface.GetMetadataAsXmlAsync(Path).Result;
                     Format = MetadataFormat.Xml;
                 }
                 if (Type == MetadataType.Url)

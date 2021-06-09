@@ -54,6 +54,10 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             throw new ApplicationException("Path is not a ArcGIS 10.x layer file or map document");
         }
 
+        public static async Task<string> GetMetadataAsXmlAsync(string path)
+        {
+            return await EsriMetadata.GetContentsAsXmlAsync(path);
+        }
     }
 }
 

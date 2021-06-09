@@ -192,19 +192,6 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             return null;
         }
 
-        internal string LoadMetadataWithCatalog(BackgroundWorker bw, TmNode node, string path)
-        {
-            try
-            {
-                EsriMetadata.LoadWithCatalog(path);
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-        }
-
         internal string LoadLicense(BackgroundWorker bw, TmNode node, string path)
         {
             try //Protect against ESRI assembly not found errors

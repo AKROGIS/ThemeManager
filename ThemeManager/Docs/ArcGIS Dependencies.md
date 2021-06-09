@@ -84,7 +84,7 @@ As of 2021-06-07 `ThemeManager\UI\Forms\Main.cs` "uses"
 ## After Refactoring on 2021-06-07
 
 * `ThemeManager\Model\Metadata.cs`
-  * `EsriMetadata.GetContentsAsXml(Path)` on line 958
+  * `GisInterface.GetMetadataAsXmlAsync(path)` on line 958
 * `ThemeManager\Model\StyleSheets.cs`
   * `GisInterface.EsriProcessingArguments()` on line 62
   * `GisInterface.CleanEsriMetadataHtml(htmlText)` on line 85
@@ -92,7 +92,6 @@ As of 2021-06-07 `ThemeManager\UI\Forms\Main.cs` "uses"
   * `GisInterface.ParseItemAtPathAsGisLayer(path) -> IGisLayer` on line 24
   * `IGisLayer` used throughout the file to create a node hierarchy.
 * `ThemeManager\UI\Forms\LoadingForm.cs`
-  * `EsriMetadata.LoadWithCatalog(path)` on lines 199
   * `EsriLicenseManager.Start()` on lines 212
   * `EsriLicenseManager.Message` on lines 215
 * `ThemeManager\UI\Forms\MainForm.cs`
