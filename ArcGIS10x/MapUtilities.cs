@@ -26,7 +26,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             return _mapDocument.IsMapDocument[file];
         }
 
-        public static IMapDocument GetMapDocumentFromFileName(string file)
+        internal static IMapDocument GetMapDocumentFromFileName(string file)
         {
             if (!InitLayerFile(file))
                 throw new Exception("Map file is not valid.");

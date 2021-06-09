@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {
-    public class EsriMetadata
+    class EsriMetadata
     {
         private static Dictionary<string, string> _cache = new Dictionary<string, string>();
         private static GxCatalog _catalog;
