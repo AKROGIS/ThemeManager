@@ -177,9 +177,10 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 bw.ReportProgress((int)(100 * (float)index / count));
                 try
                 {
+                    // This is on a cancellable background thread, so we do the async work synchronously
                     // node.ReloadTheme() may need to load to query ArcObjects
                     // which could throw any number of exceptions.
-                    node.ReloadTheme();
+                    node.ReloadThemeAsync().RunSynchronously();
                 }
                 catch (Exception ex)
                 {

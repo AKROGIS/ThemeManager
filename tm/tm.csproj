@@ -42,6 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\ThemeManager\Extensions\FileAsync.cs">
+      <Link>Extensions\FileAsync.cs</Link>
+    </Compile>
     <Compile Include="..\ThemeManager\Extensions\LinqExtensions.cs">
       <Link>Extensions\LinqExtensions.cs</Link>
     </Compile>

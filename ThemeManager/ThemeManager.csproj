@@ -106,6 +106,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\FileAsync.cs" />
     <Compile Include="Model\DateRange.cs" />
     <Compile Include="Extensions\FormExtensions.cs" />
     <Compile Include="Extensions\LinqExtensions.cs" />

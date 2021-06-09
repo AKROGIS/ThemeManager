@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using NPS.AKRO.ThemeManager.ArcGIS;
 
 namespace NPS.AKRO.ThemeManager.Model
 {
     static class ThemeBuilder
     {
-        internal static void BuildThemesForLayerFile(TmNode node)
+        internal static async Task BuildThemesForLayerFileAsync(TmNode node)
         {
-            BuildThemesForNode(node);
+            await BuildThemesForNodeAsync(node);
         }
 
-        internal static void BuildSubThemesForMapDocument(TmNode node)
+        internal static async Task BuildSubThemesForMapDocumentAsync(TmNode node)
         {
-            BuildThemesForNode(node);
+            await BuildThemesForNodeAsync(node);
         }
 
-        private static void BuildThemesForNode(TmNode tmNode)
+        private static async Task BuildThemesForNodeAsync(TmNode tmNode)
         {
             IGisLayer layer;
             try
@@ -32,34 +33,35 @@ namespace NPS.AKRO.ThemeManager.Model
             tmNode.Data.Type = layer.DataType;
             if (layer.IsGroup)
             {
-                BuildSubThemesForGroupLayer(tmNode, layer);
+                await BuildSubThemesForGroupLayerAsync(tmNode, layer);
             }
             else
                 BuildThemeDataForLayer(tmNode.Data, layer);
             layer.Close();
         }
 
-        private static void BuildSubThemesForGroupLayer(TmNode node, IGisLayer layer)
+        private static async Task BuildSubThemesForGroupLayerAsync(TmNode node, IGisLayer layer)
         {
             foreach (var sublayer in layer.SubLayers)
             {
-                BuildSubThemeForLayer(node, sublayer);
+                //TODO: Build in parallel
+                await BuildSubThemeForLayerAsync(node, sublayer);
             }
         }
 
-        private static void BuildSubThemeForLayer(TmNode node, IGisLayer subLayer)
+        private static async Task BuildSubThemeForLayerAsync(TmNode node, IGisLayer subLayer)
         {
             ThemeData data = new ThemeData(null, subLayer.DataType);
             if (subLayer.IsGroup)
             {
                 TmNode newNode = new TmNode(TmNodeType.Theme, subLayer.Name, node, data, null, null, null);
                 node.Add(newNode);
-                BuildSubThemesForGroupLayer(newNode, subLayer);
+                await BuildSubThemesForGroupLayerAsync(newNode, subLayer);
             }
             else
             {
                 BuildThemeDataForLayer(data, subLayer);
-                Metadata md = Metadata.FromDataSource(data);
+                Metadata md = await Metadata.FromDataSourceAsync(data);
                 TmNode newNode = new TmNode(TmNodeType.Theme, subLayer.Name, node, data, md, null, null);
                 node.Add(newNode);
             }

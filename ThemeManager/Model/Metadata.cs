@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -137,17 +136,15 @@ namespace NPS.AKRO.ThemeManager.Model
         /// </summary>
         /// <remarks>
         /// This method will guess the metadata Path, Type and Format based on Esri conventions
-        /// and file existence. It will check the file system for a file which will block,
-        /// and could take significant time in unusual circumstances: missing drive, network
-        /// connection problems, drive asleep, etc.  I wish it could be non-blocking, but there
-        /// is no Async version of this wrapper on a system call, and we need to check several
-        /// different paths to ensure we do not miss existing metadata for a datasource.
-        /// In general it will be quite fast and has not ben shown to be a problem yet.
+        /// and file existence. It is Async, because Iit will check the file system for a file
+        /// and/or directory existance which will block, and could take significant time in unusual
+        /// circumstances: missing drive, network connection problems, drive asleep, etc. This may
+        /// need to check several different paths to ensure we do not miss existing metadata for a datasource.
         /// This method is only called by ThemeBuilder.cs when the user adds a new data source.
         /// </remarks>
         /// <param name="data">The theme's data source</param>
         /// <returns>a new Metadata object for a theme</returns>
-        internal static Metadata FromDataSource(ThemeData data)
+        internal static async Task<Metadata> FromDataSourceAsync(ThemeData data)
         {
             Metadata newMetadata = new Metadata();
 
@@ -158,7 +155,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
             // General file based metadata
             //   Includes layer files.  if *.lyr.xml exists, it trumps the datasource metadata (for single datasource layers)
-            if (data.Path != null && File.Exists(data.Path + ".xml"))
+            if (data.Path != null && await MyFile .ExistsAsync(data.Path + ".xml"))
             {
                 newMetadata.Path = data.Path + ".xml";
                 newMetadata.Type = MetadataType.FilePath;
@@ -168,7 +165,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
             // General file based metadata
             //   Includes file based raster data, LAS datasets, and others.
-            if (data.DataSource != null && File.Exists(data.DataSource + ".xml"))
+            if (data.DataSource != null && await MyFile.ExistsAsync(data.DataSource + ".xml"))
             {
                 newMetadata.Path = data.DataSource + ".xml";
                 newMetadata.Type = MetadataType.FilePath;
@@ -177,10 +174,10 @@ namespace NPS.AKRO.ThemeManager.Model
             }
 
             // Grids, TINs, and other directory based feature classes
-            if (data.IsRasterBand && data.DataSource != null && Directory.Exists(data.DataSource))
+            if (data.IsRasterBand && data.DataSource != null && await MyDirectory.ExistsAsync(data.DataSource))
             {
                 string metadataPath = System.IO.Path.Combine(data.DataSource, "metadata.xml");
-                if (File.Exists(metadataPath))
+                if (await MyFile.ExistsAsync(metadataPath))
                 {
                     newMetadata.Path = metadataPath;
                     newMetadata.Type = MetadataType.FilePath;
@@ -193,7 +190,7 @@ namespace NPS.AKRO.ThemeManager.Model
             if (data.IsShapefile)
             {
                 string metadataPath = data.DataSource + ".shp.xml";
-                if (File.Exists(metadataPath))
+                if (await MyFile.ExistsAsync(metadataPath))
                 {
                     newMetadata.Path = metadataPath;
                     newMetadata.Type = MetadataType.FilePath;
@@ -206,10 +203,10 @@ namespace NPS.AKRO.ThemeManager.Model
             if (data.IsCoverage && data.WorkspacePath != null && data.Container != null)
             {
                 string coverageDir = System.IO.Path.Combine(data.WorkspacePath, data.Container);
-                if (Directory.Exists(coverageDir))
+                if (await MyDirectory.ExistsAsync(coverageDir))
                 {
                     string metadataPath = System.IO.Path.Combine(coverageDir, "metadata.xml");
-                    if (File.Exists(metadataPath))
+                    if (await MyFile .ExistsAsync(metadataPath))
                     {
                         newMetadata.Path = metadataPath;
                         newMetadata.Type = MetadataType.FilePath;
@@ -223,10 +220,10 @@ namespace NPS.AKRO.ThemeManager.Model
             if (data.IsCad && data.WorkspacePath != null && data.Container != null)
             {
                 string cadFile = System.IO.Path.Combine(data.WorkspacePath, data.Container);
-                if (File.Exists(cadFile))
+                if (await MyFile .ExistsAsync(cadFile))
                 {
                     string metadataPath = cadFile + ".xml";
-                    if (File.Exists(metadataPath))
+                    if (await MyFile .ExistsAsync(metadataPath))
                     {
                         newMetadata.Path = metadataPath;
                         newMetadata.Type = MetadataType.FilePath;
@@ -240,10 +237,10 @@ namespace NPS.AKRO.ThemeManager.Model
             if (data.IsSdc && data.WorkspacePath != null && data.Container != null)
             {
                 string sdcFile = System.IO.Path.Combine(data.WorkspacePath, data.Container);
-                if (File.Exists(sdcFile))
+                if (await MyFile .ExistsAsync(sdcFile))
                 {
                     string metadataPath = sdcFile + ".xml";
-                    if (File.Exists(metadataPath))
+                    if (await MyFile .ExistsAsync(metadataPath))
                     {
                         newMetadata.Path = metadataPath;
                         newMetadata.Type = MetadataType.FilePath;
@@ -275,7 +272,7 @@ namespace NPS.AKRO.ThemeManager.Model
             {
                 string rasterName = System.IO.Path.Combine(data.WorkspacePath, data.Container);
                 string metadataPath = rasterName + ".xml";
-                if (File.Exists(metadataPath))
+                if (await MyFile .ExistsAsync(metadataPath))
                 {
                     newMetadata.Path = metadataPath;
                     newMetadata.Type = MetadataType.FilePath;
@@ -847,9 +844,9 @@ namespace NPS.AKRO.ThemeManager.Model
         /// by a new one. It is much easier to update the existing bound object.
         /// </remarks>
         /// <param name="data">The theme's data source</param>
-        internal void UpdateWithDataSource(ThemeData data)
+        internal async Task UpdateWithDataSourceAsync(ThemeData data)
         {
-            Metadata newMetadata = FromDataSource(data);
+            Metadata newMetadata = await FromDataSourceAsync(data);
             if (Path != null && newMetadata.Path == null)
                 // This item has a non-standard metadata path (set manually), do not delete it.
                 return;
@@ -922,7 +919,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 {
                     Type = MetadataType.Url;
                 }
-                else if (File.Exists(Path))
+                else if (await MyFile.ExistsAsync(Path))
                 {
                     Type = MetadataType.FilePath;
                 }
@@ -952,7 +949,7 @@ namespace NPS.AKRO.ThemeManager.Model
             {
                 if (Type == MetadataType.FilePath)
                 {
-                    contents = File.ReadAllText(Path);
+                    contents = await MyFile.ReadAllTextAsync(Path);
                 }
                 if (Type == MetadataType.EsriDataPath)
                 {

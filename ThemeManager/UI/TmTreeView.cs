@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NPS.AKRO.ThemeManager.UI
@@ -412,10 +413,11 @@ namespace NPS.AKRO.ThemeManager.UI
             return node.TmNode;
         }
 
-        private void PasteAsFiles()
+        private async Task PasteAsFiles()
         {
             TmNode currentNode = GetCurrentTmNode();
             StringCollection files = Clipboard.GetFileDropList();
+            //TODO: Load each file in parallel
             foreach (string file in files)
             {
                 string basename = Path.GetFileNameWithoutExtension(file);
@@ -425,7 +427,7 @@ namespace NPS.AKRO.ThemeManager.UI
                 try
                 {
                     // May need to load to query arc objects which could throw any number of exceptions.
-                    newNode.ReloadTheme(false);
+                    await newNode.ReloadThemeAsync(false);
                 }
                 catch (Exception ex)
                 {
@@ -517,7 +519,7 @@ namespace NPS.AKRO.ThemeManager.UI
         }
 
         //respond to an item dropped in my treeview
-        protected override void OnDragDrop(DragEventArgs e)
+        protected override async void OnDragDrop(DragEventArgs e)
         {
             base.OnDragDrop(e);
             TmTreeNode destinationTreeNode = NodeAtEvent(e);
@@ -583,7 +585,7 @@ namespace NPS.AKRO.ThemeManager.UI
                     try
                     {
                         // May need to load to query arc objects which could throw any number of exceptions.
-                        newNode.ReloadTheme(false);
+                        await newNode.ReloadThemeAsync(false);
                     }
                     catch (Exception ex)
                     {

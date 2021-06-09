@@ -30,7 +30,7 @@ namespace tm
             }
             themeList.SuspendUpdates();
             themeList.Build();
-            Reload(themeList);
+            await ReloadAsync(themeList);
             Console.WriteLine("Saving Updated Theme List");
             themeList.SaveAs(path.Replace(".tml", "1.tml"));
             await SyncAsync(themeList);
@@ -46,17 +46,18 @@ namespace tm
                 null, new ThemeData(path), null, null, null);
         }
 
-        static void Reload(TmNode root)
+        static async Task ReloadAsync(TmNode root)
         {
             List<TmNode> nodes = root.Recurse(x => x.Children)
                                         .Where(n => n.IsTheme)
                                         .ToList();
             Console.WriteLine($"Reloading {nodes.Count} Themes");
+            //TODO: reload nodes in parallel
             foreach (var node in nodes)
             {
                 try
                 {
-                    node.ReloadTheme();
+                    await node.ReloadThemeAsync();
                 }
                 catch (Exception ex)
                 {

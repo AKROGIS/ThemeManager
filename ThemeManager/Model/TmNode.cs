@@ -547,7 +547,7 @@ namespace NPS.AKRO.ThemeManager.Model
             // After Node/metadata is created, a sync should only be done by user.
         }
 
-        private void Data_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private async void Data_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (ThemeList != null)
                 ThemeList.IsDirty = true; //so we know to save
@@ -560,10 +560,10 @@ namespace NPS.AKRO.ThemeManager.Model
                     try
                     {
                         // Update Theme properties (icons, etc) for new data path
-                        SyncThemeDataToPath();
+                        await SyncThemeDataToPathAsync();
                         // Update the metadata object (can't replace because it breaks property binding in forms)
                         // FIXME: May need to repair metadata paths on sub themes as well.
-                        Metadata.UpdateWithDataSource(Data);
+                        await Metadata.UpdateWithDataSourceAsync(Data);
                         // Don't automatically sync metadata attributes.  It may overwrite manually edited Theme data.
                         // User can explicitly ask for a metadata sync if they want it.
                     }
@@ -579,7 +579,7 @@ namespace NPS.AKRO.ThemeManager.Model
             //Do nothing else for Datasource property
         }
 
-        private void SyncThemeDataToPath()
+        private async Task SyncThemeDataToPathAsync()
         {
             Debug.Assert(IsThemeList || IsTheme, "Must be a themelist or theme to change data path");
             if (!IsTheme)
@@ -633,13 +633,13 @@ namespace NPS.AKRO.ThemeManager.Model
             {
                 Data.Type = "ArcMap Document";
                 Trace.TraceInformation("{0}: Start of ThemeBuilder.BuildSubThemesForMapDocument({1}:{2})", DateTime.Now, this, Data.Path); Stopwatch time = Stopwatch.StartNew();
-                ThemeBuilder.BuildSubThemesForMapDocument(this);
+                await ThemeBuilder.BuildSubThemesForMapDocumentAsync(this);
                 time.Stop(); Trace.TraceInformation("{0}: End   of ThemeBuilder.BuildSubThemesForMapDocument() - Elapsed Time: {1}", DateTime.Now, time.Elapsed);
             }
             if (ext == ".lyr")
             {
                 Trace.TraceInformation("{0}: Start of ThemeBuilder.BuildThemesForLayerFile({1}:{2})", DateTime.Now, this, Data.Path); Stopwatch time = Stopwatch.StartNew();
-                ThemeBuilder.BuildThemesForLayerFile(this);
+                await ThemeBuilder.BuildThemesForLayerFileAsync(this);
                 time.Stop(); Trace.TraceInformation("{0}: End   of ThemeBuilder.BuildThemesForLayerFile() - Elapsed Time: {1}", DateTime.Now, time.Elapsed);
             }
         }
@@ -1278,23 +1278,26 @@ namespace NPS.AKRO.ThemeManager.Model
             return results;
         }
 
-        public void ReloadTheme()
+        public async Task ReloadThemeAsync()
         {
-            ReloadTheme(false);
+            await ReloadThemeAsync(false);
         }
 
-        public void ReloadTheme(bool recurse)
+        public async Task ReloadThemeAsync(bool recurse)
         {
             if (IsTheme)
             {
-                SyncThemeDataToPath();
-                Metadata.UpdateWithDataSource(Data);
+                await SyncThemeDataToPathAsync();
+                await Metadata.UpdateWithDataSourceAsync(Data);
                 // Don't automatically sync metadata attributes.  It may overwrite manually edited Theme data.
                 // User can explicitly ask for a metadata sync if they want it.
             }
             if (recurse)
-                foreach (TmNode child in Children)
-                    child.ReloadTheme(true);
+            {
+                // Reload all the children in parallel
+                var tasks = Children.Select(async child => await child.ReloadThemeAsync(true));
+                await Task.WhenAll(tasks);
+            }
         }
 
         internal void UpdateTree()
