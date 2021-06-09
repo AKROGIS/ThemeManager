@@ -40,18 +40,21 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             return html;
         }
 
-        public static IGisLayer ParseItemAtPathAsGisLayer(string path)
+        public static async Task<IGisLayer> ParseItemAtPathAsGisLayerAsync(string path)
         {
-            string ext = System.IO.Path.GetExtension(path).ToLower();
-            if (ext == ".mxd" || ext == ".mxt")
+            return await Task<IGisLayer>.Run(() =>
             {
-                return new TmMap(path);
-            }
-            if (ext == ".lyr")
-            {
-                return new TmLayer(path);
-            }
-            throw new ApplicationException("Path is not a ArcGIS 10.x layer file or map document");
+                string ext = System.IO.Path.GetExtension(path).ToLower();
+                if (ext == ".mxd" || ext == ".mxt")
+                {
+                    return new TmMap(path) as IGisLayer;
+                }
+                if (ext == ".lyr")
+                {
+                    return new TmLayer(path) as IGisLayer;
+                }
+                throw new ApplicationException("Path is not a ArcGIS 10.x layer file or map document");
+            });
         }
 
         public static async Task<string> GetMetadataAsXmlAsync(string path)

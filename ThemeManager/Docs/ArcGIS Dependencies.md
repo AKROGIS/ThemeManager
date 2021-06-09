@@ -89,7 +89,7 @@ As of 2021-06-07 `ThemeManager\UI\Forms\Main.cs` "uses"
   * `GisInterface.EsriProcessingArguments()` on line 62
   * `GisInterface.CleanEsriMetadataHtml(htmlText)` on line 85
 * `ThemeManager\Model\ThemeBuilder.cs`
-  * `GisInterface.ParseItemAtPathAsGisLayer(path) -> IGisLayer` on line 24
+  * `GisInterface.ParseItemAtPathAsGisLayerAsync(path) -> IGisLayer` on line 24
   * `IGisLayer` used throughout the file to create a node hierarchy.
 * `ThemeManager\UI\Forms\LoadingForm.cs`
   * `EsriLicenseManager.Start()` on lines 212

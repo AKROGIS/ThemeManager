@@ -22,7 +22,7 @@ namespace NPS.AKRO.ThemeManager.Model
             IGisLayer layer;
             try
             {
-                layer = GisInterface.ParseItemAtPathAsGisLayer(tmNode.Data.Path);
+                layer = await GisInterface.ParseItemAtPathAsGisLayerAsync(tmNode.Data.Path);
             }
             catch (Exception ex)
             {
