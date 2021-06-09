@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using NPS.AKRO.ThemeManager.ArcGIS;
 using NPS.AKRO.ThemeManager.Extensions;
 using NPS.AKRO.ThemeManager.Model;
@@ -10,7 +11,7 @@ namespace tm
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine("Getting ESRI License");
             EsriLicenseManager.Start(false);
@@ -32,7 +33,7 @@ namespace tm
             Reload(themeList);
             Console.WriteLine("Saving Updated Theme List");
             themeList.SaveAs(path.Replace(".tml", "1.tml"));
-            Sync(themeList);
+            await SyncAsync(themeList);
             Console.WriteLine("Saving Updated Theme List");
             themeList.SaveAs(path.Replace(".tml", "2.tml"));
             Console.WriteLine("Done.");
@@ -73,7 +74,7 @@ namespace tm
             }
             Console.WriteLine("");
         }
-        static void Sync(TmNode root)
+        static async Task SyncAsync(TmNode root)
         {
             List<TmNode> nodes = root.Recurse(x => x.Children)
                             .Where(n => !string.IsNullOrEmpty(n.Metadata.Path))
@@ -84,7 +85,7 @@ namespace tm
             {
                 try
                 {
-                    node.SyncWithMetadata(false);
+                    await node.SyncWithMetadataAsync(false);
                 }
                 catch (Exception ex)
                 {

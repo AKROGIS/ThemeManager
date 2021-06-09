@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NPS.AKRO.ThemeManager.UI.Forms
@@ -109,9 +110,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             node.UpdateTree();
         }
 
-        private void syncThemeButton_Click(object sender, EventArgs e)
+        private async void syncThemeButton_Click(object sender, EventArgs e)
         {
-            SyncTheme(themeDescription.DataBindings["Text"].DataSource as TmNode);
+            await SyncThemeAsync(themeDescription.DataBindings["Text"].DataSource as TmNode);
         }
 
         private void syncThemesButton_Click(object sender, EventArgs e)
@@ -124,7 +125,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             SyncThemes(themelistDescription.DataBindings["Text"].DataSource as TmNode);
         }
 
-        private void SyncTheme(TmNode node)
+        private async Task SyncThemeAsync(TmNode node)
         {
             Debug.Assert(node != null, "There is no bound TMNode for this property panel");
             if (node == null)
@@ -145,7 +146,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 {
                     // May need to load/verify metadata which could throw.
                     // No need to recurse, since we just checked that we have no children.
-                    node.SyncWithMetadata(false); 
+                    await node.SyncWithMetadataAsync(false); 
                 }
                 catch (Exception ex)
                 {

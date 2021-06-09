@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
@@ -616,7 +617,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// </remarks>
         /// <param name="webBrowser"></param>
         /// <param name="styleSheet"></param>
-        internal void Display(WebBrowser webBrowser, StyleSheet styleSheet)
+        internal async Task DisplayAsync(WebBrowser webBrowser, StyleSheet styleSheet)
         {
             Debug.Assert(webBrowser != null, "The WebBrowser control is null");
             if (webBrowser == null)
@@ -626,7 +627,7 @@ namespace NPS.AKRO.ThemeManager.Model
             // GetContentAsText will also try to validate the Type and Format properties.
             // This will not throw an exception, but might return null
             // It will return null if Type = URL and Format in (Html, Text), but that is ok, since we only need the Path
-            string content = GetContentAsText();
+            string content = await GetContentAsTextAsync();
             if (content == null && (Type != MetadataType.Url || Format == MetadataFormat.Xml || Format == MetadataFormat.Undefined))
             {
                 throw new MetadataDisplayException($"Unable to load metadata content: {ErrorMessage}", null);
@@ -690,7 +691,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// <returns>A tuple with Summary, Description, Tags and a Publication date</returns>
         [SuppressMessage("ReSharper", "CommentTypo")]
         [SuppressMessage("ReSharper", "StringLiteralTypo")]
-        internal GeneralInfo GetGeneralInfo()
+        internal async Task<GeneralInfo> GetGeneralInfoAsync()
         {
             string description = null;
             DateTime? publicationDate = null;
@@ -698,7 +699,7 @@ namespace NPS.AKRO.ThemeManager.Model
             string tags = null;
 
             // We can only extract meaningful data from metadata content is an XML document.
-            XDocument xmlMetadata = ContentAsXDocument();
+            XDocument xmlMetadata = await ContentAsXDocumentAsync();
             if (xmlMetadata != null)
             {
                 // The XML content may be in a number of different schemas and version
@@ -810,7 +811,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// </remarks>
         /// <param name="search">the text and searching constraints to use.</param>
         /// <returns>true if the metadata satisfies the search options</returns>
-        internal bool SearchContent(SearchOptions search)
+        internal async Task<bool> SearchContentAsync(SearchOptions search)
         {
             if (search == null)
                 return false;
@@ -821,10 +822,10 @@ namespace NPS.AKRO.ThemeManager.Model
             if (string.IsNullOrEmpty(search.XmlElement))
             {
                 //to search the whole document, we don't need to parse it as XML
-                string content = GetContentAsText();
+                string content = await GetContentAsTextAsync();
                 return content != null && Match(content, search.SearchWords, search.FindAll, search.ComparisonMethod);
             }
-            XDocument xmlMetadata = ContentAsXDocument();
+            XDocument xmlMetadata = await ContentAsXDocumentAsync();
             if (xmlMetadata == null)
                 return false;
             return xmlMetadata.Descendants(search.XmlElement)
@@ -900,7 +901,7 @@ namespace NPS.AKRO.ThemeManager.Model
         /// It may change the Type and Format if they are wrong.
         /// </remarks>
         /// <returns>a text string of the metadata if available or null</returns>
-        private string GetContentAsText()
+        private async Task<string> GetContentAsTextAsync()
         {
             string contents = null;
             ErrorMessage = null;
@@ -955,7 +956,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 }
                 if (Type == MetadataType.EsriDataPath)
                 {
-                    contents = GisInterface.GetMetadataAsXmlAsync(Path).Result;
+                    contents = await GisInterface.GetMetadataAsXmlAsync(Path);
                     Format = MetadataFormat.Xml;
                 }
                 if (Type == MetadataType.Url)
@@ -969,10 +970,10 @@ namespace NPS.AKRO.ThemeManager.Model
                         var uri = new Uri(Path);
                         ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
                         HttpClient client = new HttpClient();
-                        var response = client.GetAsync(uri).Result;
+                        var response = await client.GetAsync(uri);
                         if (response.IsSuccessStatusCode)
                         {
-                            contents = response.Content.ReadAsStringAsync().Result;
+                            contents = await response.Content.ReadAsStringAsync();
                         }
                         else
                         {
@@ -1032,9 +1033,9 @@ namespace NPS.AKRO.ThemeManager.Model
         /// It may change the Type and Format if they are wrong.
         /// </remarks>
         /// <returns>An XDocument or null</returns>
-        private XDocument ContentAsXDocument()
+        private async Task<XDocument> ContentAsXDocumentAsync()
         {
-            string xmlString = GetContentAsText();
+            string xmlString = await GetContentAsTextAsync();
             if (xmlString == null)
             {
                 return null;

@@ -145,7 +145,8 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 {
                     // May need to load/verify metadata which could throw.
                     // No need to recurse because we already have a list of all nodes in this tree
-                    node.SyncWithMetadata(false);
+                    // This is in a cancellable background thread, so we can just wait for the task to finish
+                    node.SyncWithMetadataAsync(false).RunSynchronously();
                 }
                 catch (Exception ex)
                 {

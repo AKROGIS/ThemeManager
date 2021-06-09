@@ -12,6 +12,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
@@ -79,14 +80,14 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             RestoreForm();
         }
 
-        private void MainForm_Shown(object sender, EventArgs e)
+        private async void MainForm_Shown(object sender, EventArgs e)
         {
             if (!Settings.Default.DontShowBetaWarning)
             {
                 WarningForm warning = new WarningForm().CommonInit();
                 warning.ShowDialog(this);
             }
-            RestoreState();
+            await RestoreStateAsync();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -113,7 +114,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
         #region Treeview Events
 
-        private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
+        private async void treeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
             //e.Node maybe null since I have modified behavior of the TMTreeview
             //Debug.Print("TreeView AfterSelect Event - Sender: " + ((TreeView)sender).Name + "\n\tAction: " + e.Action + "\n\tNode: " + e.Node);
@@ -121,7 +122,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             //LoadIfNodeIsUnloadedThemeList(newNode);
             EnableButtonStrip();
             EnableMenuStrip();
-            UpdateInfoDisplay();
+            await UpdateInfoDisplayAsync();
         }
 
 
@@ -218,32 +219,32 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             }
         }
 
-        private void styleSheetComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private async void styleSheetComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateInfoDisplay();
+            await UpdateInfoDisplayAsync();
         }
 
-        private void listsTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        private async void listsTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             _currentTV = CurrentTreeViewFromIndex(listsTabControl.SelectedIndex);
             if (Settings.Default.FocusTreeviewOnTabChange)
             {
                 _currentTV.Focus();
             }
-            UpdateInfoDisplay();
+            await UpdateInfoDisplayAsync();
             EnableButtonStrip();
             EnableMenuStrip();
         }
 
-        private void infoTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        private async void infoTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateInfoDisplay();
+            await UpdateInfoDisplayAsync();
         }
 
-        private void splitContainer_SplitterMoved(object sender, SplitterEventArgs e)
+        private async void splitContainer_SplitterMoved(object sender, SplitterEventArgs e)
         {
             if (InfoPanelBecameExposedSinceLastCheck)
-                UpdateInfoDisplay();
+                await UpdateInfoDisplayAsync();
         }
 
         //State of _areInfoPagesVisible should only be modified by splitter moved events (and initialization)
@@ -839,7 +840,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         }
 
 
-        private void UpdateInfoDisplay()
+        private async Task UpdateInfoDisplayAsync()
         {
             TmNode node = CurrentTMNode;
             int newStyleSheetIndex = styleSheetComboBox.SelectedIndex;
@@ -852,7 +853,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                         if (node == null || node != _previousMetadataNode || newStyleSheetIndex != _previousStyleSheetIndex)
                         {
                             //ShowMetadataSpinner();
-                            DisplayMetadata(node);
+                            await DisplayMetadataAsync(node);
                             //HideMetadataSpinner();
                             _previousMetadataNode = node;
                             _previousStyleSheetIndex = newStyleSheetIndex;
@@ -1000,7 +1001,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         private Uri _cachedStartupUri;
         private string _invalidUriText;
 
-        private void DisplayMetadata(TmNode node)
+        private async Task DisplayMetadataAsync(TmNode node)
         {
             Trace.TraceInformation("Display metadata for node: " + (node == null ? "null" : node.ToString()));
 
@@ -1031,7 +1032,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             {
                 try
                 {
-                    node.Metadata.Display(webBrowser, styleSheetComboBox.SelectedItem as StyleSheet);
+                    await node.Metadata.DisplayAsync(webBrowser, styleSheetComboBox.SelectedItem as StyleSheet);
                 }
                 catch (MetadataDisplayException ex)
                 {
@@ -1356,7 +1357,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             SetTreeViewToolTips();
         }
 
-        private void RestoreState()
+        private async Task RestoreStateAsync()
         {
             // These go quickly, so we don't need a status bar update.
             // status bar updates would require Application.DoEvents() to trigger a form redraw
@@ -1368,7 +1369,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             UpdateSortButton();
             //RestoreThemeLists();
             RestoreThemeListsInBackground();
-            DisplayMetadata(null);
+            await DisplayMetadataAsync(null);
             progressBar.Visible = false;
             statusBar.Text = string.Empty;
         }

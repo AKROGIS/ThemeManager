@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace NPS.AKRO.ThemeManager.Model
@@ -455,7 +456,7 @@ namespace NPS.AKRO.ThemeManager.Model
         //we need to reinitialize the parent after re-serialization
         //until that happens the re-serialized node is an orphan.
         //This also applies to all the decendents below this node
-        
+
         //The solution (Hack) is to use recursion in the Parent set accessor.
         //the parent for the root of the re-serialized node will be set when it
         //is added into the tree somewhere.
@@ -468,7 +469,7 @@ namespace NPS.AKRO.ThemeManager.Model
             get { return _themeList; }
             set {
                 //Debug.Assert(value.Type == TmNodeType.ThemeList, "Setting themelist to a non-themelist node");
-                //themelist will be null for favorites and saved searches. 
+                //themelist will be null for favorites and saved searches.
                 if (value != null && value.Type == TmNodeType.ThemeList)
                     _themeList = value;
                 else
@@ -680,7 +681,7 @@ namespace NPS.AKRO.ThemeManager.Model
             //  ImageIndex = 12: "*TIN*"
             //  ImageIndex = 13: "*AGS*"
             //  ImageIndex = ??: "*SHAPE*" -- ?? = GetShapeImageIndex(sLayerName) = {5, 6, 7, 9, 10}
-            //                      esriGeoDatabase.IFeatureClass.ShapeType = 
+            //                      esriGeoDatabase.IFeatureClass.ShapeType =
             //                          esriGeometryPoint | esriGeometryMultipoint => 6:"Point"
             //                          esriGeometryLine | esriGeometryPolyline | esriGeometryPath => 5:"Line"
             //                          esriGeometryPolygon => 6:"Point" or 10:"RasterCatalog" if esriGeoDatabase.IFeatureClass.FeatureType = esriFTRasterCatalogItem
@@ -954,7 +955,11 @@ namespace NPS.AKRO.ThemeManager.Model
                     case SearchType.PubDate:
                         found = MatchDate(search); break;
                     case SearchType.Metadata:
-                        found = MatchMeta(search); break; //FIXME - since this is in a loop, we may load metadata multiple times
+                        //Searching metadata may require loading the metadata which can be slow.
+                        //A metadata search should only be done on a cancellable background thread.
+                        //Therefore, the MatchMetaAsync can be done synchronously (easier than making the wntire switch async)
+                        //Metadata loading is cached, so even though this is in a loop, metadata will not be loaded more than once.
+                        found = MatchMetaAsync(search).Result; break;
                     default:
                         Debug.WriteLine("Invalid Search Condition");
                         found = false; break;
@@ -1024,11 +1029,11 @@ namespace NPS.AKRO.ThemeManager.Model
             return false;
         }
 
-        private bool MatchMeta(SearchOptions search)
+        private async Task<bool> MatchMetaAsync(SearchOptions search)
         {
             if (!HasMetadata)
                 return false;
-            return Metadata.SearchContent(search);
+            return await Metadata.SearchContentAsync(search);
         }
 
         public void Launch()
@@ -1206,7 +1211,7 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             if (_type != TmNodeType.ThemeList)
                 return null;
-            
+
             // If we return from this routine prematurely, then we do not have a valid datastore
             _status = ThemeListStatus.Created;
 
@@ -1297,9 +1302,9 @@ namespace NPS.AKRO.ThemeManager.Model
             OnReloadNode();
         }
 
-        public void SyncWithMetadata(bool recurse)
+        public async Task SyncWithMetadataAsync(bool recurse)
         {
-            var info = Metadata.GetGeneralInfo();
+            var info = await Metadata.GetGeneralInfoAsync();
             Tags = info.Tags ?? Tags;
             Summary = info.Summary ?? Summary;
             Description = info.Description ?? Description;
@@ -1315,8 +1320,13 @@ namespace NPS.AKRO.ThemeManager.Model
                     PubDate = File.GetLastWriteTime(Data.Path);
             }
             if (recurse)
-                foreach (TmNode child in Children)
-                    child.SyncWithMetadata(true);
+            {
+                // Sync all the children in parallel
+                var tasks = Children.Select(async child => await child.SyncWithMetadataAsync(true));
+                await Task.WhenAll(tasks);
+            }
+
+
         }
 
         #region ICloneable Members
@@ -1371,7 +1381,7 @@ namespace NPS.AKRO.ThemeManager.Model
             if (handle != null && _issueUpdates)
                 handle(this, new PropertyChangedEventArgs(property));
         }
-        
+
         #endregion
 
         [field: NonSerializedAttribute()]

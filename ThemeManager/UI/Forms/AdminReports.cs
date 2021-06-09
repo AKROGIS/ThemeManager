@@ -293,7 +293,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             {
                 string error;
                 try {
-                    theme.Metadata.GetGeneralInfo();
+                    // This is in a cancellable background thread, so we can just wait for each result
+                    // This can ignore the boolean "success" response, because we are checking the error message
+                    var _ = theme.Metadata.GetGeneralInfoAsync().Result;
                     error = theme.Metadata.ErrorMessage;
                 }
                 catch (Exception ex)
