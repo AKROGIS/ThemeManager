@@ -358,9 +358,9 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             CurrentTreeView.Copy();
         }
 
-        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void pasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CurrentTreeView.Paste();
+            await CurrentTreeView.PasteAsync();
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)

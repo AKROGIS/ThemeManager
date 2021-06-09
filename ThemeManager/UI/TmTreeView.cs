@@ -344,7 +344,7 @@ namespace NPS.AKRO.ThemeManager.UI
         }
 
 
-        public void Paste()
+        public async Task PasteAsync()
         {
             if (Clipboard.ContainsData("TmNodeList"))
             {
@@ -357,7 +357,7 @@ namespace NPS.AKRO.ThemeManager.UI
                 return;
             }
             if (Clipboard.ContainsFileDropList())
-                PasteAsFiles();
+                await PasteAsFilesAsync();
         }
 
         //FIXME -  Dont paste a node onto itself
@@ -413,7 +413,7 @@ namespace NPS.AKRO.ThemeManager.UI
             return node.TmNode;
         }
 
-        private async Task PasteAsFiles()
+        private async Task PasteAsFilesAsync()
         {
             TmNode currentNode = GetCurrentTmNode();
             StringCollection files = Clipboard.GetFileDropList();
