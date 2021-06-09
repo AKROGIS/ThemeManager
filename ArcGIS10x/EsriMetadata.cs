@@ -1,11 +1,11 @@
 ﻿using ESRI.ArcGIS.Catalog;
 using ESRI.ArcGIS.esriSystem;
 using ESRI.ArcGIS.Geodatabase;
-//using NPS.AKRO.ThemeManager.UI.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {
@@ -31,19 +31,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 return _cache[datapath];
             return null;
         }
-
-        //public static string ReloadContentsAsXml(string datapath)
-        //{
-        //    if (datapath == null)
-        //        throw new ArgumentNullException("datapath");
-        //    if (datapath == string.Empty)
-        //        throw new ArgumentException("datapath is empty string");
-
-        //    if (_cache.ContainsKey(datapath))
-        //        _cache.Remove(datapath);
-
-        //    return GetContentsAsXml(datapath);
-        //}
 
         private static void Load(string path)
         {
@@ -72,9 +59,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 return;
             }
             // This is reliable, but can be very slow (don't know why)
-            //throw new ApplicationException("About to call catalog on (" + path + ")");
             LoadWithCatalog(path);
-            //LoadWithCatalogShowDialog(path);
         }
 
         private static string GetMetaDataFromFGDB(string path)
@@ -239,17 +224,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 name2 = names.Next();
             }
             return null;
-        }
-
-        private static void LoadWithCatalogShowDialog(string path)
-        {
-            // Make LoadWithCatalog(path) and Cancelable Async call and handle dialog in Caller
-            //LoadingForm _dialog = new LoadingForm();
-            //_dialog.Message = "Loading ArcCatalog to try and find metadata.";
-            //_dialog.Path = path;
-            //_dialog.Command = _dialog.LoadMetadataWithCatalog;
-            //_dialog.ShowDialog();
-            LoadWithCatalog(path);
         }
 
         //may be called by a background thread with the "Loading" dialog
