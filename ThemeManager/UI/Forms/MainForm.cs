@@ -1334,16 +1334,6 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 //I want to avoid overwrite a possibly good session with an empty session
                 SaveSession(); //attached theme lists, favorites, and search results
             SaveSettings();  //form size, picklist index, etc.
-            //Return the ESRI license
-            try //Protect against ESRI assembly not found errors
-            {
-                if (EsriLicenseManager.Running)
-                    EsriLicenseManager.Stop();
-            }
-            catch (Exception ex)
-            {
-                Trace.TraceError("Could not load EsriLicenseManager. " + ex.Message);
-            }
         }
 
         private void RestoreForm()
