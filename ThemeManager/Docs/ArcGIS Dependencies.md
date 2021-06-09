@@ -80,3 +80,26 @@ As of 2021-06-07 `ThemeManager\UI\Forms\Main.cs` "uses"
 `NPS.AKRO.ThemeManager.ArcGIS`.
 
 * `PreviewPage` created and used on lines 1129 to 1155.
+
+## After Refactoring on 2021-06-07
+
+* `ThemeManager\Model\Metadata.cs`
+  * `EsriMetadata.GetContentsAsXml(Path)` on line 958
+* `ThemeManager\Model\StyleSheets.cs`
+  * `GisInterface.EsriProcessingArguments()` on line 62
+  * `GisInterface.CleanEsriMetadataHtml(htmlText)` on line 85
+* `ThemeManager\Model\ThemeBuilder.cs`
+  * `GisInterface.ParseItemAtPathAsGisLayer(path) -> IGisLayer` on line 24
+  * `IGisLayer` used throughout the file to create a node hierarchy.
+* `ThemeManager\UI\Forms\LoadingForm.cs`
+  * `EsriMetadata.LoadWithCatalog(path)` on lines 199
+  * `EsriLicenseManager.Start()` on lines 212
+  * `EsriLicenseManager.Message` on lines 215
+* `ThemeManager\UI\Forms\MainForm.cs`
+  * `PreviewPage` created and used on lines 1129 to 1155.
+  * `EsriLicenseManager.Running` on line 1339
+  * `EsriLicenseManager.Stop()` on lines 1340
+* `tm\Program.cs`
+  * `EsriLicenseManager.Start()` on lines 16
+  * `EsriLicenseManager.Running` on lines 17
+  * `EsriLicenseManager.Message` on lines 19

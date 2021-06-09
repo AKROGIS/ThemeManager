@@ -5,20 +5,17 @@ using System.IO;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {
-
-    //TODO: make TmLayer generic enough to convert Map and Map frame into TmLayer
-    //TODO make TMLayer support Pro layers
-    //Hmm.. Maybe publish an interface, and hide the actual implemntation
-
-    public class TmMap
+    public class TmMap : GisLayer, IGisLayer
     {
-        private IMapDocument _mapDoc;
+        private readonly IMapDocument _mapDoc;
         public TmMap(string path)
         {
             _mapDoc = MapUtilities.GetMapDocumentFromFileName(path);
+            DataType = "ArcMap Document";
+            IsGroup = true;
         }
 
-        public IEnumerable<TmMapFrame> MapFrames
+        public override IEnumerable<IGisLayer> SubLayers
         {
             get
             {
@@ -28,30 +25,25 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             }
         }
 
-        public void Close()
+        public override void Close()
         {
             //TODO: This is lame: GetMapDocumentFromFileName() should close file before returning
             _mapDoc.Close();
         }
     }
 
-    public class TmMapFrame
+    public class TmMapFrame : GisLayer, IGisLayer
     {
-
-        IMap _map;
+        private readonly IMap _map;
         public TmMapFrame(IMap map)
         {
             _map = map;
-        }
-
-        public string Name {
-            get
-            {
-                return _map.Name;
-            }
+            Name = _map.Name;
+            DataType = "Map Frame";
+            IsGroup = true;
         }
     
-        public IEnumerable<TmLayer> Layers
+        public override IEnumerable<IGisLayer> SubLayers
         {
             get
             {
@@ -63,9 +55,9 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
     }
 
-    public class TmLayer
+    public class TmLayer : GisLayer, IGisLayer
     {
-        private ILayer _layer;
+        private readonly ILayer _layer;
 
         public TmLayer(string path)
         {
@@ -80,21 +72,14 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             Initialize(_layer);
         }
 
-        public string DataSource;
-        public string WorkspacePath;
-        public string WorkspaceProgId;
-        public string WorkspaceType;
-        public string Container;
-        public string ContainerType;
-        public string DataSourceName;
-        public string DataSetName;
-        public string DataSetType;
-
         private void Initialize(ILayer layer)
         {
-            // Can be called on any layer type, but it will not get sub layer information
-            // and a lot of info will be lacking if this is not a data layer
-            //LayerUtilities.GetLayerDescriptionFromLayer(layer);
+            // Layer properties
+            Name = layer.Name;
+            DataType =  LayerUtilities.GetLayerDescriptionFromLayer(layer);
+            IsGroup = DataType == "Group Layer";
+
+            // data source properties;
             if (LayerUtilities.HasDataSetName(layer))
             {
                 DataSource = GetDataSourceFullNameFromLayer(layer);
@@ -181,38 +166,15 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             }
             if (string.IsNullOrEmpty(DataSource))
                 DataSource = "!Error - Data source not found";
-
         }
 
-        public void Close()
+        public override void Close()
         {
             //TODO: This is lame: GetLayerFromLayerFile() should close file before returning
             LayerUtilities.CloseOpenLayerFile();
         }
 
-        public string Name
-        {
-            get
-            {
-                return _layer.Name;
-            }
-        }
-        public string DataType
-        {
-            get
-            {
-                return LayerUtilities.GetLayerDescriptionFromLayer(_layer);
-            }
-        }
-        public bool IsGroup
-        {
-            get
-            {
-                return DataType == "Group Layer";
-            }
-        }
-
-        public IEnumerable<TmLayer> SubLayers
+        public override IEnumerable<IGisLayer> SubLayers
         {
             get
             {

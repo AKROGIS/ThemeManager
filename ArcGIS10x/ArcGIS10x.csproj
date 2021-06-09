@@ -102,6 +102,7 @@
     <Compile Include="EsriLicenseManager.cs" />
     <Compile Include="EsriMetadata.cs" />
     <Compile Include="GisInterface.cs" />
+    <Compile Include="IGisLayer.cs" />
     <Compile Include="LayerUtilities.cs" />
     <Compile Include="LicenseInitializer.cs" />
     <Compile Include="LicenseInitializer.Designer.cs" />

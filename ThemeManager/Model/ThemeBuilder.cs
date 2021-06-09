@@ -6,18 +6,27 @@ namespace NPS.AKRO.ThemeManager.Model
 {
     static class ThemeBuilder
     {
-        internal static void BuildThemesForLayerFile(TmNode tmNode)
+        internal static void BuildThemesForLayerFile(TmNode node)
         {
+            BuildThemesForNode(node);
+        }
 
-            TmLayer layer;
+        internal static void BuildSubThemesForMapDocument(TmNode node)
+        {
+            BuildThemesForNode(node);
+        }
+
+        private static void BuildThemesForNode(TmNode tmNode)
+        {
+            IGisLayer layer;
             try
             {
-                layer = new TmLayer(tmNode.Data.Path);
+                layer = GisInterface.ParseItemAtPathAsGisLayer(tmNode.Data.Path);
             }
             catch (Exception ex)
             {
-                Debug.Print("Unable to load layer file: " + tmNode.Data.Path + " " + ex.Message);
-                tmNode.Data.Type = "Unable to load layer file (" + ex.Message + ")";
+                Debug.Print("Unable to load GIS data layers at " + tmNode.Data.Path + " " + ex.Message);
+                tmNode.Data.Type = "Unable to load  GIS data layers (" + ex.Message + ")";
                 return;
             }
             if (layer.IsGroup)
@@ -29,7 +38,7 @@ namespace NPS.AKRO.ThemeManager.Model
             layer.Close();
         }
 
-        private static void BuildSubThemesForGroupLayer(TmNode node, TmLayer layer)
+        private static void BuildSubThemesForGroupLayer(TmNode node, IGisLayer layer)
         {
             foreach (var sublayer in layer.SubLayers)
             {
@@ -37,46 +46,25 @@ namespace NPS.AKRO.ThemeManager.Model
             }
         }
 
-        internal static void BuildSubThemesForMapDocument(TmNode node)
+        private static void BuildSubThemeForLayer(TmNode node, IGisLayer subLayer)
         {
-            var map = new TmMap(node.Data.Path);
-            foreach (var mapFrame in map.MapFrames)
-                BuildSubThemeForMap(node, mapFrame);
-            map.Close();
-        }
-
-        private static void BuildSubThemeForMap(TmNode node, TmMapFrame map)
-        {
-            TmNode newNode = new TmNode(TmNodeType.Theme, map.Name, node, new ThemeData(null, "Map Data Frame"), null, null, null);
-            node.Add(newNode);
-            foreach (var layer in map.Layers)
-            {
-                BuildSubThemeForLayer(newNode, layer);
-            }
-        }
-
-        private static void BuildSubThemeForLayer(TmNode node, TmLayer subLayer)
-        {
+            ThemeData data = new ThemeData(null, subLayer.DataType);
             if (subLayer.IsGroup)
             {
-                TmNode newNode = new TmNode(TmNodeType.Theme, subLayer.Name, node, new ThemeData(null, "Group Layer"), null, null, null);
+                TmNode newNode = new TmNode(TmNodeType.Theme, subLayer.Name, node, data, null, null, null);
                 node.Add(newNode);
                 BuildSubThemesForGroupLayer(newNode, subLayer);
             }
             else
             {
-                string dataType = subLayer.DataType;
-                ThemeData data = new ThemeData(null, subLayer.DataType);
-
                 BuildThemeDataForLayer(data, subLayer);
-
                 Metadata md = Metadata.FromDataSource(data);
                 TmNode newNode = new TmNode(TmNodeType.Theme, subLayer.Name, node, data, md, null, null);
                 node.Add(newNode);
             }
         }
 
-        private static void BuildThemeDataForLayer(ThemeData data, TmLayer layer)
+        private static void BuildThemeDataForLayer(ThemeData data, IGisLayer layer)
         {
             data.DataSource = layer.DataSource;
             data.WorkspacePath = layer.WorkspacePath;

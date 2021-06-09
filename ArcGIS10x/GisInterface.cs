@@ -40,5 +40,20 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             return html;
         }
 
+        public static IGisLayer ParseItemAtPathAsGisLayer(string path)
+        {
+            string ext = System.IO.Path.GetExtension(path).ToLower();
+            if (ext == ".mxd" || ext == ".mxt")
+            {
+                return new TmMap(path);
+            }
+            if (ext == ".lyr")
+            {
+                return new TmLayer(path);
+            }
+            throw new ApplicationException("Path is not a ArcGIS 10.x layer file or map document");
+        }
+
     }
 }
+

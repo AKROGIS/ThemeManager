@@ -1,5 +1,4 @@
-﻿using NPS.AKRO.ThemeManager.ArcGIS;
-using NPS.AKRO.ThemeManager.Extensions;
+﻿using NPS.AKRO.ThemeManager.Extensions;
 using NPS.AKRO.ThemeManager.Model.ThemeList;
 using NPS.AKRO.ThemeManager.Properties;
 using System;
