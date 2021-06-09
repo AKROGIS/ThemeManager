@@ -29,6 +29,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 tmNode.Data.Type = "Unable to load  GIS data layers (" + ex.Message + ")";
                 return;
             }
+            tmNode.Data.Type = layer.DataType;
             if (layer.IsGroup)
             {
                 BuildSubThemesForGroupLayer(tmNode, layer);
