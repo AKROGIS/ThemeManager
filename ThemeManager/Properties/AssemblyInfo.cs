@@ -8,12 +8,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Theme Manager")]
 [assembly: AssemblyDescription("A tool to help organize GIS data")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("National Park Service")]
+[assembly: AssemblyCompany("National Park Service, Alaska Region GIS Team")]
 [assembly: AssemblyProduct("ThemeManager")]
-[assembly: AssemblyCopyright("Copyright © National Park Service 2010-2019")]
+[assembly: AssemblyCopyright("Copyright © National Park Service 2010-2021")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-
 
 [assembly: CLSCompliant(true)]
 
