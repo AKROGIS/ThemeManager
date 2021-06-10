@@ -16,11 +16,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         internal async static Task<string> GetContentsAsXmlAsync(string datapath)
         {
-            return await Task.Run( () => GetContentsAsXml(datapath) );
-        }
-
-        private static string GetContentsAsXml(string datapath)
-        {
             if (datapath == null)
                 throw new ArgumentNullException("datapath");
             if (datapath == string.Empty)
@@ -29,7 +24,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             if (!_cache.ContainsKey(datapath))
             {
                 Trace.TraceInformation("{0}:   Begin Load ESRI Metadata for dataset path: {1}", DateTime.Now, datapath);
-                Load(datapath);
+                await EsriLicense.GetLicenseAsync();
+                await Task.Run(() => Load(datapath));
                 Trace.TraceInformation("{0}:   End   Load ESRI Metadata for dataset path: {1}", DateTime.Now, datapath);
             }
             if (_cache.ContainsKey(datapath))
@@ -39,11 +35,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         private static void Load(string path)
         {
-            if (!EsriLicenseManager.Running)
-                EsriLicenseManager.Start(true);
-            if (!EsriLicenseManager.Running)
-                throw new Exception("Could not initialize an ArcGIS license. \n" + EsriLicenseManager.Message);
-
             //FIXME - test with catalog.  Can ".gdb" be anywhere in path?, can a FGDB extension be changed?
             string text = null;
             if (path.ToLower().Contains(".gdb\\"))

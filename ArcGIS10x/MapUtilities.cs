@@ -1,5 +1,6 @@
 ﻿using ESRI.ArcGIS.Carto;
 using System;
+using System.Threading.Tasks;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {
@@ -7,28 +8,20 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
     {
         private static MapDocument _mapDocument;
 
-        static void GetLicense()
-        {
-            if (!EsriLicenseManager.Running)
-                EsriLicenseManager.Start(true);
-            if (!EsriLicenseManager.Running)
-                throw new Exception("Could not initialize an ArcGIS license. \n" + EsriLicenseManager.Message);
-        }
-
-        private static bool InitLayerFile(string file)
+        private static async Task<bool> InitLayerFileAsync(string file)
         {
             if (_mapDocument == null)
             {
-                GetLicense();
+                await EsriLicense.GetLicenseAsync();
                 _mapDocument = new MapDocumentClass();
             }
             _mapDocument.Open(file);
             return _mapDocument.IsMapDocument[file];
         }
 
-        internal static IMapDocument GetMapDocumentFromFileName(string file)
+        internal static async Task<IMapDocument> GetMapDocumentFromFileNameAsync(string file)
         {
-            if (!InitLayerFile(file))
+            if (!await InitLayerFileAsync(file))
                 throw new Exception("Map file is not valid.");
             return _mapDocument;
         }

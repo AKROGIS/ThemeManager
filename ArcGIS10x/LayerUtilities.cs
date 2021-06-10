@@ -6,6 +6,7 @@ using ESRI.ArcGIS.Geoprocessing;
 using ESRI.ArcGIS.GISClient;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {
@@ -13,19 +14,11 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
     {
         private static LayerFile _layerFile;
 
-        private static void GetLicense()
-        {
-            if (!EsriLicenseManager.Running)
-                EsriLicenseManager.Start(true);
-            if (!EsriLicenseManager.Running)
-                throw new Exception("Could not initialize an ArcGIS license. \n" + EsriLicenseManager.Message);
-        }
-
-        private static bool InitLayerFile(string file)
+        private static async Task<bool> InitLayerFileAsync(string file)
         {
             if (_layerFile == null)
             {
-                GetLicense();
+                await EsriLicense.GetLicenseAsync();
                 _layerFile = new LayerFileClass();
             }
             //doesn't hurt, and ensures that any layer file left open is closed.
@@ -38,9 +31,9 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             return _layerFile.Layer != null;
         }
 
-        internal static ILayer GetLayerFromLayerFile(string file)
+        internal static async Task<ILayer> GetLayerFromLayerFileAsync(string file)
         {
-            if (!InitLayerFile(file))
+            if (!await InitLayerFileAsync(file))
                 throw new Exception("!Error - Layer file (" + file + ") is not valid.");
             return _layerFile.Layer;
         }

@@ -14,10 +14,10 @@ namespace tm
         static async Task Main(string[] args)
         {
             Console.WriteLine("Getting ESRI License");
-            EsriLicenseManager.Start(false);
-            if (!EsriLicenseManager.Running)
+            await GisInterface.InitializeAsync();
+            if (!GisInterface.IsInitialized)
             {
-                Console.WriteLine($"Could not initialize an ArcGIS license. {EsriLicenseManager.Message}");
+                Console.WriteLine($"Could not initialize an ArcGIS license. {GisInterface.Status}");
                 return;
             }
             var path = args[0];

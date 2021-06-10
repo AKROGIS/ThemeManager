@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
@@ -37,13 +38,13 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             _defaultControl.Text = text;
         }
 
-        public void ShowMap(string path)
+        public async Task ShowMapAsync(string path)
         {
             if (mapControl == null)
             {
                 try
                 {
-                    CreateMapControl();
+                    await CreateMapControlAsync();
                 }
                 catch (Exception ex)
                 {
@@ -81,15 +82,12 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             }
         }
 
-        private void CreateMapControl()
+        private async Task CreateMapControlAsync()
         {
             Trace.TraceInformation("{0}: Start of CreateMapControl()", DateTime.Now); Stopwatch time = Stopwatch.StartNew();
             ShowText("Loading preview image...");
 
-            if (!EsriLicenseManager.Running)
-                EsriLicenseManager.Start(true);
-            if (!EsriLicenseManager.Running)
-                throw new Exception("Could not initialize an ArcGIS license. \n" + EsriLicenseManager.Message);
+            await EsriLicense.GetLicenseAsync();
 
             Trace.TraceInformation("{0}: CreateMapControl()- Got License - Elapsed time: {1}", DateTime.Now, time.Elapsed);
 

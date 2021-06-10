@@ -98,14 +98,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EsriLicenseInitializer.cs" />
-    <Compile Include="EsriLicenseManager.cs" />
+    <Compile Include="EsriLicense.cs" />
     <Compile Include="EsriMetadata.cs" />
     <Compile Include="GisInterface.cs" />
     <Compile Include="IGisLayer.cs" />
     <Compile Include="LayerUtilities.cs" />
-    <Compile Include="LicenseInitializer.cs" />
-    <Compile Include="LicenseInitializer.Designer.cs" />
     <Compile Include="MapUtilities.cs" />
     <Compile Include="PreviewPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

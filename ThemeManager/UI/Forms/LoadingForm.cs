@@ -1,5 +1,4 @@
-﻿using NPS.AKRO.ThemeManager.ArcGIS;
-using NPS.AKRO.ThemeManager.Extensions;
+﻿using NPS.AKRO.ThemeManager.Extensions;
 using NPS.AKRO.ThemeManager.Model;
 using System;
 using System.Collections.Generic;
@@ -194,19 +193,5 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             return null;
         }
 
-        internal string LoadLicense(BackgroundWorker bw, TmNode node, string path)
-        {
-            try //Protect against ESRI assembly not found errors
-            {
-                if (EsriLicenseManager.Start())
-                    return null;
-                else
-                    return "Unable to initialize an ArcGIS license.\n" + EsriLicenseManager.Message;
-            }
-            catch (Exception ex)
-            {
-                return "Unable to initialize an ArcGIS license.\n" + ex.Message;
-            }
-        }
     }
 }

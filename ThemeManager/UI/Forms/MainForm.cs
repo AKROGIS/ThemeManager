@@ -863,7 +863,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                         if (node == null || node != _previousPreviewNode)
                         {
                             //ShowPreviewSpinner();
-                            DisplayPreview(node);
+                            await DisplayPreviewAsync(node);
                             //HidePreviewSpinner();
                             _previousPreviewNode = node;
                         }
@@ -1129,7 +1129,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
         private PreviewPage _previewPage;
 
-        private void DisplayPreview(TmNode node)
+        private async Task DisplayPreviewAsync(TmNode node)
         {
             Trace.TraceInformation("Display map preview for node: " + (node == null ? "null" : node.ToString()));
 
@@ -1146,7 +1146,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             {
                 if (node.HasDataToPreview)
                 {
-                    _previewPage.ShowMap(node.Data.Path);
+                    await _previewPage.ShowMapAsync(node.Data.Path);
                 }
                 else
                 {

@@ -61,6 +61,20 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         {
             return await EsriMetadata.GetContentsAsXmlAsync(path);
         }
+
+        public static bool IsInitialized => EsriLicense.IsRunning;
+
+        public static string Status => EsriLicense.Message;
+
+        public static async Task<bool> InitializeAsync()
+        {
+            return await Task.Run(() => { return EsriLicense.Start(); });
+        }
+
+        //TODO: Make this an observable property, and have the main form monitor it
+        // display a progressing dialog or message on main form if message is not null
+        public static string ProgressorMessage { get; internal set; }
+
     }
 }
 

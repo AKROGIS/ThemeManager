@@ -10,7 +10,9 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private readonly IMapDocument _mapDoc;
         public TmMap(string path)
         {
-            _mapDoc = MapUtilities.GetMapDocumentFromFileName(path);
+            //FIXME: This will block the UI thread while waiting for a license
+            // Move Async call out of ctor.
+            _mapDoc = MapUtilities.GetMapDocumentFromFileNameAsync(path).Result;
             DataType = "ArcMap Document";
             IsGroup = true;
         }
@@ -61,7 +63,9 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         public TmLayer(string path)
         {
-            var _layer = LayerUtilities.GetLayerFromLayerFile(path);
+            //FIXME: This will block the UI thread while waiting for a license
+            // Move Async call out of ctor.
+            var _layer = LayerUtilities.GetLayerFromLayerFileAsync(path).Result;
             Initialize(_layer);
 
         }

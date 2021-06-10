@@ -81,24 +81,19 @@ As of 2021-06-07 `ThemeManager\UI\Forms\Main.cs` "uses"
 
 * `PreviewPage` created and used on lines 1129 to 1155.
 
-## After Refactoring on 2021-06-07
+## After Refactoring on 2021-06-08
 
 * `ThemeManager\Model\Metadata.cs`
-  * `GisInterface.GetMetadataAsXmlAsync(path)` on line 958
+  * `GisInterface.GetMetadataAsXmlAsync(path)` on line 956
 * `ThemeManager\Model\StyleSheets.cs`
   * `GisInterface.EsriProcessingArguments()` on line 62
   * `GisInterface.CleanEsriMetadataHtml(htmlText)` on line 85
 * `ThemeManager\Model\ThemeBuilder.cs`
-  * `GisInterface.ParseItemAtPathAsGisLayerAsync(path) -> IGisLayer` on line 24
+  * `GisInterface.ParseItemAtPathAsGisLayerAsync(path) -> IGisLayer` on line 25
   * `IGisLayer` used throughout the file to create a node hierarchy.
-* `ThemeManager\UI\Forms\LoadingForm.cs`
-  * `EsriLicenseManager.Start()` on lines 212
-  * `EsriLicenseManager.Message` on lines 215
 * `ThemeManager\UI\Forms\MainForm.cs`
-  * `PreviewPage` created and used on lines 1129 to 1155.
-  * `EsriLicenseManager.Running` on line 1339
-  * `EsriLicenseManager.Stop()` on lines 1340
+  * `PreviewPage` created and used on lines 1130 to 1156.
 * `tm\Program.cs`
-  * `EsriLicenseManager.Start()` on lines 16
-  * `EsriLicenseManager.Running` on lines 17
-  * `EsriLicenseManager.Message` on lines 19
+  * `GisInterface.InitializeAsync()` on lines 17
+  * `GisInterface.IsInitialized` on lines 18
+  * `GisInterface.Status` on lines 20
