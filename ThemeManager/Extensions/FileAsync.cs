@@ -14,10 +14,10 @@ namespace NPS.AKRO.ThemeManager.Extensions
         /// </remarks>
         /// <param name="filePath">Filesystem path to a text file</param>
         /// <returns></returns>
-        public static async Task<string> ReadAllTextAsync(string filePath)
+        public static async Task<string> ReadAllTextAsync(string filePath, Encoding encoding = null)
         {
             var sb = new StringBuilder();
-
+            if (encoding == null) encoding = Encoding.UTF8;
             using (var sourceStream =
                 new FileStream(
                     filePath,
@@ -29,7 +29,7 @@ namespace NPS.AKRO.ThemeManager.Extensions
                 int numRead;
                 while ((numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
                 {
-                    string text = Encoding.Unicode.GetString(buffer, 0, numRead);
+                    string text = encoding.GetString(buffer, 0, numRead);
                     sb.Append(text);
                 }
             }
