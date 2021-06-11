@@ -636,7 +636,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 await ThemeBuilder.BuildSubThemesForMapDocumentAsync(this);
                 time.Stop(); Trace.TraceInformation("{0}: End   of ThemeBuilder.BuildSubThemesForMapDocument() - Elapsed Time: {1}", DateTime.Now, time.Elapsed);
             }
-            if (ext == ".lyr")
+            if (ext == ".lyr" || ext == ".lyrx")
             {
                 Trace.TraceInformation("{0}: Start of ThemeBuilder.BuildThemesForLayerFile({1}:{2})", DateTime.Now, this, Data.Path); Stopwatch time = Stopwatch.StartNew();
                 await ThemeBuilder.BuildThemesForLayerFileAsync(this);
