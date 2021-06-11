@@ -107,7 +107,9 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private void Initialize()
         {
             Name = _layer.Name;
-            DataType = _layer.GetType().ToString().Replace("CIM", "");
+            DataType = ClassTypeAsLayerType(_layer.GetType().ToString());
+            //TODO: ThemeManager expects a richer DataType than this.
+            // i.e. "Feature Layer, FileGeodatabase (compressed), Point
             if (_layer is CIMBasicFeatureLayer layer1) { InitBasicFeature(layer1); return; };
             if (_layer is CIMBuildingDisciplineLayer layer2) { InitBuildingDiscipline(layer2); return; };
             if (_layer is CIMBuildingDisciplineSceneLayer layer3) { InitBuildingDisciplineScene(layer3); return; };
@@ -233,6 +235,19 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             if (Container == null)
                 return Path.Combine(WorkspacePath, DataSourceName);
             return Path.Combine(WorkspacePath, Container, DataSourceName);
+        }
+
+        private string ClassTypeAsLayerType(string typeString)
+        {
+            var start = typeString.LastIndexOf('.') + 1;
+            var length = typeString.Length - start;
+            var result = typeString;
+            if (start > 0 && length > 0)
+            {
+                result = typeString.Substring(start, length);
+            }
+            result = result.Replace("CIM", "").Replace("Layer", " Layer");
+            return result;
         }
     }
 }

@@ -636,11 +636,17 @@ namespace NPS.AKRO.ThemeManager.Model
                 await ThemeBuilder.BuildSubThemesForMapDocumentAsync(this);
                 time.Stop(); Trace.TraceInformation("{0}: End   of ThemeBuilder.BuildSubThemesForMapDocument() - Elapsed Time: {1}", DateTime.Now, time.Elapsed);
             }
-            if (ext == ".lyr" || ext == ".lyrx")
+            if (ext == ".lyr")
             {
-                Trace.TraceInformation("{0}: Start of ThemeBuilder.BuildThemesForLayerFile({1}:{2})", DateTime.Now, this, Data.Path); Stopwatch time = Stopwatch.StartNew();
+                Data.Type = "ArcGIS 10.x Layer File";
+                // Data.Type will be improved if this layer can be read; i.e. this is the 10.x version of TM
                 await ThemeBuilder.BuildThemesForLayerFileAsync(this);
-                time.Stop(); Trace.TraceInformation("{0}: End   of ThemeBuilder.BuildThemesForLayerFile() - Elapsed Time: {1}", DateTime.Now, time.Elapsed);
+            }
+            if (ext == ".lyrx")
+            {
+                Data.Type = "ArcGIS Pro Layer File";
+                // Data.Type will be improved if this layer can be read; i.e. this is the Pro version of TM
+                await ThemeBuilder.BuildThemesForLayerFileAsync(this);
             }
         }
 
@@ -765,7 +771,7 @@ namespace NPS.AKRO.ThemeManager.Model
             //Added to match esriGeometryType and esriDataSourceType Enums
             if (datatype.Contains("POINT"))
                 return "_point";  //6
-            if (datatype.Contains("LINE") || datatype.Contains("ARC"))
+            if (datatype.Contains("LINE") || (datatype.Contains("ARC") && !datatype.Contains("ARCGIS") && !datatype.Contains("ARCMAP")))
                 return "_line"; //5
             if (datatype.Contains("RING") || datatype.Contains("POINT"))
                 return "_poly";  //6

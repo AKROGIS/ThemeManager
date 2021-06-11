@@ -27,7 +27,8 @@ namespace NPS.AKRO.ThemeManager.Model
             catch (Exception ex)
             {
                 Debug.Print("Unable to load GIS data layers at " + tmNode.Data.Path + " " + ex.Message);
-                tmNode.Data.Type = "Unable to load  GIS data layers (" + ex.Message + ")";
+                // The caller set a default type. Do not return too much info, it may generate an unexpected icon.
+                tmNode.Data.Type += "; Unable to load.";
                 return;
             }
             tmNode.Data.Type = layer.DataType;
