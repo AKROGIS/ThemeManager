@@ -1,5 +1,6 @@
 ﻿using ArcGIS.Core.Hosting;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
@@ -26,13 +27,13 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         internal static string Message { get; private set; }
 
-        internal static bool Start()
+        internal static async Task<bool> StartAsync()
         {
             if (!IsRunning & !_failed)
             {
                 try
                 {
-                    Host.Initialize();
+                    await StartSTATask(() => Host.Initialize());
                     _license = true;
                 }
                 catch (Exception ex)
@@ -61,11 +62,33 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             if (!IsRunning)
             {
                 GisInterface.ProgressorMessage = "Checking for ArcGIS Pro License...";
-                await Task.Run(() => { Start(); });
+                await StartAsync();
                 GisInterface.ProgressorMessage = null;
             }
             if (!IsRunning)
                 throw new Exception("Could not initialize an ArcGIS license. \n" + Message);
+        }
+
+        //Credit: https://stackoverflow.com/a/35351613/542911
+        //See post for an option for a task that returns a result
+        public static Task StartSTATask(Action func)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    func();
+                    tcs.SetResult(null);
+                }
+                catch (Exception e)
+                {
+                    tcs.SetException(e);
+                }
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            return tcs.Task;
         }
 
     }

@@ -65,7 +65,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         public static async Task<bool> InitializeAsync()
         {
-            return await Task.Run(() => { return EsriLicense.Start(); });
+            return await EsriLicense.StartAsync();
         }
 
         //TODO: Make this an observable property, and have the main form monitor it
