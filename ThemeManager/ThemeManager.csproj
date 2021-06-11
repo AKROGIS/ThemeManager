@@ -385,9 +385,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NoGis\NoGis.csproj">
-      <Project>{21c2e0f2-5f64-4378-b12c-b5097dcc1aa0}</Project>
-      <Name>NoGis</Name>
+    <ProjectReference Include="..\ArcGIS10x\ArcGIS10x.csproj">
+      <Project>{27ca5cf4-3a56-4efb-8daf-293b365cac4a}</Project>
+      <Name>ArcGIS10x</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

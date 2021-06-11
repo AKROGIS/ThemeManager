@@ -49,11 +49,14 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 {
                     return new TmMap(path) as IGisLayer;
                 }
-                if (ext == ".lyr")
+                else if (ext == ".lyr")
                 {
                     return new TmLayer(path) as IGisLayer;
                 }
-                throw new ApplicationException("Path is not a ArcGIS 10.x layer file or map document");
+                else
+                {
+                    throw new ApplicationException("Path is not a ArcGIS 10.x layer file or map document");
+                }
             });
         }
 
