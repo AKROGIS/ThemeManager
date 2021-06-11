@@ -42,7 +42,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         {
             var index = path.ToLower().IndexOf(@".gdb\") + 4; 
             var gdbPath = path.Substring(0, index);
-            var datasetPath = path.Substring(index, path.Length);
+            var datasetPath = path.Substring(index, path.Length - index);
             var gdb = new Fgdb(gdbPath);
             await gdb.OpenAsync();
             string xml = await gdb.GetMetadataAsync(datasetPath);
