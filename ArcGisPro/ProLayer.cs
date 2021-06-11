@@ -51,12 +51,15 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 WorkspaceType = _proxy.WorkspaceType;
 
             }
-            if (_layerDoc.Layers.Length > 1)
+            else if (_layerDoc.Layers.Length > 1)
             {
                 IsGroup = true;
                 DataType = "Group Layer";
             }
-            throw new ApplicationException("The layer file to have less than 1 layer");
+            else
+            {
+                throw new ApplicationException("The layer file to have less than 1 layer");
+            }
         }
 
         public override IEnumerable<IGisLayer> SubLayers
