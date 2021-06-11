@@ -43,15 +43,15 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         public static async Task<IGisLayer> ParseItemAtPathAsGisLayerAsync(string path)
         {
-            return await Task<IGisLayer>.Run(() =>
+            string ext = System.IO.Path.GetExtension(path).ToLower();
+            if (ext == ".lyrx")
             {
-                string ext = System.IO.Path.GetExtension(path).ToLower();
-                if (ext == ".lyrx")
-                {
-                    return new ProLayerDoc(path) as IGisLayer;
-                }
-                throw new ApplicationException("Path is not a ArcGIS Pro layer file");
-            });
+
+                var lyrx = new ProLayerDoc(path);
+                await lyrx.OpenAsync();
+                return lyrx;
+            }
+            throw new ApplicationException("Path is not a ArcGIS Pro layer file");
         }
 
         public static async Task<string> GetMetadataAsXmlAsync(string path)
