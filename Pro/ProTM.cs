@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ThemeManager
 {
@@ -13,15 +15,44 @@ namespace ThemeManager
 
         //[STAThread] must be present on the Application entry point
         [STAThread]
-        static void Main(string[] args)
+        // for testing async initialize
+        static async Task Main(string[] args)
+        //static void Main(string[] args)
         {
             //Call Host.Initialize before constructing any objects from ArcGIS.Core
-            Host.Initialize();
+            // must be called on the main thread; the following does not work:
+            // System.Exception: Host must be initialized on an STA Thread
+            //await Task.Run(() => Host.Initialize());
+            // See https://stackoverflow.com/a/35351613/542911 for how to starting a task on a STA thread
+            await StartSTATask(() => Host.Initialize());
+            //Host.Initialize();
 
             //InspectLayerFile(@"C:\tmp\plants.lyrx");
             //InspectLayerFolder(@"C:\tmp\ThemeMgrPro");
             //TestFGDB();
             TestMetadataStyling();
+        }
+
+        //Credit: https://stackoverflow.com/a/35351613/542911
+        //See post for an option for a task that returns a result
+        public static Task StartSTATask(Action func)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    func();
+                    tcs.SetResult(null);
+                }
+                catch (Exception e)
+                {
+                    tcs.SetException(e);
+                }
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            return tcs.Task;
         }
 
         static void TestMetadataStyling()
