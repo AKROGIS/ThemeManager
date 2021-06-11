@@ -57,10 +57,12 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         string DataSetType { get; }
         /// <summary>
         /// Is this a "group" GIS Layer; i.e. is it the parent for a set of GIS (sub) Layers
+        /// default is false
         /// </summary>
         bool IsGroup { get; }
         /// <summary>
         /// A collection of GIS Layers when this GIS Layer is a group
+        /// default is an empty list
         /// </summary>
         IEnumerable<IGisLayer> SubLayers { get; }
 
