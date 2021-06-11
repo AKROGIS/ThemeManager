@@ -35,7 +35,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             // If a layer doc has only one layer, pose as that layer, otherwise pose as a group layer
             if (_layerDoc.Layers.Length == 1)
             {
-                _proxy = new ProLayer(_layerDoc, _layerDoc.Layers[0]);
+                _proxy = new ProLayer(_path, _layerDoc, _layerDoc.Layers[0]);
 
                 Container = _proxy.Container;
                 ContainerType = _proxy.ContainerType;
@@ -68,7 +68,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             {
                 if (_proxy == null)
                 {
-                    return _layerDoc.Layers.Select(l => new ProLayer(_layerDoc, l));
+                    return _layerDoc.Layers.Select(l => new ProLayer(_path, _layerDoc, l));
                 }
                 else
                 {
@@ -79,11 +79,13 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
     }
     public class ProLayer : GisLayer, IGisLayer
     {
+        private readonly string _path;
         private readonly CIMLayerDocument _layerDoc;
         private readonly CIMDefinition _layer;
         private IEnumerable<string> _subLayers;
-        public ProLayer(CIMLayerDocument doc, string uri)
+        public ProLayer(string path, CIMLayerDocument doc, string uri)
         {
+            _path = path;
             _layerDoc = doc;
             _layer = doc.LayerDefinitions.FirstOrDefault(l => l.URI == uri);
             Initialize();
@@ -99,7 +101,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 }
                 else
                 {
-                    return _subLayers.Select(l => new ProLayer(_layerDoc, l));
+                    return _subLayers.Select(l => new ProLayer(_path, _layerDoc, l));
                 }
             }
         }
@@ -207,7 +209,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             DataSetName = connection.Dataset;
             DataSetType = connection.DatasetType.ToString();
             DataSourceName = connection.Dataset;
-            WorkspacePath = connection.WorkspaceConnectionString.Replace("DATABASE=", "");
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
             WorkspaceProgId = connection.WorkspaceFactory.ToString();
             WorkspaceType = connection.WorkspaceFactory.ToString();
             DataSource = BuildFullDataSourceName();
@@ -221,7 +223,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             DataSetName = connection.Dataset;
             DataSetType = connection.DatasetType.ToString();
             DataSourceName = connection.Dataset;
-            WorkspacePath = connection.WorkspaceConnectionString.Replace("DATABASE=", "");
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
             WorkspaceProgId = connection.WorkspaceFactory.ToString();
             WorkspaceType = connection.WorkspaceFactory.ToString();
             DataSource = BuildFullDataSourceName();
@@ -248,6 +250,25 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             }
             result = result.Replace("CIM", "").Replace("Layer", " Layer");
             return result;
+        }
+
+        private string FixWorkspacePath(string conn)
+        {
+            if (conn.StartsWith("DATABASE="))
+            {
+                var path = conn.Replace("DATABASE=", "");
+                // path may be a relative path
+                if (path.StartsWith("."))
+                {
+                    var savedCWD = Environment.CurrentDirectory;
+                    Environment.CurrentDirectory = Path.GetDirectoryName(_path);
+                    path = Path.GetFullPath(path);
+                    Environment.CurrentDirectory = savedCWD;
+                    return path;
+                }
+            }
+            // return everything else, could be a naked path (TIN), or SDE connection string, or ???
+            return conn;
         }
     }
 }
