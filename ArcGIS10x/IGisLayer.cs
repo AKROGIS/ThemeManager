@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {
     /// <summary>
@@ -12,59 +11,140 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
     public interface IGisLayer
     {
         /// <summary>
-        /// A descriptive label for the GIS Layer as it should appear in the UI
-        /// </summary>
-        string Name { get; }
-        /// <summary>
-        /// This is the type of the GIS Layer, not the data in the layer
-        /// </summary>
-        string DataType { get; }
-        /// <summary>
-        /// The URL or full path to the data; often Join(WorkspacePath, Container, DataSourceName)
-        /// </summary>
-        string DataSource { get; }
-        /// <summary>
-        /// A GIS system specific string to a container of GIS data, could be a URL or file system path, or Database connnection string.
-        /// </summary>
-        string WorkspacePath { get; }
-        /// <summary>
-        /// The class name of the workspace, required to query some GIS systems (i.e. ArcObjects)
-        /// </summary>
-        string WorkspaceProgId { get; }
-        /// <summary>
-        /// The type of the workspace, used for interpreting the Workspace Path.
-        /// </summary>
-        string WorkspaceType { get; }
-        /// <summary>
-        /// A container for data sources in a workspace.  Also known as a feature dataset
+        /// The name of the container in a workspace that holds the data. Could be the name of a feature dataset
+        /// in a geodatabase or coverage, or the name of a raster with multiple bands of data.
+        /// This is a property of the data pointed to by a layer. It may be null. The nullity should match ContainerType
+        /// It is persisted in the Container property of ThemeData (in the Data property of a TmNode)
+        /// It is used in many places in Metadata.cs to Path.Combine with WorkspacePath to look for metadata.
+        /// For some types of data, it is part of the DataSource property.
         /// </summary>
         string Container { get; }
+
         /// <summary>
-        /// What type of container is this?
+        /// A string for the type of container.  Historically (from ArcObjects), this was either "RasterDataset" 
+        /// or "FeatureDataset".
+        /// This is a property of the data pointed to by a layer. It may be null. The nullity should match Container
+        /// It is persisted in the ContainerType property of ThemeData (in the Data property of a TmNode)
+        /// It is not used by Theme Manager.
         /// </summary>
         string ContainerType { get; }
+
         /// <summary>
-        /// 
-        /// </summary>
-        string DataSourceName { get; }
-        /// <summary>
-        /// 
+        /// This was typically the same as the DataSourceName, but obtained in a different way (Because ArcObjects is confusing).
+        /// Historically (ArcObjects) this is the name property of an object that implments the IDatasetName interface
+        /// https://desktop.arcgis.com/en/arcobjects/latest/net/webframe.htm#IDatasetName.htm
+        /// This is a property of the data pointed to by a layer. It may be null. The nullity should match DataSetType
+        /// It is persisted in the DataSetName property of ThemeData (in the Data property of a TmNode)
+        /// It is not used by Theme Manager.
         /// </summary>
         string DataSetName { get; }
+
         /// <summary>
-        /// This is the type of the GIS data in the GIS Layer (could be null for a group layer).
+        /// This is a string describing the type of the data in the layer.  It could be null (e.g. group layers) 
+        /// 
+        /// Historically (in ArcObjects) this was the type of a layer that implemented IDataset. It would be the string value
+        /// of one of the enumerations in https://desktop.arcgis.com/en/arcobjects/latest/net/webframe.htm#esriDatasetType.htm
+        /// with "esriDT" removed.
+        /// This is a property of the data pointed to by a layer. It may be null. The nullity should match DataSetName
+        /// It is persisted in the DataSetType property of ThemeData (in the Data property of a TmNode)
+        /// It is used once in ThemeData.cs to clasify the Data object when the value is "RasterBand".
         /// </summary>
         string DataSetType { get; }
+
+        /// <summary>
+        /// This is the "path" to the data in the layer. It is usually a URL or the full path to the data; often
+        ///  by combining WorkspacePath, Container, and DataSourceName.
+        /// This is a property of the data pointed to by a layer. It may be null.
+        /// It is persisted in the DataSource property of ThemeData (in the Data property of a TmNode)
+        /// It is presented and editable in the UI as the Data Source.  It is an observed property.
+        /// It is used in TMNode to help determine the Iconography if the string starts with "http".
+        /// It is used in ThemeData.cs to classify the Data object when the string starts with "http" and ends with one of "/MapServer", "FeatureServer", or "/ImageServer".
+        /// It is used in Metadata.cs to find and set the metadata path (in a geodatabase, it is the metadata path)
+        /// </summary>
+        string DataSource { get; }
+
+        /// <summary>
+        /// The short name (without the workspace) of the data in the layer. It is the last component in the DataSource.
+        /// This is a property of the data pointed to by a layer. It may be null.
+        /// It is persisted in the DataSourceName property of ThemeData (in the Data property of a TmNode)
+        /// It is used once in Metadata.cs to remove itself from the DataSource for RasterBand Metadata path.
+        /// </summary>
+        string DataSourceName { get; }
+
+        /// <summary>
+        /// This is a combination of the "type" of the GIS Layer and the "type" of the data in the layer.
+        /// It is a comma separated collection values use to classify the layer.
+        /// It may contain an error value if the "type" cannot be determined.
+        /// It is a property of the layer and the data in the layer. It can be null, but rarely.
+        /// It is persisted in the Type property of ThemeData (in the Data property of a TmNode)
+        /// It is presented and editable in the UI as the Data Type.  It is an observed property.
+        /// It is used in TMNode as the primary source for determining the icon for the theme.
+        /// It is used in ThemeData.cs to classify the Data object for determining the metadata path in Metadata.cs.
+        /// It is usually classified by seeing if it contains keywords - a really poor strategy.
+        /// It is checked in AdminReports.cs for a value of "Error"
+        /// </summary>
+        string DataType { get; }
+
         /// <summary>
         /// Is this a "group" GIS Layer; i.e. is it the parent for a set of GIS (sub) Layers
-        /// default is false
+        /// default is false.
+        /// This value is only used by ThemeBuilder to create a "Theme" type TmNode for holding other TmNodes.
         /// </summary>
         bool IsGroup { get; }
+
         /// <summary>
-        /// A collection of GIS Layers when this GIS Layer is a group
-        /// default is an empty list
+        /// The name of the layer as it appears in a map's table of contents.
+        /// It will be persisted in the Name property on a TmNode.
+        /// It will be used in the Theme Manager UI as the theme name.
+        /// It is purely descriptive, and not used in any conditional expressions.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// A collection of GIS Layers that are children (sub layers) of this layer
+        /// The collection will be empty if IsGroup is true and not empty otherwise.
+        /// This is only used by ThemeBuilder to create "Theme" type TmNodes that are children of another "Theme" Node.
+        /// Default is an empty list
         /// </summary>
         IEnumerable<IGisLayer> SubLayers { get; }
+
+        /// <summary>
+        /// A GIS system specific string to a container of GIS data. It could be a URL, file system path,
+        /// a database connnection string, or even some other custom string.
+        /// Historically (in ArcObjects) it was a URL or filesystem path. A remote database workspace
+        /// was referenced by a file system path to a *.sde file with connection properties.
+        /// This is a property of the data pointed to by a layer. It may be null if there is no data
+        /// It is persisted in the WorkspacePath property of ThemeData (in the Data property of a TmNode)
+        /// It is used in Metadata.cs to build a metadata path when it is not null.
+        /// It is used in ThemeData.cs to classify the Data object for determining the metadata path in Metadata.cs.
+        /// </summary>
+        string WorkspacePath { get; }
+
+        /// <summary>
+        /// The string the defines the "meaningful" type of the workspace.
+        /// Historically (in ArcObjects) it is the value of the IDatasetName.WorkspaceName.WorkspaceFactoryProgId string.
+        /// Typical values are listed in
+        /// https://desktop.arcgis.com/en/arcobjects/latest/net/webframe.htm#IWorkspaceName_WorkspaceFactoryProgID.htm
+        /// Values may also have a ".1" appended if the OS is 64bit.
+        /// I have not been able to find an exhaustive list of WorkspaceFactoryProgId alues, but I tried in the MapFixer
+        /// repo at https://github.com/AKROGIS/MapFixer/blob/c7ff2451977bfd400850b8628089f6a6efb44293/MovesDatabase/Moves.cs#L574-L641
+        /// Starting With ArcGIS Pro, This may also include the string representation of the WorkspaceFacotry enum
+        /// https://github.com/Esri/cim-spec/blob/master/docs/v2/CIMVectorLayers.md#enumeration-workspacefactory
+        /// This is a property of the data pointed to by a layer. It may be null if there is no data
+        /// It is persisted in the WorkspaceProgId property of ThemeData (in the Data property of a TmNode)
+        /// It is used in ThemeData.cs to classify the Data object for determining the metadata path in Metadata.cs.
+        /// </summary>
+        string WorkspaceProgId { get; }
+
+        /// <summary>
+        /// The type of the workspace (e.g. file system, local database, remote database).
+        /// Historically (in ArcObjects) it is one of the three text strings from the enumeration in
+        /// https://desktop.arcgis.com/en/arcobjects/latest/net/webframe.htm#esriWorkspaceType.htm
+        /// This is a property of the data pointed to by a layer. It may be null if there is no data
+        /// It is persisted in the WorkspaceType property of ThemeData (in the Data property of a TmNode)
+        /// It is not used by Theme Manager.
+        /// </summary>
+        string WorkspaceType { get; }
 
         /// <summary>
         /// Close the map or layer file when done processing it.
