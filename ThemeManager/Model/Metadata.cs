@@ -155,7 +155,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
             // General file based metadata
             //   Includes layer files.  if *.lyr.xml exists, it trumps the datasource metadata (for single datasource layers)
-            if (data.Path != null && await MyFile .ExistsAsync(data.Path + ".xml"))
+            if (data.Path != null && await MyFile.ExistsAsync(data.Path + ".xml"))
             {
                 newMetadata.Path = data.Path + ".xml";
                 newMetadata.Type = MetadataType.FilePath;
