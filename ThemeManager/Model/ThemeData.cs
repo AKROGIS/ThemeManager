@@ -75,7 +75,7 @@ namespace NPS.AKRO.ThemeManager.Model
         // the path to the layer file (for a group layer, or a layer file with a single datasource,
         // however for all items in a group layer, then path has the ArcObjects path to the
         // data source.
-        
+
         // For the future, Path will contain only contain a file system path.
         // DatasourceName will contain the ArcObjects name of the data source.
         // for a layer file with a single data layer, then both Path and DataSourceName are populated
@@ -131,10 +131,13 @@ namespace NPS.AKRO.ThemeManager.Model
 
         internal bool IsRasterBand => DataSetType == "RasterBand";
 
+        // This is used to set the metadata path to the DataSource as Esri formatted XML metadata
+        // We can include the Pro FileGDB in this category
         internal bool IsInGeodatabase =>
-            WorkspaceProgId == "esriDataSourcesGDB.FileGDBWorkspaceFactory.1" || 
-            WorkspaceProgId == "esriDataSourcesGDB.AccessWorkspaceFactory.1" ||
-            WorkspaceProgId == "esriDataSourcesGDB.SdeWorkspaceFactory.1";
+            WorkspaceProgId.StartsWith("esriDataSourcesGDB.FileGDBWorkspaceFactory") ||
+            WorkspaceProgId.StartsWith("esriDataSourcesGDB.AccessWorkspaceFactory") ||
+            WorkspaceProgId.StartsWith("esriDataSourcesGDB.SdeWorkspaceFactory") ||
+            WorkspaceProgId == "FileGDB";
 
         internal bool IsEsriMapService =>
             DataSource != null && DataSource.StartsWith("http", StringComparison.OrdinalIgnoreCase) && 

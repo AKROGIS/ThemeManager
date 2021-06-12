@@ -74,7 +74,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         /// <summary>
         /// This is a combination of the "type" of the GIS Layer and the "type" of the data in the layer.
         /// It is a comma separated collection values use to classify the layer.
-        /// It may contain an error value if the "type" cannot be determined.
+        /// See the ArcObjects GetLayerDescriptionFromLayer in LayerUtilities.cs to see how it has historically been built.
+        /// It may contain an "error" value if the "type" cannot be determined.
         /// It is a property of the layer and the data in the layer. It can be null, but rarely.
         /// It is persisted in the Type property of ThemeData (in the Data property of a TmNode)
         /// It is presented and editable in the UI as the Data Type.  It is an observed property.
