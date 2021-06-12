@@ -44,7 +44,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         /// 
         /// Historically (in ArcObjects) this was the type of a layer that implemented IDataset. It would be the string value
         /// of one of the enumerations in https://desktop.arcgis.com/en/arcobjects/latest/net/webframe.htm#esriDatasetType.htm
-        /// with "esriDT" removed.
+        /// with "esriDT" removed. Starting with support for Pro, the additional types in
+        /// https://pro.arcgis.com/en/pro-app/latest/sdk/api-reference/#topic95.html are also recognized.
         /// This is a property of the data pointed to by a layer. It may be null. The nullity should match DataSetName
         /// It is persisted in the DataSetType property of ThemeData (in the Data property of a TmNode)
         /// It is used once in ThemeData.cs to clasify the Data object when the value is "RasterBand".
@@ -72,7 +73,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         string DataSourceName { get; }
 
         /// <summary>
-        /// This is a combination of the "type" of the GIS Layer and the "type" of the data in the layer.
+        /// This is a them description: a combination of the "type" of the GIS Layer and the "type" of the data in the layer.
         /// It is a comma separated collection values use to classify the layer.
         /// See the ArcObjects GetLayerDescriptionFromLayer in LayerUtilities.cs to see how it has historically been built.
         /// It may contain an "error" value if the "type" cannot be determined.

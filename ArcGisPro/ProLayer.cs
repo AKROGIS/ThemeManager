@@ -89,6 +89,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             _layerDoc = doc;
             _layer = doc.LayerDefinitions.FirstOrDefault(l => l.URI == uri);
             Initialize();
+            if (DataType == null) { DataType = LayerDescription; }
         }
 
         public override IEnumerable<IGisLayer> SubLayers
@@ -109,9 +110,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private void Initialize()
         {
             Name = _layer.Name;
-            DataType = ClassTypeAsLayerType(_layer.GetType().ToString());
-            //TODO: ThemeManager expects a richer DataType than this.
-            // i.e. "Feature Layer, FileGeodatabase (compressed), Point
             if (_layer is CIMBasicFeatureLayer layer1) { InitBasicFeature(layer1); return; };
             if (_layer is CIMBuildingDisciplineLayer layer2) { InitBuildingDiscipline(layer2); return; };
             if (_layer is CIMBuildingDisciplineSceneLayer layer3) { InitBuildingDisciplineScene(layer3); return; };
@@ -205,9 +203,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private void InitDataConnection(CIMStandardDataConnection connection)
         {
             //TODO difference between DataSetName and DataSourceName
-            //FIXME convert WorkspaceFactory and DatasetType to ArcObject types or Add new Pro Types
             DataSetName = connection.Dataset;
-            DataSetType = connection.DatasetType.ToString();
+            DataSetType = FixDatasetType(connection.DatasetType);
             DataSourceName = connection.Dataset;
             WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
             WorkspaceProgId = connection.WorkspaceFactory.ToString();
@@ -221,7 +218,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             Container = connection.FeatureDataset;
             ContainerType = "Feature Dataset";
             DataSetName = connection.Dataset;
-            DataSetType = connection.DatasetType.ToString();
+            DataSetType = FixDatasetType(connection.DatasetType);
             DataSourceName = connection.Dataset;
             WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
             WorkspaceProgId = connection.WorkspaceFactory.ToString();
@@ -239,18 +236,13 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             return Path.Combine(WorkspacePath, Container, DataSourceName);
         }
 
-        private string ClassTypeAsLayerType(string typeString)
-        {
-            var start = typeString.LastIndexOf('.') + 1;
-            var length = typeString.Length - start;
-            var result = typeString;
-            if (start > 0 && length > 0)
-            {
-                result = typeString.Substring(start, length);
-            }
-            result = result.Replace("CIM", "").Replace("Layer", " Layer");
-            return result;
-        }
+        private string LayerClass =>
+            _layer.GetType().Name.Replace("CIM", "").Replace("Layer", " Layer");
+
+        private string LayerDescription =>
+            //FIXME: Add other descriptors.  See ArcGis10.x.LayerUtilities.GetLayerDescriptionFromLayer
+            // Need Coverage and geometry and other items for iconography
+            string.Join(", ", LayerClass, WorkspaceProgId, ContainerType, DataSetType);
 
         private string FixWorkspacePath(string conn)
         {
@@ -267,8 +259,21 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                     return path;
                 }
             }
-            // return everything else, could be a naked path (TIN), or SDE connection string, or ???
+            if (conn.StartsWith("URL="))
+            {
+                //when workspaceType is FeatureService, the workspacePath is URL=...;URL=... with identical URLs.
+                return conn.Replace("URL=", "").Split(';').FirstOrDefault();
+            }
+            // return everything else as is
+            // Based on Theme Manager circa June 2021, this could be a naked path when workspace = "Tin"
+            // or connection parameters (";" separated KEY=Value) when workspace = "SDE"
+            // or "<DataConnections ... " XML for raster function definition when workspace == "Raster" and DataSetType == "Any"
             return conn;
+        }
+
+        private string FixDatasetType(esriDatasetType dt)
+        {
+            return dt.ToString().Replace("esriDT","");
         }
     }
 }

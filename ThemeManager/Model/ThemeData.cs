@@ -121,23 +121,35 @@ namespace NPS.AKRO.ThemeManager.Model
         //The following checks are based on Type information only available to 
         //themes loaded with TM3.0, however these checks are only called
         //when trying to find metadata for themes loaded with TM3.0
-        internal bool IsCoverage => Type != null && (Type.Contains("Coverage") || Type.Contains("Region") || Type.Contains("Route"));
+        internal bool IsCoverage =>
+            WorkspaceProgId == "ArcInfo" ||
+            (WorkspaceProgId != null && WorkspaceProgId.StartsWith("esriDataSourcesFile.ArcInfoWorkspaceFactory")) ||
+            (Type != null && (Type.Contains("Coverage") || Type.Contains("Region") || Type.Contains("Route")));
 
-        internal bool IsShapefile => Type != null && Type.Contains("Shapefile");
+        internal bool IsShapefile => 
+            WorkspaceProgId == "Shapefile" ||
+            (WorkspaceProgId != null && WorkspaceProgId.StartsWith("esriDataSourcesFile.ShapefileWorkspaceFactory")) ||
+            (Type != null && Type.Contains("Shapefile"));
 
-        internal bool IsCad => Type != null && Type.Contains(" CAD ");
+        internal bool IsCad =>
+            WorkspaceProgId == "Cad" ||
+            (WorkspaceProgId != null && WorkspaceProgId.StartsWith("esriDataSourcesFile.CadWorkspaceFactory")) ||
+            (Type != null && Type.Contains(" CAD "));
 
-        internal bool IsSdc => WorkspaceProgId == "esriDataSourcesFile.SDCWorkspaceFactory.1";
+        // SCD is not supported in Pro
+        internal bool IsSdc =>
+            (WorkspaceProgId != null && WorkspaceProgId.StartsWith("esriDataSourcesFile.SDCWorkspaceFactory"));
 
         internal bool IsRasterBand => DataSetType == "RasterBand";
 
         // This is used to set the metadata path to the DataSource as Esri formatted XML metadata
         // We can include the Pro FileGDB in this category
         internal bool IsInGeodatabase =>
+            WorkspaceProgId != null && (
             WorkspaceProgId.StartsWith("esriDataSourcesGDB.FileGDBWorkspaceFactory") ||
             WorkspaceProgId.StartsWith("esriDataSourcesGDB.AccessWorkspaceFactory") ||
             WorkspaceProgId.StartsWith("esriDataSourcesGDB.SdeWorkspaceFactory") ||
-            WorkspaceProgId == "FileGDB";
+            WorkspaceProgId == "FileGDB");
 
         internal bool IsEsriMapService =>
             DataSource != null && DataSource.StartsWith("http", StringComparison.OrdinalIgnoreCase) && 
