@@ -210,6 +210,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private void InitBasicFeature(CIMBasicFeatureLayer layer)
         {
             InitDataConnection(layer.FeatureTable.DataConnection);
+            GeometryType = BuildGeometryType(layer);
         }
         private void InitBuildingDiscipline(CIMBuildingDisciplineLayer layer)
         {
@@ -256,7 +257,11 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             _subLayers = layer.Layers;
             DataType = "Group Layer";
         }
-        private void InitKML(CIMKMLLayer layer) { }
+        private void InitKML(CIMKMLLayer layer)
+        {
+            _layerClassName = "KML Layer";
+            InitDataConnection(layer.DataConnection);
+        }
         private void InitKnowledgeGraph(CIMKnowledgeGraphLayer layer)
         {
             _layerClassName = "Knowledge Graph Layer";
@@ -415,6 +420,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         private void InitDataConnection(CIMDataConnection connection)
         {
+            ConnectionClassName = BuildConnectionClassName(connection);
             if (connection is CIMFeatureDatasetDataConnection conn1) { InitDataConnection(conn1); }
             if (connection is CIMGADataConnection conn2) { InitDataConnection(conn2); }
             if (connection is CIMInMemoryDatasetDataConnection conn3) { InitDataConnection(conn3); }
@@ -466,6 +472,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         {
             // TODO: Make this a group theme so we can see all the data sources
             InitDataConnection(connection.DataConnections[0]);
+            ConnectionClassName = "Geostatistical Analysis";
         }
         private void InitDataConnection(CIMInMemoryDatasetDataConnection connection) { }
         private void InitDataConnection(CIMInMemoryWorkspaceDataConnection connection) { }
@@ -506,6 +513,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             WorkspaceProgId = connection.WorkspaceFactory.ToString();
             WorkspaceType = connection.WorkspaceFactory.ToString();
             DataSource = BuildFullDataSourceName();
+            ConnectionClassName = "Net CDF Raster";
         }
         private void InitDataConnection(CIMNetCDFStandardDataConnection connection)
         {
@@ -516,6 +524,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             WorkspaceProgId = connection.WorkspaceFactory.ToString();
             WorkspaceType = connection.WorkspaceFactory.ToString();
             DataSource = BuildFullDataSourceName();
+            ConnectionClassName = "Net CDF";
         }
         private void InitDataConnection(CIMNITFDataConnection connection)
         {
@@ -567,6 +576,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             DataSetName = DataSourceName;
             DataSetType = "OGC Service";
             DataSource = BuildFullUrl();
+            ConnectionClassName = "OGC API Service";
         }
         private void InitDataConnection(CIMStandardServiceConnection connection)
         {
@@ -608,7 +618,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             DataSetType = "Web Tile Service";
             DataSource = BuildFullUrl();
         }
-        
+
         private void InitDataConnection(CIMSqlQueryDataConnection connection)
         {
             DataSetName = connection.Dataset;
@@ -628,6 +638,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             WorkspaceProgId = connection.WorkspaceFactory.ToString();
             WorkspaceType = connection.WorkspaceFactory.ToString();
             DataSource = BuildFullDataSourceName();
+            ConnectionClassName = null;
         }
         private void InitDataConnection(CIMStreamServiceDataConnection connection)
         {
@@ -682,6 +693,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private void InitDataConnection(CIMXYEventDataConnection connection)
         {
             InitDataConnection(connection.XYEventTableDataConnection);
+            ConnectionClassName = "XY Event";
         }
 
         #endregion
@@ -706,22 +718,54 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             return WorkspacePath + "/" + DataSourceName;
         }
 
+        private string BuildGeometryType(CIMBasicFeatureLayer layer)
+        {
+            if (layer is CIMAnnotationLayer) return "Annotation";
+            if (layer is CIMDimensionLayer) return "Dimension";
+            if (layer is CIMFeatureLayer)
+            {
+                var symbolName = layer.SelectionSymbol.Symbol.GetType().Name;
+                switch (symbolName)
+                {
+                    case "CIMLineSymbol": return "Polyline";
+                    case "CIMMeshSymbol": return "Mesh";
+                    case "CIMPointSymbol": return "Point";
+                    case "CIMPolygonSymbol": return "Polygon";
+                    case "CIMTextSymbol": return "Annotation";
+                    default: return null;
+                }
+            }
+            return null;
+        }
+
+        private string GeometryType;
+
+        private string ConnectionClassName;
         private string LayerClassName
         {
             get
             {
                 if (_layerClassName == null)
                 {
-                    _layerClassName = _layer.GetType().Name.Replace("CIM", "").Replace("Layer", " Layer");
+                    _layerClassName = AddSpacesToClassName(_layer.GetType().Name.Replace("CIM", ""));
                 }
                 return _layerClassName;
             }
         }
+        private string BuildConnectionClassName(CIMDataConnection connection)
+        {
+            return AddSpacesToClassName(connection.GetType().Name.Replace("CIM", "").Replace("DataConnection","").Replace("ServiceConnection", " Service"));
+        }
 
-        private string LayerDescription =>
-            //FIXME: Add other descriptors.  See ArcGis10.x.LayerUtilities.GetLayerDescriptionFromLayer
-            // Need Coverage and geometry and other items for iconography
-            string.Join(", ", LayerClassName, WorkspaceProgId, ContainerType, DataSetType);
+        private string LayerDescription
+        {
+            get {
+                //FIXME: Add other descriptors.  See ArcGis10.x.LayerUtilities.GetLayerDescriptionFromLayer
+                // Need Coverage and geometry and other items for iconography
+                var descriptors = new string[] { LayerClassName, ConnectionClassName, WorkspaceProgId, ContainerType, DataSetType, GeometryType };
+                return string.Join(", ", descriptors.Where(d => !string.IsNullOrEmpty(d)));
+            }
+        }
 
         private string FixWorkspacePath(string conn)
         {
@@ -735,8 +779,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                     Environment.CurrentDirectory = Path.GetDirectoryName(_path);
                     path = Path.GetFullPath(path);
                     Environment.CurrentDirectory = savedCWD;
-                    return path;
                 }
+                return path;
             }
             if (conn.StartsWith("URL="))
             {
@@ -752,7 +796,31 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         private string FixDatasetType(esriDatasetType dt)
         {
+            // Do not add spaces - to maintain compatibility with ArcObjects 10.x
             return dt.ToString().Replace("esriDT","");
         }
+
+        /// <summary>
+        /// Return a new string with a space before each Upper case letter after a lower case letter.
+        /// e.g. "TableQueryNameData" => "Table Query Name Data"
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        private string AddSpacesToClassName(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return "";
+            StringBuilder newText = new StringBuilder(text.Length * 2);
+            for (int i = 0; i < text.Length-1; i++)
+            {
+                newText.Append(text[i]);
+                // maximize short circuiting the and operation
+                if (char.IsUpper(text[i + 1]) && char.IsLower(text[i]))
+                    newText.Append(' ');
+            }
+            newText.Append(text[text.Length - 1]);
+            return newText.ToString();
+        }
+
     }
 }
