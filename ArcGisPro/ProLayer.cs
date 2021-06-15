@@ -260,55 +260,109 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private void InitKnowledgeGraph(CIMKnowledgeGraphLayer layer)
         {
             _layerClassName = "Knowledge Graph Layer";
+            InitDataConnection(layer.DataConnection);
         }
         private void InitLASDataset(CIMLASDatasetLayer layer)
         {
             _layerClassName = "LAS Dataset Layer";
+            InitDataConnection(layer.DataConnection);
         }
-        private void InitMosaic(CIMMosaicLayer layer) { }
+        private void InitMosaic(CIMMosaicLayer layer)
+        {
+            InitDataConnection(layer.MosaicDatasetConnection);
+            // Note: could also represented as a group layer
+            // However, there is only one metadata item, so it makes sense to have only one TM item
+            // _subLayers = new string[] { layer.BoundaryLayer, layer.FootprintLayer, layer.SeamlineLayer, layer.ImageLayer };
+        }
         private void InitNA(CIMNALayer layer)
         {
-            _layerClassName = "Network Analyst Layer";
+            IsGroup = true;
+            _subLayers = layer.Layers;
+            DataType = "Network Analyst Group Layer";
         }
         private void InitNetworkDataset(CIMNetworkDatasetLayer layer)
         {
             _layerClassName = "Network Dataset Layer";
+            InitDataConnection(layer.DataConnection);
         }
         private void InitNitf(CIMNitfLayer layer)
         {
             _layerClassName = "NITF Layer";
+            InitDataConnection(layer.DataConnection);
         }
         private void InitParcelFabric(CIMParcelFabricLayer layer)
         {
-            _layerClassName = "Parcel Fabric Layer";
+            IsGroup = true;
+            _subLayers = layer.AllLayers;
+            DataType = "Parcel Fabric Layer";
         }
-        private void InitParcel(CIMParcelLayer layer) { }
+        private void InitParcel(CIMParcelLayer layer)
+        {
+            InitDataConnection(layer.ParcelConnection);
+        }
         private void InitPointCloud(CIMPointCloudLayer layer)
         {
             _layerClassName = "Point Cloud Layer";
+            InitDataConnection(layer.DataConnection);
         }
-        private void InitRaster(CIMRasterLayer layer) { }
+        private void InitRaster(CIMRasterLayer layer)
+        {
+            InitDataConnection(layer.DataConnection);
+        }
         private void InitSceneService(CIMSceneServiceLayer layer)
         {
             _layerClassName = "Scene Service Layer";
+            InitDataConnection(layer.DataConnection);
         }
-        private void InitService(CIMServiceLayer layer) { }
-        private void InitTerrain(CIMTerrainLayer layer) { }
-        private void InitTin(CIMTinLayer layer) { }
-        private void InitTopology(CIMTopologyLayer layer) { }
+        private void InitService(CIMServiceLayer layer)
+        {
+            InitDataConnection(layer.ServiceConnection);
+        }
+        private void InitTerrain(CIMTerrainLayer layer)
+        {
+            InitDataConnection(layer.DataConnection);
+        }
+        private void InitTin(CIMTinLayer layer)
+        {
+            InitDataConnection(layer.DataConnection);
+        }
+        private void InitTopology(CIMTopologyLayer layer)
+        {
+            InitDataConnection(layer.TopologyConnection);
+            // Or it could be a group layer
+            // However the sub layers may vary depending on the current topology issues
+            //IsGroup = true;
+            //_subLayers = layer.AllLayers;
+            //DataType = "Topology Group Layer";
+
+        }
         private void InitTraceNetwork(CIMTraceNetworkLayer layer)
         {
             _layerClassName = "Trace Network Layer";
+            InitDataConnection(layer.DataConnection);
+            // Or it could be a group layer
+            //IsGroup = true;
+            //_subLayers = new string[] { layer.PointErrorLayer, layer.LineErrorLayer, layer.DirtyAreaLayer };
+            //DataType = "Trace Network Group Layer";
         }
         private void InitUtilityNetwork(CIMUtilityNetworkLayer layer)
         {
             _layerClassName = "Utility Network Layer";
+            InitDataConnection(layer.DataConnection);
+            // Or it could be a group layer
+            //IsGroup = true;
+            //_subLayers = new string[] { layer.PointErrorLayer, layer.LineErrorLayer, layer.PolygonErrorLayer, layer.DirtyAreaLayer };
+            //DataType = "Utility Network Group Layer";
         }
         private void InitVectorTile(CIMVectorTileLayer layer)
         {
             _layerClassName = "Vector Tile Layer";
+            InitDataConnection(layer.DataConnection);
         }
-        private void InitVoxel(CIMVoxelLayer layer) { }
+        private void InitVoxel(CIMVoxelLayer layer)
+        {
+            InitDataConnection(layer.DataConnection);
+        }
 
         #endregion
 
