@@ -121,6 +121,18 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
          Useful properties on the sub classes of CIMBaseLayer (sub class of CIMDefinition):
          All we need is the data connection OR a list of "interesting" sub layers
 
+         Theme Manager only cares about composite layers or layers with data source (Data or Service Connection in Pro speak)
+         If a layer has both, a choice must be made if the layer is going to be a group or a single theme.  If the individual
+         sub layers can/do have different metadata (i.e. Network Layer), then use a group, if they do not (i.e. Mosaic dataset),
+         then do not. If a composite layer is shown as a data source, then the sub layers will be hidden.
+         
+         The type of the Layer and data source the geometry of the selection symbol is used
+         to set the iconography in the browse panel (for example we use the annotation icon for a feature class
+         in a annotation layer. Besides iconography, the data connection is used to find the metadata for the data source.
+         
+         Here are all the published CIM Layer types (as of Pro 2.8 circa 2021-06-01)
+         Annotated with the property to obtain a sub class of ArcGIS.Core.CIM.CIMDataConnection
+
          ArcGIS.Core.CIM.CIMBaseLayer - an abstract base class with no useful members
             ArcGIS.Core.CIM.CIMBasicFeatureLayer - CIMDataConnection FeatureTable.DataConnection
                 ArcGIS.Core.CIM.CIMAnnotationLayer - See CIMBasicFeatureLayer
@@ -179,15 +191,12 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             if (_layer is CIMBuildingSceneLayer layer5) { InitBuildingScene(layer5); return; };
             if (_layer is CIMGALayer layer6) { InitGA(layer6); return; };
             if (_layer is CIMGeodatabaseErrorLayer layer7) { InitGeodatabaseError(layer7); return; };
-            if (_layer is CIMGraphicsLayer layer8) { InitGraphics(layer8); return; };
             if (_layer is CIMGroupLayer layer9) { InitGroup(layer9); return; };
             if (_layer is CIMKMLLayer layer10) { InitKML(layer10); return; };
-            if (_layer is CIMKnowledgeGraphLayer layer11) { InitKnowledgeGraph(layer11); return; };
             if (_layer is CIMLASDatasetLayer layer12) { InitLASDataset(layer12); return; };
             if (_layer is CIMMosaicLayer layer13) { InitMosaic(layer13); return; };
             if (_layer is CIMNALayer layer14) { InitNA(layer14); return; };
             if (_layer is CIMNetworkDatasetLayer layer15) { InitNetworkDataset(layer15); return; };
-            if (_layer is CIMNitfLayer layer16) { InitNitf(layer16); return; };
             if (_layer is CIMParcelFabricLayer layer17) { InitParcelFabric(layer17); return; };
             if (_layer is CIMParcelLayer layer18) { InitParcel(layer18); return; };
             if (_layer is CIMPointCloudLayer layer19) { InitPointCloud(layer19); return; };
@@ -202,7 +211,12 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             if (_layer is CIMTraceNetworkLayer layer26) { InitTraceNetwork(layer26); return; };
             if (_layer is CIMUtilityNetworkLayer layer27) { InitUtilityNetwork(layer27); return; };
             if (_layer is CIMVectorTileLayer layer28) { InitVectorTile(layer28); return; };
+#if !Pro25
+            if (_layer is CIMGraphicsLayer layer8) { InitGraphics(layer8); return; };
+            if (_layer is CIMKnowledgeGraphLayer layer11) { InitKnowledgeGraph(layer11); return; };
+            if (_layer is CIMNitfLayer layer16) { InitNitf(layer16); return; };
             if (_layer is CIMVoxelLayer layer29) { InitVoxel(layer29); return; };
+#endif
         }
 
         // All layers type that yield have subLayes (IsGroup = true) should have no
@@ -247,10 +261,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             _subLayers = new string[] { layer.PointLayer, layer.LineLayer, layer.PolygonLayer, layer.ObjectTable };
             DataType = "Geodatabase Error Group Layer";
         }
-        private void InitGraphics(CIMGraphicsLayer layer)
-        {
-            // No sub layers and no data connection, just show a node with a name and a type
-        }
         private void InitGroup(CIMGroupLayer layer)
         {
             IsGroup = true;
@@ -260,11 +270,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private void InitKML(CIMKMLLayer layer)
         {
             _layerClassName = "KML Layer";
-            InitDataConnection(layer.DataConnection);
-        }
-        private void InitKnowledgeGraph(CIMKnowledgeGraphLayer layer)
-        {
-            _layerClassName = "Knowledge Graph Layer";
             InitDataConnection(layer.DataConnection);
         }
         private void InitLASDataset(CIMLASDatasetLayer layer)
@@ -288,11 +293,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private void InitNetworkDataset(CIMNetworkDatasetLayer layer)
         {
             _layerClassName = "Network Dataset Layer";
-            InitDataConnection(layer.DataConnection);
-        }
-        private void InitNitf(CIMNitfLayer layer)
-        {
-            _layerClassName = "NITF Layer";
             InitDataConnection(layer.DataConnection);
         }
         private void InitParcelFabric(CIMParcelFabricLayer layer)
@@ -364,12 +364,28 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             _layerClassName = "Vector Tile Layer";
             InitDataConnection(layer.DataConnection);
         }
+#if !Pro25
+        private void InitGraphics(CIMGraphicsLayer layer)
+        {
+            // No sub layers and no data connection, just show a node with a name and a type
+        }
+        private void InitKnowledgeGraph(CIMKnowledgeGraphLayer layer)
+        {
+            _layerClassName = "Knowledge Graph Layer";
+            InitDataConnection(layer.DataConnection);
+        }
+        private void InitNitf(CIMNitfLayer layer)
+        {
+            _layerClassName = "NITF Layer";
+            InitDataConnection(layer.DataConnection);
+        }
         private void InitVoxel(CIMVoxelLayer layer)
         {
             InitDataConnection(layer.DataConnection);
         }
+#endif
 
-        #endregion
+#endregion
 
         #region Data Connections
 
@@ -426,17 +442,13 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             if (connection is CIMInMemoryDatasetDataConnection conn3) { InitDataConnection(conn3); }
             if (connection is CIMInMemoryWorkspaceDataConnection conn4) { InitDataConnection(conn4); }
             if (connection is CIMKMLDataConnection conn5) { InitDataConnection(conn5); }
-            if (connection is CIMKnowledgeGraphDataConnection conn6) { InitDataConnection(conn6); }
-            if (connection is CIMKnowledgeGraphTableDataConnection conn7) { InitDataConnection(conn7); }
             if (connection is CIMNetCDFRasterDataConnection conn8) { InitDataConnection(conn8); }
             if (connection is CIMNetCDFStandardDataConnection conn9) { InitDataConnection(conn9); }
-            if (connection is CIMNITFDataConnection conn10) { InitDataConnection(conn10); }
             if (connection is CIMRasterBandDataConnection conn11) { InitDataConnection(conn11); }
             if (connection is CIMRelQueryTableDataConnection conn12) { InitDataConnection(conn12); }
             if (connection is CIMRouteEventDataConnection conn13) { InitDataConnection(conn13); }
             if (connection is CIMSceneDataConnection conn32) { InitDataConnection(conn32); }
             if (connection is CIMAGSServiceConnection conn14) { InitDataConnection(conn14); }
-            if (connection is CIMOGCAPIServiceConnection conn15) { InitDataConnection(conn15); }
             if (connection is CIMStandardServiceConnection conn16) { InitDataConnection(conn16); }
             if (connection is CIMWCSServiceConnection conn17) { InitDataConnection(conn17); }
             if (connection is CIMWFSServiceConnection conn18) { InitDataConnection(conn18); }
@@ -450,9 +462,15 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             if (connection is CIMTrackingServerDataConnection conn26) { InitDataConnection(conn26); }
             if (connection is CIMVectorTileDataConnection conn27) { InitDataConnection(conn27); }
             if (connection is CIMVideoDataConnection conn28) { InitDataConnection(conn28); }
-            if (connection is CIMVoxelDataConnection conn29) { InitDataConnection(conn29); }
             if (connection is CIMWorkspaceConnection conn30) { InitDataConnection(conn30); }
             if (connection is CIMXYEventDataConnection conn31) { InitDataConnection(conn31); }
+#if!Pro25
+            if (connection is CIMKnowledgeGraphDataConnection conn6) { InitDataConnection(conn6); }
+            if (connection is CIMKnowledgeGraphTableDataConnection conn7) { InitDataConnection(conn7); }
+            if (connection is CIMNITFDataConnection conn10) { InitDataConnection(conn10); }
+            if (connection is CIMOGCAPIServiceConnection conn15) { InitDataConnection(conn15); }
+            if (connection is CIMVoxelDataConnection conn29) { InitDataConnection(conn29); }
+#endif
         }
 
         //FIXME: Check the URI format for KML, NITF, Scene, VectorTile, Video, Voxel,
@@ -484,26 +502,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             DataSetType = "KML File/Service";
             DataSource = connection.KMLURI;
         }
-        private void InitDataConnection(CIMKnowledgeGraphDataConnection connection)
-        {
-            DataSetName = connection.Dataset;
-            DataSetType = FixDatasetType(connection.DatasetType);
-            DataSourceName = connection.Dataset;
-            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
-            WorkspaceProgId = connection.WorkspaceFactory.ToString();
-            WorkspaceType = connection.WorkspaceFactory.ToString();
-            DataSource = BuildFullDataSourceName();
-        }
-        private void InitDataConnection(CIMKnowledgeGraphTableDataConnection connection)
-        {
-            DataSetName = connection.Dataset;
-            DataSetType = FixDatasetType(connection.DatasetType);
-            DataSourceName = connection.Dataset;
-            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
-            WorkspaceProgId = connection.WorkspaceFactory.ToString();
-            WorkspaceType = connection.WorkspaceFactory.ToString();
-            DataSource = BuildFullDataSourceName();
-        }
         private void InitDataConnection(CIMNetCDFRasterDataConnection connection)
         {
             DataSetName = connection.Dataset;
@@ -525,14 +523,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             WorkspaceType = connection.WorkspaceFactory.ToString();
             DataSource = BuildFullDataSourceName();
             ConnectionClassName = "Net CDF";
-        }
-        private void InitDataConnection(CIMNITFDataConnection connection)
-        {
-            WorkspacePath = connection.URI;
-            DataSourceName = Path.GetFileName(WorkspacePath);
-            DataSetName = DataSourceName;
-            DataSetType = "NITF files";
-            DataSource = connection.URI;
         }
         private void InitDataConnection(CIMRasterBandDataConnection connection)
         {
@@ -568,15 +558,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             DataSetName = DataSourceName;
             DataSetType = connection.ObjectType;
             DataSource = connection.URL;
-        }
-        private void InitDataConnection(CIMOGCAPIServiceConnection connection)
-        {
-            WorkspacePath = connection.ServerConnection.URL;
-            DataSourceName = connection.ServiceName;
-            DataSetName = DataSourceName;
-            DataSetType = "OGC Service";
-            DataSource = BuildFullUrl();
-            ConnectionClassName = "OGC API Service";
         }
         private void InitDataConnection(CIMStandardServiceConnection connection)
         {
@@ -682,7 +663,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         }
         private void InitDataConnection(CIMVectorTileDataConnection connection) { }
         private void InitDataConnection(CIMVideoDataConnection connection) { }
-        private void InitDataConnection(CIMVoxelDataConnection connection) { }
         private void InitDataConnection(CIMWorkspaceConnection connection)
         {
             WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
@@ -695,6 +675,46 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             InitDataConnection(connection.XYEventTableDataConnection);
             ConnectionClassName = "XY Event";
         }
+#if !Pro25
+        private void InitDataConnection(CIMKnowledgeGraphDataConnection connection)
+        {
+            DataSetName = connection.Dataset;
+            DataSetType = FixDatasetType(connection.DatasetType);
+            DataSourceName = connection.Dataset;
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = BuildFullDataSourceName();
+        }
+        private void InitDataConnection(CIMKnowledgeGraphTableDataConnection connection)
+        {
+            DataSetName = connection.Dataset;
+            DataSetType = FixDatasetType(connection.DatasetType);
+            DataSourceName = connection.Dataset;
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = BuildFullDataSourceName();
+        }
+        private void InitDataConnection(CIMNITFDataConnection connection)
+        {
+            WorkspacePath = connection.URI;
+            DataSourceName = Path.GetFileName(WorkspacePath);
+            DataSetName = DataSourceName;
+            DataSetType = "NITF files";
+            DataSource = connection.URI;
+        }
+        private void InitDataConnection(CIMOGCAPIServiceConnection connection)
+        {
+            WorkspacePath = connection.ServerConnection.URL;
+            DataSourceName = connection.ServiceName;
+            DataSetName = DataSourceName;
+            DataSetType = "OGC Service";
+            DataSource = BuildFullUrl();
+            ConnectionClassName = "OGC API Service";
+        }
+        private void InitDataConnection(CIMVoxelDataConnection connection) { }
+#endif
 
         #endregion
 
