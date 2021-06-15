@@ -30,10 +30,14 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         string ContainerType { get; }
 
         /// <summary>
-        /// This was typically the same as the DataSourceName, but obtained in a different way (Because ArcObjects is confusing).
-        /// Historically (ArcObjects) this is the name property of an object that implments the IDatasetName interface
-        /// https://desktop.arcgis.com/en/arcobjects/latest/net/webframe.htm#IDatasetName.htm
-        /// This is a property of the data pointed to by a layer. It may be null. The nullity should match DataSetType
+        /// One of three names for the Data. It is unused. See also DataSourceName and Name
+        /// Historically (ArcObjects) this is the name property of the layer as an IDataset interface
+        /// https://desktop.arcgis.com/en/arcobjects/latest/net/webframe.htm#IDataset.htm
+        /// It was typically the same as the Name, but blank for Group layers, Map Frames, and non-GIS themes
+        /// It might differ for services, if the data manger edited the name, or if the layer file name was
+        /// different than the layer name for a single dataset layer file.
+        /// Stating with Pro, this is more commonly the same as the DataSourceName.
+        /// This is a property of the layer. It may be null. The nullity should match DataSetType
         /// It is persisted in the DataSetName property of ThemeData (in the Data property of a TmNode)
         /// It is not used by Theme Manager.
         /// </summary>
@@ -65,7 +69,11 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         string DataSource { get; }
 
         /// <summary>
-        /// The short name (without the workspace) of the data in the layer. It is the last component in the DataSource.
+        /// One of three names for the Data. See also DataSetName and Name
+        /// The name (without the workspace) of the data in the layer. It is typically the last component in the DataSource.
+        /// Historically (ArcObjects) this is the name property of the IDataLayer layer's DataSourceName (IDatasetName) property
+        /// https://desktop.arcgis.com/en/arcobjects/latest/net/webframe.htm#IDatasetName.htm
+        /// Starting with Pro it is the DataConnection's DataSet property.  Typically the same as ArcObjects.
         /// This is a property of the data pointed to by a layer. It may be null.
         /// It is persisted in the DataSourceName property of ThemeData (in the Data property of a TmNode)
         /// It is used once in Metadata.cs to remove itself from the DataSource for RasterBand Metadata path.
@@ -95,10 +103,12 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         bool IsGroup { get; }
 
         /// <summary>
-        /// The name of the layer as it appears in a map's table of contents.
+        /// One of three names for the Data. See also DataSetName and DataSourceName
+        /// This is name of the layer as it appears in a map's table of contents.
         /// It will be persisted in the Name property on a TmNode.
         /// It will be used in the Theme Manager UI as the theme name.
         /// It is purely descriptive, and not used in any conditional expressions.
+        /// The theme list manager can edit the name as needed.
         /// </summary>
         string Name { get; }
 

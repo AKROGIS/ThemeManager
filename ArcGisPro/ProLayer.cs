@@ -79,16 +79,25 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
     }
     public class ProLayer : GisLayer, IGisLayer
     {
-        private readonly string _path;
-        private readonly CIMLayerDocument _layerDoc;
         private readonly CIMDefinition _layer;
+        private string _layerClassName;
+        private readonly CIMLayerDocument _layerDoc;
+        private readonly string _path;
         private IEnumerable<string> _subLayers;
+
         public ProLayer(string path, CIMLayerDocument doc, string uri)
         {
             _path = path;
             _layerDoc = doc;
             _layer = doc.LayerDefinitions.FirstOrDefault(l => l.URI == uri);
-            Initialize();
+            try
+            {
+                Initialize();
+            }
+            catch (Exception ex)
+            {
+                DataType = "Error: " + ex.Message;
+            }
             if (DataType == null) { DataType = LayerDescription; }
         }
 
@@ -107,42 +116,12 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             }
         }
 
-        private void Initialize()
-        {
-            Name = _layer.Name;
-            if (_layer is CIMBasicFeatureLayer layer1) { InitBasicFeature(layer1); return; };
-            if (_layer is CIMBuildingDisciplineLayer layer2) { InitBuildingDiscipline(layer2); return; };
-            if (_layer is CIMBuildingDisciplineSceneLayer layer3) { InitBuildingDisciplineScene(layer3); return; };
-            if (_layer is CIMBuildingLayer layer4) { InitBuilding(layer4); return; };
-            if (_layer is CIMBuildingSceneLayer layer5) { InitBuildingScene(layer5); return; };
-            if (_layer is CIMGALayer layer6) { InitGA(layer6); return; };
-            if (_layer is CIMGeodatabaseErrorLayer layer7) { InitGeodatabaseError(layer7); return; };
-            if (_layer is CIMGraphicsLayer layer8) { InitGraphics(layer8); return; };
-            if (_layer is CIMGroupLayer layer9) { InitGroup(layer9); return; };
-            if (_layer is CIMGALayer layer10) { InitGA(layer10); return; };
-            //TODO: Finish list
-        }
-
-        private void InitBasicFeature(CIMBasicFeatureLayer layer)
-        {
-            InitDataConnection(layer.FeatureTable.DataConnection);
-        }
-        private void InitBuildingDiscipline(CIMBuildingDisciplineLayer layer) { }
-        private void InitBuildingDisciplineScene(CIMBuildingDisciplineSceneLayer layer) { }
-        private void InitBuilding(CIMBuildingLayer layer) { }
-        private void InitBuildingScene(CIMBuildingSceneLayer layer) { }
-        private void InitGA(CIMGALayer layer) { }
-        private void InitGeodatabaseError(CIMGeodatabaseErrorLayer layer) { }
-        private void InitGraphics(CIMGraphicsLayer layer) { }
-        private void InitGroup(CIMGroupLayer layer)
-        {
-            DataType = "Group Layer";
-            IsGroup = true;
-            _subLayers = layer.Layers;
-        }
-
+        #region Layer Classes
         /*
-            ArcGIS.Core.CIM.CIMBaseLayer
+         Useful properties on the sub classes of CIMBaseLayer (sub class of CIMDefinition):
+         All we need is the data connection OR a list of "interesting" sub layers
+
+         ArcGIS.Core.CIM.CIMBaseLayer - an abstract base class with no useful members
             ArcGIS.Core.CIM.CIMBasicFeatureLayer - CIMDataConnection FeatureTable.DataConnection
                 ArcGIS.Core.CIM.CIMAnnotationLayer - See CIMBasicFeatureLayer
                 ArcGIS.Core.CIM.CIMDimensionLayer - See CIMBasicFeatureLayer
@@ -152,7 +131,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                         ArcGIS.Core.CIM.CIMNitfFeatureSubLayer - See CIMBasicFeatureLayer
                 ArcGIS.Core.CIM.CIMSubtypeGroupLayer - See CIMBasicFeatureLayer
                 ArcGIS.Core.CIM.CIMSubtypeGroupLayerBase - See CIMBasicFeatureLayer
-            ArcGIS.Core.CIM.CIMBuildingDisciplineLayer - No data connection; usestring[] CategoryLayers
+            ArcGIS.Core.CIM.CIMBuildingDisciplineLayer - No data connection; use string[] CategoryLayers
             ArcGIS.Core.CIM.CIMBuildingDisciplineSceneLayer - No data connection; use string[] SubLayers
             ArcGIS.Core.CIM.CIMBuildingLayer - CIMDataConnection DataConnection
             ArcGIS.Core.CIM.CIMBuildingSceneLayer - CIMDataConnection DataConnection
@@ -185,24 +164,409 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             ArcGIS.Core.CIM.CIMUtilityNetworkLayer - CIMDataConnection DataConnection; Also a group layer with DirtyAreaLayer, LineErrorLayer, PointErrorLayer, and PolygonErrorLayer 
             ArcGIS.Core.CIM.CIMVectorTileLayer - CIMVectorTileDataConnection DataConnection
             ArcGIS.Core.CIM.CIMVoxelLayer - CIMDataConnection DataConnection
+        */
 
-            */
+        private void Initialize()
+        {
+            Name = _layer.Name;
+            if (_layer is CIMBasicFeatureLayer layer1) { InitBasicFeature(layer1); return; };
+            // CIMBasicFeatureLayer covers: CIMAnnotationLayer, CIMDimensionLayer, CIMGeoFeatureLayerBase, CIMSubtypeGroupLayer, CIMSubtypeGroupLayerBase
+            // CIMGeoFeatureLayerBase covers: CIMFeatureLayer
+            // CIMFeatureLayer covers: CIMFeatureMosaicSubLayer, CIMNitfFeatureSubLayer
+            if (_layer is CIMBuildingDisciplineLayer layer2) { InitBuildingDiscipline(layer2); return; };
+            if (_layer is CIMBuildingDisciplineSceneLayer layer3) { InitBuildingDisciplineScene(layer3); return; };
+            if (_layer is CIMBuildingLayer layer4) { InitBuilding(layer4); return; };
+            if (_layer is CIMBuildingSceneLayer layer5) { InitBuildingScene(layer5); return; };
+            if (_layer is CIMGALayer layer6) { InitGA(layer6); return; };
+            if (_layer is CIMGeodatabaseErrorLayer layer7) { InitGeodatabaseError(layer7); return; };
+            if (_layer is CIMGraphicsLayer layer8) { InitGraphics(layer8); return; };
+            if (_layer is CIMGroupLayer layer9) { InitGroup(layer9); return; };
+            if (_layer is CIMKMLLayer layer10) { InitKML(layer10); return; };
+            if (_layer is CIMKnowledgeGraphLayer layer11) { InitKnowledgeGraph(layer11); return; };
+            if (_layer is CIMLASDatasetLayer layer12) { InitLASDataset(layer12); return; };
+            if (_layer is CIMMosaicLayer layer13) { InitMosaic(layer13); return; };
+            if (_layer is CIMNALayer layer14) { InitNA(layer14); return; };
+            if (_layer is CIMNetworkDatasetLayer layer15) { InitNetworkDataset(layer15); return; };
+            if (_layer is CIMNitfLayer layer16) { InitNitf(layer16); return; };
+            if (_layer is CIMParcelFabricLayer layer17) { InitParcelFabric(layer17); return; };
+            if (_layer is CIMParcelLayer layer18) { InitParcel(layer18); return; };
+            if (_layer is CIMPointCloudLayer layer19) { InitPointCloud(layer19); return; };
+            if (_layer is CIMRasterLayer layer20) { InitRaster(layer20); return; };
+            // CIMRasterLayer covers: CIMImageServiceLayer, CIMNitfImageSubLayer
+            if (_layer is CIMSceneServiceLayer layer21) { InitSceneService(layer21); return; };
+            if (_layer is CIMServiceLayer layer22) { InitService(layer22); return; };
+            // CIMServiceLayer covers: CIMDynamicServiceLayer, CIMGlobeServiceLayer, CIMTiledServiceLayer
+            if (_layer is CIMTerrainLayer layer23) { InitTerrain(layer23); return; };
+            if (_layer is CIMTinLayer layer24) { InitTin(layer24); return; };
+            if (_layer is CIMTopologyLayer layer25) { InitTopology(layer25); return; };
+            if (_layer is CIMTraceNetworkLayer layer26) { InitTraceNetwork(layer26); return; };
+            if (_layer is CIMUtilityNetworkLayer layer27) { InitUtilityNetwork(layer27); return; };
+            if (_layer is CIMVectorTileLayer layer28) { InitVectorTile(layer28); return; };
+            if (_layer is CIMVoxelLayer layer29) { InitVoxel(layer29); return; };
+        }
 
+        // All layers type that yield have subLayes (IsGroup = true) should have no
+        // connection properties and have "Group" in the data type to get the group icon.
+        private void InitBasicFeature(CIMBasicFeatureLayer layer)
+        {
+            InitDataConnection(layer.FeatureTable.DataConnection);
+        }
+        private void InitBuildingDiscipline(CIMBuildingDisciplineLayer layer)
+        {
+            IsGroup = true;
+            _subLayers = layer.CategoryLayers;
+            DataType = "Building Discipline Group Layer";
+        }
+        private void InitBuildingDisciplineScene(CIMBuildingDisciplineSceneLayer layer)
+        {
+            IsGroup = true;
+            _subLayers = layer.SubLayers;
+            DataType = "Building Discipline Scene Group Layer";
+        }
+        private void InitBuilding(CIMBuildingLayer layer)
+        {
+            IsGroup = true;
+            _subLayers = layer.BuildingDisciplineLayers;
+            DataType = "Building Group Layer";
+        }
+        private void InitBuildingScene(CIMBuildingSceneLayer layer)
+        {
+            IsGroup = true;
+            _subLayers = layer.SubLayers;
+            DataType = "Building Scene Group Layer";
+        }
+        private void InitGA(CIMGALayer layer)
+        {
+            _layerClassName = "Geostatistical Analysis Layer";
+            InitDataConnection(layer.Method.DataConnection);
+        }
+        private void InitGeodatabaseError(CIMGeodatabaseErrorLayer layer)
+        {
+            IsGroup = true;
+            _subLayers = new string[] { layer.PointLayer, layer.LineLayer, layer.PolygonLayer, layer.ObjectTable };
+            DataType = "Geodatabase Error Group Layer";
+        }
+        private void InitGraphics(CIMGraphicsLayer layer)
+        {
+            // No sub layers and no data connection, just show a node with a name and a type
+        }
+        private void InitGroup(CIMGroupLayer layer)
+        {
+            IsGroup = true;
+            _subLayers = layer.Layers;
+            DataType = "Group Layer";
+        }
+        private void InitKML(CIMKMLLayer layer) { }
+        private void InitKnowledgeGraph(CIMKnowledgeGraphLayer layer)
+        {
+            _layerClassName = "Knowledge Graph Layer";
+        }
+        private void InitLASDataset(CIMLASDatasetLayer layer)
+        {
+            _layerClassName = "LAS Dataset Layer";
+        }
+        private void InitMosaic(CIMMosaicLayer layer) { }
+        private void InitNA(CIMNALayer layer)
+        {
+            _layerClassName = "Network Analyst Layer";
+        }
+        private void InitNetworkDataset(CIMNetworkDatasetLayer layer)
+        {
+            _layerClassName = "Network Dataset Layer";
+        }
+        private void InitNitf(CIMNitfLayer layer)
+        {
+            _layerClassName = "NITF Layer";
+        }
+        private void InitParcelFabric(CIMParcelFabricLayer layer)
+        {
+            _layerClassName = "Parcel Fabric Layer";
+        }
+        private void InitParcel(CIMParcelLayer layer) { }
+        private void InitPointCloud(CIMPointCloudLayer layer)
+        {
+            _layerClassName = "Point Cloud Layer";
+        }
+        private void InitRaster(CIMRasterLayer layer) { }
+        private void InitSceneService(CIMSceneServiceLayer layer)
+        {
+            _layerClassName = "Scene Service Layer";
+        }
+        private void InitService(CIMServiceLayer layer) { }
+        private void InitTerrain(CIMTerrainLayer layer) { }
+        private void InitTin(CIMTinLayer layer) { }
+        private void InitTopology(CIMTopologyLayer layer) { }
+        private void InitTraceNetwork(CIMTraceNetworkLayer layer)
+        {
+            _layerClassName = "Trace Network Layer";
+        }
+        private void InitUtilityNetwork(CIMUtilityNetworkLayer layer)
+        {
+            _layerClassName = "Utility Network Layer";
+        }
+        private void InitVectorTile(CIMVectorTileLayer layer)
+        {
+            _layerClassName = "Vector Tile Layer";
+        }
+        private void InitVoxel(CIMVoxelLayer layer) { }
+
+        #endregion
+
+        #region Data Connections
+
+        /*
+         Useful properties on sub classes of CIMDataConnection (an abstract base class with no useful members)
+         Those marked with a * have these standard properties:
+            string CustomWorkspaceFactoryCLSID,
+            WorkspaceFactory WorkspaceFactory, string WorkspaceConnectionString,
+            esriDatasetType DatasetType, string Dataset
+
+         ArcGIS.Core.CIM.CIMFeatureDatasetDataConnection - * + string FeatureDataset
+         ArcGIS.Core.CIM.CIMGADataConnection - CIMDataConnection[] DataConnections
+         ArcGIS.Core.CIM.CIMInMemoryDatasetDataConnection - N/A
+         ArcGIS.Core.CIM.CIMInMemoryWorkspaceDataConnection - N/A
+         ArcGIS.Core.CIM.CIMKMLDataConnection - string KMLURI
+         ArcGIS.Core.CIM.CIMKnowledgeGraphDataConnection - * + string DefinitionQuery
+         ArcGIS.Core.CIM.CIMKnowledgeGraphTableDataConnection - * + string DefinitionQuery, string ExclusionSetURI, string InclusionSetURI
+         ArcGIS.Core.CIM.CIMNetCDFRasterDataConnection - * + lots of other special properties
+         ArcGIS.Core.CIM.CIMNetCDFStandardDataConnection - * + lots of other special properties
+         ArcGIS.Core.CIM.CIMNITFDataConnection - string URI
+         ArcGIS.Core.CIM.CIMRasterBandDataConnection - * + string RasterBandName
+         ArcGIS.Core.CIM.CIMRelQueryTableDataConnection - CIMDataConnection SourceTable, DestinationTable, string PrimaryKey, ForeignKey and others
+         ArcGIS.Core.CIM.CIMRouteEventDataConnection - CIMDataConnection EventTable, CIMDataConnection RouteFeatureClass
+         ArcGIS.Core.CIM.CIMSceneDataConnection - string URI
+         ArcGIS.Core.CIM.CIMServiceConnection (abstract base class) - string Description
+            ArcGIS.Core.CIM.CIMAGSServiceConnection - string URL + CIMServerConnection ServerConnection
+            ArcGIS.Core.CIM.CIMOGCAPIServiceConnection  - CIMInternetServerConnectionBase ServerConnection + string ServiceName
+            ArcGIS.Core.CIM.CIMStandardServiceConnection - string URL
+            ArcGIS.Core.CIM.CIMWCSServiceConnection - CIMInternetServerConnectionBase ServerConnection + string CoverageName
+            ArcGIS.Core.CIM.CIMWFSServiceConnection - CIMInternetServerConnectionBase ServerConnection + string LayerName
+            ArcGIS.Core.CIM.CIMWMSServiceConnection - CIMInternetServerConnectionBase ServerConnection + string LayerName
+            ArcGIS.Core.CIM.CIMWMTSServiceConnection - CIMInternetServerConnectionBase ServerConnection + string LayerName
+         ArcGIS.Core.CIM.CIMSqlQueryDataConnection - * + string SqlQuery,  string OIDFields, and others
+         ArcGIS.Core.CIM.CIMStandardDataConnection - *
+         ArcGIS.Core.CIM.CIMStreamServiceDataConnection - * + age and expiration members
+         ArcGIS.Core.CIM.CIMTableQueryNameDataConnection - * + string WhereClause and others
+         ArcGIS.Core.CIM.CIMTemporalDataConnection - * + temporal members
+         ArcGIS.Core.CIM.CIMTrackingServerDataConnection - * + purge members
+         ArcGIS.Core.CIM.CIMVectorTileDataConnection - string URI, string ResourcesURI
+         ArcGIS.Core.CIM.CIMVideoDataConnection - string URI
+         ArcGIS.Core.CIM.CIMVoxelDataConnection - string URI
+         ArcGIS.Core.CIM.CIMWorkspaceConnection - * less DatasetType and Dataset
+         ArcGIS.Core.CIM.CIMXYEventDataConnection - CIMDataConnection XYEventTableDataConnection
+
+         ArcGIS.Core.CIM.CIMInternetServerConnectionBase - string URL, bool Anonymous, string User, string Password
+            ArcGIS.Core.CIM.CIMServerConnection - no additional properties
+         */
 
         private void InitDataConnection(CIMDataConnection connection)
         {
-            if (connection is CIMStandardDataConnection conn1) { InitDataConnection(conn1); }
+            if (connection is CIMFeatureDatasetDataConnection conn1) { InitDataConnection(conn1); }
             if (connection is CIMGADataConnection conn2) { InitDataConnection(conn2); }
-            if (connection is CIMKMLDataConnection conn3) { InitDataConnection(conn3); }
-            if (connection is CIMNITFDataConnection conn4) { InitDataConnection(conn4); }
-            if (connection is CIMFeatureDatasetDataConnection conn5) { InitDataConnection(conn5); }
-            if (connection is CIMStandardDataConnection conn6) { InitDataConnection(conn6); }
-            //TODO: finish list
+            if (connection is CIMInMemoryDatasetDataConnection conn3) { InitDataConnection(conn3); }
+            if (connection is CIMInMemoryWorkspaceDataConnection conn4) { InitDataConnection(conn4); }
+            if (connection is CIMKMLDataConnection conn5) { InitDataConnection(conn5); }
+            if (connection is CIMKnowledgeGraphDataConnection conn6) { InitDataConnection(conn6); }
+            if (connection is CIMKnowledgeGraphTableDataConnection conn7) { InitDataConnection(conn7); }
+            if (connection is CIMNetCDFRasterDataConnection conn8) { InitDataConnection(conn8); }
+            if (connection is CIMNetCDFStandardDataConnection conn9) { InitDataConnection(conn9); }
+            if (connection is CIMNITFDataConnection conn10) { InitDataConnection(conn10); }
+            if (connection is CIMRasterBandDataConnection conn11) { InitDataConnection(conn11); }
+            if (connection is CIMRelQueryTableDataConnection conn12) { InitDataConnection(conn12); }
+            if (connection is CIMRouteEventDataConnection conn13) { InitDataConnection(conn13); }
+            if (connection is CIMSceneDataConnection conn32) { InitDataConnection(conn32); }
+            if (connection is CIMAGSServiceConnection conn14) { InitDataConnection(conn14); }
+            if (connection is CIMOGCAPIServiceConnection conn15) { InitDataConnection(conn15); }
+            if (connection is CIMStandardServiceConnection conn16) { InitDataConnection(conn16); }
+            if (connection is CIMWCSServiceConnection conn17) { InitDataConnection(conn17); }
+            if (connection is CIMWFSServiceConnection conn18) { InitDataConnection(conn18); }
+            if (connection is CIMWMSServiceConnection conn19) { InitDataConnection(conn19); }
+            if (connection is CIMWMTSServiceConnection conn20) { InitDataConnection(conn20); }
+            if (connection is CIMSqlQueryDataConnection conn21) { InitDataConnection(conn21); }
+            if (connection is CIMStandardDataConnection conn22) { InitDataConnection(conn22); }
+            if (connection is CIMStreamServiceDataConnection conn23) { InitDataConnection(conn23); }
+            if (connection is CIMTableQueryNameDataConnection conn24) { InitDataConnection(conn24); }
+            if (connection is CIMTemporalDataConnection conn25) { InitDataConnection(conn25); }
+            if (connection is CIMTrackingServerDataConnection conn26) { InitDataConnection(conn26); }
+            if (connection is CIMVectorTileDataConnection conn27) { InitDataConnection(conn27); }
+            if (connection is CIMVideoDataConnection conn28) { InitDataConnection(conn28); }
+            if (connection is CIMVoxelDataConnection conn29) { InitDataConnection(conn29); }
+            if (connection is CIMWorkspaceConnection conn30) { InitDataConnection(conn30); }
+            if (connection is CIMXYEventDataConnection conn31) { InitDataConnection(conn31); }
         }
 
+        //FIXME: Check the URI format for KML, NITF, Scene, VectorTile, Video, Voxel,
+        private void InitDataConnection(CIMFeatureDatasetDataConnection connection)
+        {
+            Container = connection.FeatureDataset;
+            ContainerType = "FeatureDataset";
+            DataSetName = connection.Dataset;
+            DataSetType = FixDatasetType(connection.DatasetType);
+            DataSourceName = connection.Dataset;
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = BuildFullDataSourceName();
+        }
+        private void InitDataConnection(CIMGADataConnection connection)
+        {
+            // TODO: Make this a group theme so we can see all the data sources
+            InitDataConnection(connection.DataConnections[0]);
+        }
+        private void InitDataConnection(CIMInMemoryDatasetDataConnection connection) { }
+        private void InitDataConnection(CIMInMemoryWorkspaceDataConnection connection) { }
+        private void InitDataConnection(CIMKMLDataConnection connection)
+        {
+            WorkspacePath = connection.KMLURI;
+            DataSourceName = Path.GetFileName(WorkspacePath);
+            DataSetName = DataSourceName;
+            DataSetType = "KML File/Service";
+            DataSource = connection.KMLURI;
+        }
+        private void InitDataConnection(CIMKnowledgeGraphDataConnection connection)
+        {
+            DataSetName = connection.Dataset;
+            DataSetType = FixDatasetType(connection.DatasetType);
+            DataSourceName = connection.Dataset;
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = BuildFullDataSourceName();
+        }
+        private void InitDataConnection(CIMKnowledgeGraphTableDataConnection connection)
+        {
+            DataSetName = connection.Dataset;
+            DataSetType = FixDatasetType(connection.DatasetType);
+            DataSourceName = connection.Dataset;
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = BuildFullDataSourceName();
+        }
+        private void InitDataConnection(CIMNetCDFRasterDataConnection connection)
+        {
+            DataSetName = connection.Dataset;
+            DataSetType = FixDatasetType(connection.DatasetType);
+            DataSourceName = connection.Dataset;
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = BuildFullDataSourceName();
+        }
+        private void InitDataConnection(CIMNetCDFStandardDataConnection connection)
+        {
+            DataSetName = connection.Dataset;
+            DataSetType = FixDatasetType(connection.DatasetType);
+            DataSourceName = connection.Dataset;
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = BuildFullDataSourceName();
+        }
+        private void InitDataConnection(CIMNITFDataConnection connection)
+        {
+            WorkspacePath = connection.URI;
+            DataSourceName = Path.GetFileName(WorkspacePath);
+            DataSetName = DataSourceName;
+            DataSetType = "NITF files";
+            DataSource = connection.URI;
+        }
+        private void InitDataConnection(CIMRasterBandDataConnection connection)
+        {
+            Container = connection.Dataset;
+            ContainerType = "RasterDataset";
+            DataSetName = connection.RasterBandName;
+            DataSetType = FixDatasetType(connection.DatasetType);
+            DataSourceName = connection.RasterBandName;
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = BuildFullDataSourceName();
+        }
+        private void InitDataConnection(CIMRelQueryTableDataConnection connection)
+        {
+            // TODO: Make this a group theme so we can also see all the destination table
+            InitDataConnection(connection.SourceTable);
+            //InitDataConnection(connection.destinationTable);
+        }
+        private void InitDataConnection(CIMRouteEventDataConnection connection)
+        {
+            // TODO: Make this a group theme so we can see all the event table
+            InitDataConnection(connection.RouteFeatureClass);
+            //InitDataConnection(connection.EventTable);
+        }
+        private void InitDataConnection(CIMSceneDataConnection connection) { }
+
+        // The next 7 are sub classes of CIMServiceConnection
+        private void InitDataConnection(CIMAGSServiceConnection connection)
+        {
+            WorkspacePath = (connection.ServerConnection as CIMInternetServerConnectionBase)?.URL;
+            DataSourceName = connection.ObjectName;
+            DataSetName = DataSourceName;
+            DataSetType = connection.ObjectType;
+            DataSource = connection.URL;
+        }
+        private void InitDataConnection(CIMOGCAPIServiceConnection connection)
+        {
+            WorkspacePath = connection.ServerConnection.URL;
+            DataSourceName = connection.ServiceName;
+            DataSetName = DataSourceName;
+            DataSetType = "OGC Service";
+            DataSource = BuildFullUrl();
+        }
+        private void InitDataConnection(CIMStandardServiceConnection connection)
+        {
+            WorkspacePath = connection.URL;
+            DataSourceName = connection.ServiceProvider;
+            DataSetName = DataSourceName;
+            DataSetType = connection.ServiceType;
+            DataSource = connection.URL;
+        }
+        private void InitDataConnection(CIMWCSServiceConnection connection)
+        {
+            WorkspacePath = connection.ServerConnection.URL;
+            DataSourceName = connection.CoverageName;
+            DataSetName = DataSourceName;
+            DataSetType = "Web Coverage Service";
+            DataSource = BuildFullUrl();
+        }
+        private void InitDataConnection(CIMWFSServiceConnection connection)
+        {
+            WorkspacePath = connection.ServerConnection.URL;
+            DataSourceName = connection.LayerName;
+            DataSetName = DataSourceName;
+            DataSetType = "Web Feature Service";
+            DataSource = BuildFullUrl();
+        }
+        private void InitDataConnection(CIMWMSServiceConnection connection)
+        {
+            WorkspacePath = connection.ServerConnection.URL;
+            DataSourceName = connection.LayerName;
+            DataSetName = DataSourceName;
+            DataSetType = "Web Mapping Service";
+            DataSource = BuildFullUrl();
+        }
+        private void InitDataConnection(CIMWMTSServiceConnection connection)
+        {
+            WorkspacePath = connection.ServerConnection.URL;
+            DataSourceName = connection.LayerName;
+            DataSetName = DataSourceName;
+            DataSetType = "Web Tile Service";
+            DataSource = BuildFullUrl();
+        }
+        
+        private void InitDataConnection(CIMSqlQueryDataConnection connection)
+        {
+            DataSetName = connection.Dataset;
+            DataSetType = FixDatasetType(connection.DatasetType);
+            DataSourceName = connection.Dataset;
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = BuildFullDataSourceName();
+        }
         private void InitDataConnection(CIMStandardDataConnection connection)
         {
-            //TODO difference between DataSetName and DataSourceName
             DataSetName = connection.Dataset;
             DataSetType = FixDatasetType(connection.DatasetType);
             DataSourceName = connection.Dataset;
@@ -211,12 +575,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             WorkspaceType = connection.WorkspaceFactory.ToString();
             DataSource = BuildFullDataSourceName();
         }
-        private void InitDataConnection(CIMGADataConnection connection) { }
-        private void InitDataConnection(CIMKMLDataConnection connection) { }
-        private void InitDataConnection(CIMNITFDataConnection connection) { }
-        private void InitDataConnection(CIMFeatureDatasetDataConnection connection) {
-            Container = connection.FeatureDataset;
-            ContainerType = "Feature Dataset";
+        private void InitDataConnection(CIMStreamServiceDataConnection connection)
+        {
             DataSetName = connection.Dataset;
             DataSetType = FixDatasetType(connection.DatasetType);
             DataSourceName = connection.Dataset;
@@ -225,6 +585,53 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             WorkspaceType = connection.WorkspaceFactory.ToString();
             DataSource = BuildFullDataSourceName();
         }
+        private void InitDataConnection(CIMTableQueryNameDataConnection connection)
+        {
+            DataSetName = connection.Dataset;
+            DataSetType = FixDatasetType(connection.DatasetType);
+            DataSourceName = connection.Dataset;
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = BuildFullDataSourceName();
+        }
+        private void InitDataConnection(CIMTemporalDataConnection connection)
+        {
+            DataSetName = connection.Dataset;
+            DataSetType = FixDatasetType(connection.DatasetType);
+            DataSourceName = connection.Dataset;
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = BuildFullDataSourceName();
+        }
+        private void InitDataConnection(CIMTrackingServerDataConnection connection)
+        {
+            DataSetName = connection.Dataset;
+            DataSetType = FixDatasetType(connection.DatasetType);
+            DataSourceName = connection.Dataset;
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = BuildFullDataSourceName();
+        }
+        private void InitDataConnection(CIMVectorTileDataConnection connection) { }
+        private void InitDataConnection(CIMVideoDataConnection connection) { }
+        private void InitDataConnection(CIMVoxelDataConnection connection) { }
+        private void InitDataConnection(CIMWorkspaceConnection connection)
+        {
+            WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
+            WorkspaceProgId = connection.WorkspaceFactory.ToString();
+            WorkspaceType = connection.WorkspaceFactory.ToString();
+            DataSource = WorkspacePath;
+        }
+        private void InitDataConnection(CIMXYEventDataConnection connection)
+        {
+            InitDataConnection(connection.XYEventTableDataConnection);
+        }
+
+        #endregion
+
         private string BuildFullDataSourceName()
         {
             if (DataSourceName == null)
@@ -236,13 +643,31 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             return Path.Combine(WorkspacePath, Container, DataSourceName);
         }
 
-        private string LayerClass =>
-            _layer.GetType().Name.Replace("CIM", "").Replace("Layer", " Layer");
+        private string BuildFullUrl()
+        {
+            if (DataSourceName == null)
+                return WorkspacePath;
+            if (WorkspacePath == null)
+                return DataSourceName;
+            return WorkspacePath + "/" + DataSourceName;
+        }
+
+        private string LayerClassName
+        {
+            get
+            {
+                if (_layerClassName == null)
+                {
+                    _layerClassName = _layer.GetType().Name.Replace("CIM", "").Replace("Layer", " Layer");
+                }
+                return _layerClassName;
+            }
+        }
 
         private string LayerDescription =>
             //FIXME: Add other descriptors.  See ArcGis10.x.LayerUtilities.GetLayerDescriptionFromLayer
             // Need Coverage and geometry and other items for iconography
-            string.Join(", ", LayerClass, WorkspaceProgId, ContainerType, DataSetType);
+            string.Join(", ", LayerClassName, WorkspaceProgId, ContainerType, DataSetType);
 
         private string FixWorkspacePath(string conn)
         {
