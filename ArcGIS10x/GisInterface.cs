@@ -42,22 +42,23 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         public static async Task<IGisLayer> ParseItemAtPathAsGisLayerAsync(string path)
         {
-            return await Task<IGisLayer>.Run(() =>
+            string ext = System.IO.Path.GetExtension(path).ToLower();
+            if (ext == ".mxd" || ext == ".mxt")
             {
-                string ext = System.IO.Path.GetExtension(path).ToLower();
-                if (ext == ".mxd" || ext == ".mxt")
-                {
-                    return new TmMap(path) as IGisLayer;
-                }
-                else if (ext == ".lyr")
-                {
-                    return new TmLayer(path) as IGisLayer;
-                }
-                else
-                {
-                    throw new ApplicationException("Path is not a ArcGIS 10.x layer file or map document");
-                }
-            });
+                var mxd = new TmMap(path);
+                await mxd.OpenAsync();
+                return mxd;
+            }
+            else if (ext == ".lyr")
+            {
+                var lyr = new TmLayer(path);
+                await lyr.OpenAsync();
+                return lyr;
+            }
+            else
+            {
+                throw new ApplicationException("Path is not a ArcGIS 10.x layer file or map document");
+            }
         }
 
         public static async Task<string> GetMetadataAsXmlAsync(string path)

@@ -2,19 +2,24 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NPS.AKRO.ThemeManager.ArcGIS
 {
     public class TmMap : GisLayer, IGisLayer
     {
-        private readonly IMapDocument _mapDoc;
+        private readonly string _path;
+        private IMapDocument _mapDoc;
         public TmMap(string path)
         {
-            //FIXME: This will block the UI thread while waiting for a license
-            // Move Async call out of ctor.
-            _mapDoc = MapUtilities.GetMapDocumentFromFileNameAsync(path).Result;
+            _path = path;
             DataType = "ArcMap Document";
             IsGroup = true;
+        }
+
+        public async Task OpenAsync()
+        {
+            _mapDoc = await MapUtilities.GetMapDocumentFromFileNameAsync(_path);
         }
 
         public override IEnumerable<IGisLayer> SubLayers
@@ -59,21 +64,25 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
     public class TmLayer : GisLayer, IGisLayer
     {
-        private readonly ILayer _layer;
+        private readonly string _path;
+        private ILayer _layer;
 
         public TmLayer(string path)
         {
-            //FIXME: This will block the UI thread while waiting for a license
-            // Move Async call out of ctor.
-            var _layer = LayerUtilities.GetLayerFromLayerFileAsync(path).Result;
-            Initialize(_layer);
-
+            _path = path;
         }
 
         internal TmLayer(ILayer layer)
         {
             _layer = layer;
             Initialize(_layer);
+        }
+
+        public async Task OpenAsync()
+        {
+            var layer = await LayerUtilities.GetLayerFromLayerFileAsync(_path);
+            await Task.Run(()=>Initialize(layer));
+            LayerUtilities.CloseOpenLayerFile();
         }
 
         private void Initialize(ILayer layer)
