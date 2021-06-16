@@ -305,7 +305,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             return dataset.Name;
         }
 
-        //FIXME - does this have the complete list of container types
+        //There may be other container types (however, we are not using them)
         internal static string GetDataSourceContainerFromLayer(ILayer layer)
         {
             IDatasetName datasetName = GetDataSetName(layer);

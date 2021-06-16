@@ -395,7 +395,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
 #endregion
 
-#region Data Connections
+        #region Data Connections
 
         /*
          Useful properties on sub classes of CIMDataConnection (an abstract base class with no useful members)
@@ -486,7 +486,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 #endif
         }
 
-        //FIXME: Check the URI format for KML, NITF, Scene, VectorTile, Video, Voxel,
+        //TODO: Check the URI format for KML, NITF, Scene, VectorTile, Video, Voxel,
         private void InitDataConnection(CIMFeatureDatasetDataConnection connection)
         {
             Container = connection.FeatureDataset;
@@ -798,8 +798,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private string LayerDescription
         {
             get {
-                //FIXME: Add other descriptors.  See ArcGis10.x.LayerUtilities.GetLayerDescriptionFromLayer
-                // Need Coverage and geometry and other items for iconography
                 var descriptors = new string[] { LayerClassName, ConnectionClassName, WorkspaceProgId, ContainerType, DataSetType, GeometryType };
                 return string.Join(", ", descriptors.Where(d => !string.IsNullOrEmpty(d)));
             }

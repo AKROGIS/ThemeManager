@@ -35,8 +35,9 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         private static void Load(string path)
         {
-            //FIXME - test with catalog.  Can ".gdb" be anywhere in path?, can a FGDB extension be changed?
-            string text = null;
+            //Searching for ".gdb" in a path name, seems broken, but this is what esri does in thier sample code.
+            //If you have ".gdb" in your path when it is not at the end of a geodatabse folder, will not work with ArcGIS.
+            string text;
             if (path.ToLower().Contains(".gdb\\"))
             {
                 text = GetMetaDataFromFGDB(path);
@@ -233,7 +234,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
             int numberFound;
             //This takes a long time on the first call (loads up the ESRI libraries)
-            //FIXME - If this is the first time, and we are on the UI thread, then provide feedback
+            //Not to worry, this is _always_ called inside an awaited Task.Run().
             Trace.TraceInformation("{0}:     Begin _catalog.GetObjectFromFullName({1}), elapsed ms = {2}", DateTime.Now, path, time.Elapsed.TotalMilliseconds); time.Reset(); time.Start();
             object obj = _catalog.GetObjectFromFullName(path, out numberFound);
             Trace.TraceInformation("{0}:     End   _catalog.GetObjectFromFullName({1}), elapsed ms = {2}", DateTime.Now, path, time.Elapsed.TotalMilliseconds); time.Reset(); time.Start();
@@ -249,7 +250,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                     // TM2.2 stored the data path without the dataset, so
                     // database/dataset/featureclass was saved as just database/featureclass
                     // Therefore if we didn't find database/featureclass, try looking for database/*/featureclass
-                    // FIXME - store the corrected path in the xml file, store uncorrected path in mdb
                     obj = FindInDataset(_catalog, path, out numberFound);
                 if (numberFound == 0)
                     throw new ArgumentException("Path (" + path + ") not found");

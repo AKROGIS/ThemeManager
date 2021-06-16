@@ -195,7 +195,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             }
         }
 
-        //FIXME - get this directly from the layer object, or move this to the themeData object 
+        // Potential cleanup; this could be a derived property from the other layer properties
         private static string GetDataSourceFullNameFromLayer(ILayer layer)
         {
             if (!(layer is IDataLayer))
