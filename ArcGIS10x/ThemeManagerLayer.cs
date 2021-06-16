@@ -17,11 +17,14 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             IsGroup = true;
         }
 
+        //TODO: change to LoadAsync() and await the async hydrating of layers
         public async Task OpenAsync()
         {
             _mapDoc = await MapUtilities.GetMapDocumentFromFileNameAsync(_path);
         }
 
+        // This will read the open map document, which may do blocking IO
+        //TODO: hydrate the map frame and layers an a LoadAsync()
         public override IEnumerable<IGisLayer> SubLayers
         {
             get
@@ -78,15 +81,18 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             Initialize(_layer);
         }
 
-        public async Task OpenAsync()
+        public async Task LoadAsync()
         {
             var layer = await LayerUtilities.GetLayerFromLayerFileAsync(_path);
             await Task.Run(()=>Initialize(layer));
-            LayerUtilities.CloseOpenLayerFile();
+            // Can't close the layer file, because the sub layers are not defined yet.
+            //LayerUtilities.CloseOpenLayerFile();
         }
 
         private void Initialize(ILayer layer)
         {
+            //TODO: Hydrate the sub layers
+
             // Layer properties
             Name = layer.Name;
             DataType =  LayerUtilities.GetLayerDescriptionFromLayer(layer);
@@ -187,6 +193,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             LayerUtilities.CloseOpenLayerFile();
         }
 
+        // This will read the open layer document, which may do blocking IO
+        //TODO: hydrate the subLayers during the LoadAsync()
         public override IEnumerable<IGisLayer> SubLayers
         {
             get

@@ -15,6 +15,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 await EsriLicense.GetLicenseAsync();
                 _mapDocument = new MapDocumentClass();
             }
+            //TODO: await an async open
             _mapDocument.Open(file);
             return _mapDocument.IsMapDocument[file];
         }

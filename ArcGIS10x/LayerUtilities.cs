@@ -24,6 +24,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             //doesn't hurt, and ensures that any layer file left open is closed.
             //all properties on _layerfile throw an exception if _layerfile is not opened
             _layerFile.Close();
+            //TODO: await an async open
             _layerFile.Open(file);
             //return _layerFile.IsLayerFile[file] && _layerFile.Layer != null;
             //The previous check failed on "X:\\GIS\\ThemeMgr\\Albers\\WRST\\IKONOS OrthoNED NearIR- WRST.lyr"
