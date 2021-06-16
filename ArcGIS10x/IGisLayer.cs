@@ -181,7 +181,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         public string DataSetName { get; protected set; }
         public string DataSetType { get; protected set; }
         public bool IsGroup { get; protected set; }
-        public virtual IEnumerable<IGisLayer> SubLayers => new GisLayer[] { };
+        public IEnumerable<IGisLayer> SubLayers { get; protected set; }
 
         public virtual void Close() { }
     }

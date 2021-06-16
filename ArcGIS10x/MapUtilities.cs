@@ -10,14 +10,12 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         private static async Task<bool> InitLayerFileAsync(string file)
         {
-            if (_mapDocument == null)
-            {
-                await EsriLicense.GetLicenseAsync();
+            await EsriLicense.GetLicenseAsync();
+            return await Task.Run(() => {
                 _mapDocument = new MapDocumentClass();
-            }
-            //TODO: await an async open
-            _mapDocument.Open(file);
-            return _mapDocument.IsMapDocument[file];
+                _mapDocument.Open(file);
+                return _mapDocument.IsMapDocument[file];
+            });
         }
 
         internal static async Task<IMapDocument> GetMapDocumentFromFileNameAsync(string file)

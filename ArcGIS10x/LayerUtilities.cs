@@ -12,37 +12,26 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 {
     class LayerUtilities
     {
-        private static LayerFile _layerFile;
-
-        private static async Task<bool> InitLayerFileAsync(string file)
+        private static async Task<ILayer> InitLayerFileAsync(string file)
         {
-            if (_layerFile == null)
+            await EsriLicense.GetLicenseAsync();
+            var layerFile = new LayerFileClass();
+            var layer = await Task.Run(() =>
             {
-                await EsriLicense.GetLicenseAsync();
-                _layerFile = new LayerFileClass();
-            }
-            //doesn't hurt, and ensures that any layer file left open is closed.
-            //all properties on _layerfile throw an exception if _layerfile is not opened
-            _layerFile.Close();
-            //TODO: await an async open
-            _layerFile.Open(file);
-            //return _layerFile.IsLayerFile[file] && _layerFile.Layer != null;
-            //The previous check failed on "X:\\GIS\\ThemeMgr\\Albers\\WRST\\IKONOS OrthoNED NearIR- WRST.lyr"
-            //It might have been due to a memory problem
-            return _layerFile.Layer != null;
+                layerFile.Open(file);
+                var l = layerFile.Layer;
+                layerFile.Close();
+                return l;
+            });
+            return layer;
         }
 
         internal static async Task<ILayer> GetLayerFromLayerFileAsync(string file)
         {
-            if (!await InitLayerFileAsync(file))
+            var layer = await InitLayerFileAsync(file);
+            if (layer == null)
                 throw new Exception("!Error - Layer file (" + file + ") is not valid.");
-            return _layerFile.Layer;
-        }
-
-        internal static void CloseOpenLayerFile()
-        {
-            if (_layerFile != null)
-                _layerFile.Close();
+            return layer;
         }
 
         internal static string GetLayerDescriptionFromLayer(ILayer layer)
@@ -56,7 +45,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 featureInfo = ", " + GetFormattedFeatureInfoFromLayer(layer);
             return layerType + (dataSetType ?? "") + (featureInfo ?? "");
         }
-
 
         internal static string GetLayerTypeFromLayer(ILayer layer)
         {

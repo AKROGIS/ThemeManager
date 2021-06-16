@@ -46,17 +46,13 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             if (ext == ".mxd" || ext == ".mxt")
             {
                 var mxd = new TmMap(path);
-                await mxd.OpenAsync();
-                //TODO: mxd may not be fully hydrated - it will build sublayers as needed, which may block while reading
-                // change the open to a load and fully hydrated the object and all children
+                await mxd.LoadAsync();
                 return mxd;
             }
             else if (ext == ".lyr")
             {
                 var lyr = new TmLayer(path);
-                //TODO: lyr may not be fully hydrated - it will build sublayers as needed, which may block while reading
-                // change the open to a load and fully hydrated the object and all children
-                await lyr.OpenAsync();
+                await lyr.LoadAsync();
                 return lyr;
             }
             else

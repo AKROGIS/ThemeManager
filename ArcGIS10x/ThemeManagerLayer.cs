@@ -9,58 +9,56 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
     public class TmMap : GisLayer, IGisLayer
     {
         private readonly string _path;
-        private IMapDocument _mapDoc;
         public TmMap(string path)
         {
             _path = path;
             DataType = "ArcMap Document";
             IsGroup = true;
+            SubLayers = new List<IGisLayer>();
         }
 
-        //TODO: change to LoadAsync() and await the async hydrating of layers
-        public async Task OpenAsync()
+        public async Task LoadAsync()
         {
-            _mapDoc = await MapUtilities.GetMapDocumentFromFileNameAsync(_path);
-        }
-
-        // This will read the open map document, which may do blocking IO
-        //TODO: hydrate the map frame and layers an a LoadAsync()
-        public override IEnumerable<IGisLayer> SubLayers
-        {
-            get
+            IMapDocument mapDoc = await MapUtilities.GetMapDocumentFromFileNameAsync(_path);
+            await Task.Run(() =>
             {
-                int count = _mapDoc.MapCount;
-                for (int i = 0; i < count; i++)
-                    yield return new TmMapFrame(_mapDoc.Map[i]);
-            }
+                // This will read the open map document, which may do blocking IO
+                LoadMaps(mapDoc);
+            });
+            mapDoc.Close();
         }
 
-        public override void Close()
+        private void LoadMaps(IMapDocument mapDoc)
         {
-            //TODO: This is lame: GetMapDocumentFromFileName() should close file before returning
-            _mapDoc.Close();
+            int count = mapDoc.MapCount;
+            for (int i = 0; i < count; i++)
+                ((List<IGisLayer>)SubLayers).Add(new TmMapFrame(mapDoc.Map[i]));
         }
+
+        public override void Close() { }
+
     }
 
     public class TmMapFrame : GisLayer, IGisLayer
     {
         private readonly IMap _map;
+
         public TmMapFrame(IMap map)
         {
             _map = map;
             Name = _map.Name;
             DataType = "Map Frame";
             IsGroup = true;
+            SubLayers = GetSubLayers();
         }
     
-        public override IEnumerable<IGisLayer> SubLayers
+        private List<IGisLayer> GetSubLayers()
         {
-            get
-            {
-                int count = _map.LayerCount;
-                for (int i = 0; i < count; i++)
-                    yield return new TmLayer(_map.Layer[i]);
-            }
+            var subLayers = new List<IGisLayer>();
+            int count = _map.LayerCount;
+            for (int i = 0; i < count; i++)
+                subLayers.Add(new TmLayer(_map.Layer[i]));
+            return subLayers;
         }
 
     }
@@ -83,20 +81,20 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         public async Task LoadAsync()
         {
+            // Create a Layer object from a layer file
             var layer = await LayerUtilities.GetLayerFromLayerFileAsync(_path);
-            await Task.Run(()=>Initialize(layer));
-            // Can't close the layer file, because the sub layers are not defined yet.
-            //LayerUtilities.CloseOpenLayerFile();
+            // The layer object was fully hydrated from the file; Initialize will do no IO.
+            Initialize(layer);
         }
 
         private void Initialize(ILayer layer)
         {
-            //TODO: Hydrate the sub layers
 
             // Layer properties
             Name = layer.Name;
             DataType =  LayerUtilities.GetLayerDescriptionFromLayer(layer);
             IsGroup = DataType == "Group Layer";
+            SubLayers = GetSubLayers(layer);
 
             // data source properties;
             if (LayerUtilities.HasDataSetName(layer))
@@ -187,29 +185,21 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 DataSource = "!Error - Data source not found";
         }
 
-        public override void Close()
-        {
-            //TODO: This is lame: GetLayerFromLayerFile() should close file before returning
-            LayerUtilities.CloseOpenLayerFile();
-        }
+        public override void Close() { }
 
-        // This will read the open layer document, which may do blocking IO
-        //TODO: hydrate the subLayers during the LoadAsync()
-        public override IEnumerable<IGisLayer> SubLayers
+        private List<IGisLayer> GetSubLayers(ILayer layer)
         {
-            get
+            var subLayers = new List<IGisLayer>();
+            // GroupLayer implements IGroupLayer and ICompositeLayer
+            if (!(layer is ICompositeLayer))
             {
-                // GroupLayer implements IGroupLayer and ICompositeLayer
-                if (!(_layer is ICompositeLayer))
-                {
-                    Debug.Print("layer is not an ICompositeLayer; BuildSubThemes must be called with a Group Layer.");
-                    yield break;
-                }
-                ICompositeLayer gl = (ICompositeLayer)_layer;
-                int count = gl.Count;
-                for (int i = 0; i < count; i++)
-                    yield return new TmLayer(gl.Layer[i]);
+                return subLayers;
             }
+            ICompositeLayer gl = (ICompositeLayer)_layer;
+            int count = gl.Count;
+            for (int i = 0; i < count; i++)
+                subLayers.Add(new TmLayer(gl.Layer[i]));
+            return subLayers;
         }
 
         // Potential cleanup; this could be a derived property from the other layer properties

@@ -55,6 +55,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             {
                 IsGroup = true;
                 DataType = "Group Layer";
+                SubLayers = GetSubLayers();
             }
             else
             {
@@ -62,18 +63,15 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             }
         }
 
-        public override IEnumerable<IGisLayer> SubLayers
+        private IEnumerable<IGisLayer> GetSubLayers()
         {
-            get
+            if (_proxy == null)
             {
-                if (_proxy == null)
-                {
-                    return _layerDoc.Layers.Select(l => new ProLayer(_path, _layerDoc, l));
-                }
-                else
-                {
-                    return _proxy.SubLayers;
-                }
+                return _layerDoc.Layers.Select(l => new ProLayer(_path, _layerDoc, l));
+            }
+            else
+            {
+                return _proxy.SubLayers;
             }
         }
     }
@@ -99,20 +97,18 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 DataType = "Error: " + ex.Message;
             }
             if (DataType == null) { DataType = LayerDescription; }
+            SubLayers = GetSubLayers();
         }
 
-        public override IEnumerable<IGisLayer> SubLayers
+        private IEnumerable<IGisLayer> GetSubLayers()
         {
-            get
+            if (_subLayers == null)
             {
-                if (_subLayers == null)
-                {
-                    return base.SubLayers;
-                }
-                else
-                {
-                    return _subLayers.Select(l => new ProLayer(_path, _layerDoc, l));
-                }
+                return new List<IGisLayer>();
+            }
+            else
+            {
+                return _subLayers.Select(l => new ProLayer(_path, _layerDoc, l));
             }
         }
 
