@@ -38,7 +38,6 @@ namespace NPS.AKRO.ThemeManager.Model
             }
             else
                 BuildThemeDataForLayer(tmNode.Data, layer);
-            layer.Close();
         }
 
         private static async Task BuildSubThemesForGroupLayerAsync(TmNode node, IGisLayer layer)

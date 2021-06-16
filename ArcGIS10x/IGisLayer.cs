@@ -158,11 +158,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         /// </summary>
         string WorkspaceType { get; }
 
-        /// <summary>
-        /// Close the map or layer file when done processing it.
-        /// FIXME: Do not hold the map or layer file open.
-        /// </summary>
-        void Close();
     }
 
     public class GisLayer: IGisLayer
@@ -183,6 +178,5 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         public bool IsGroup { get; protected set; }
         public IEnumerable<IGisLayer> SubLayers { get; protected set; }
 
-        public virtual void Close() { }
     }
 }

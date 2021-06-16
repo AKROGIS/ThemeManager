@@ -35,8 +35,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 ((List<IGisLayer>)SubLayers).Add(new TmMapFrame(mapDoc.Map[i]));
         }
 
-        public override void Close() { }
-
     }
 
     public class TmMapFrame : GisLayer, IGisLayer
@@ -184,8 +182,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             if (string.IsNullOrEmpty(DataSource))
                 DataSource = "!Error - Data source not found";
         }
-
-        public override void Close() { }
 
         private List<IGisLayer> GetSubLayers(ILayer layer)
         {
