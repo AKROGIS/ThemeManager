@@ -24,37 +24,36 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private void Open()
         {
             var text = System.IO.File.ReadAllText(_path, Encoding.UTF8);
-            var _layerDoc = CIMLayerDocument.FromJson(text);
-            Initialize(_layerDoc);
+            var layerDoc = CIMLayerDocument.FromJson(text);
+            Initialize(layerDoc);
         }
 
-        private void Initialize(CIMLayerDocument _layerDoc)
+        private void Initialize(CIMLayerDocument layerDoc)
         {
             // If a layer doc has only one layer, pose as that layer, otherwise pose as a group layer
-            if (_layerDoc.Layers.Length == 1)
+            if (layerDoc.Layers.Length == 1)
             {
-                var _proxy = new ProLayer(_path, _layerDoc, _layerDoc.Layers[0]);
+                var proxy = new ProLayer(_path, layerDoc, layerDoc.Layers[0]);
 
-                Container = _proxy.Container;
-                ContainerType = _proxy.ContainerType;
-                DataSetName = _proxy.DataSetName;
-                DataSetType = _proxy.DataSetType;
-                DataSource = _proxy.DataSource;
-                DataSourceName = _proxy.DataSourceName;
-                DataType = _proxy.DataType;
-                IsGroup = _proxy.IsGroup;
-                SubLayers = _proxy.SubLayers;
-                Name = _proxy.Name;
-                WorkspacePath = _proxy.WorkspacePath;
-                WorkspaceProgId = _proxy.WorkspaceProgId;
-                WorkspaceType = _proxy.WorkspaceType;
-
+                Container = proxy.Container;
+                ContainerType = proxy.ContainerType;
+                DataSetName = proxy.DataSetName;
+                DataSetType = proxy.DataSetType;
+                DataSource = proxy.DataSource;
+                DataSourceName = proxy.DataSourceName;
+                DataType = proxy.DataType;
+                IsGroup = proxy.IsGroup;
+                SubLayers = proxy.SubLayers;
+                Name = proxy.Name;
+                WorkspacePath = proxy.WorkspacePath;
+                WorkspaceProgId = proxy.WorkspaceProgId;
+                WorkspaceType = proxy.WorkspaceType;
             }
-            else if (_layerDoc.Layers.Length > 1)
+            else if (layerDoc.Layers.Length > 1)
             {
                 IsGroup = true;
                 DataType = "Group Layer";
-                SubLayers = _layerDoc.Layers.Select(l => new ProLayer(_path, _layerDoc, l));
+                SubLayers = layerDoc.Layers.Select(l => new ProLayer(_path, layerDoc, l));
             }
             else
             {
