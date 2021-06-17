@@ -580,15 +580,13 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region INotifyPropertyChanged Interface
 
-        internal bool IssueUpdates = true;
-
         [field: NonSerializedAttribute()]
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged(string propertyName)
         {
             PropertyChangedEventHandler handle = PropertyChanged;
-            if (handle != null && IssueUpdates)
+            if (handle != null)
                 handle(this, new PropertyChangedEventArgs(propertyName));
         }
 
