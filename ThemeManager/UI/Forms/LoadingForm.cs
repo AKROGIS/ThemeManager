@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NPS.AKRO.ThemeManager.UI.Forms
@@ -19,7 +20,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         internal string Message { get; set; }
         internal TmNode Node { get; set; }
         internal string Path { get; set; }
-        internal Func<BackgroundWorker, TmNode, string, string> Command { get; set; }
+        internal Func<BackgroundWorker, TmNode, string, Task<string>> Command { get; set; }
         private string Error { get; set; }
 
         private void LoadingForm_Shown(object sender, EventArgs e)
@@ -73,7 +74,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             
             //I'm not sure I should be accessing these form properties on the background thread,
             //but it seems to be working.
-            e.Result = Command(bw, Node, Path);
+            e.Result = Command(bw, Node, Path).Result;
 
             //Command does not have access to the DoWorkEventArgs, and cannot set the Cancel property
             //In order to respond to a cancel event, Command will need to periodically
@@ -125,7 +126,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             progressLabel.Text = Message;
         }
 
-        internal string SyncNode(BackgroundWorker bw, TmNode root, string path)
+        internal async Task<string> SyncNodeAsync(BackgroundWorker bw, TmNode root, string path)
         {
             if (root == null)
                 return "No node provided for sync";
@@ -145,7 +146,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     // May need to load/verify metadata which could throw.
                     // No need to recurse because we already have a list of all nodes in this tree
                     // This is in a cancellable background thread, so we can just wait for the task to finish
-                    node.SyncWithMetadataAsync(false).RunSynchronously();
+                    await node.SyncWithMetadataAsync(false);
                 }
                 catch (Exception ex)
                 {
@@ -159,7 +160,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             return null;
         }
 
-        internal string ReloadNode(BackgroundWorker bw, TmNode root, string path)
+        internal async Task<string> ReloadNodeAsync(BackgroundWorker bw, TmNode root, string path)
         {
             if (root == null)
                 return "No node provided for reload";
@@ -179,7 +180,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                     // This is on a cancellable background thread, so we do the async work synchronously
                     // node.ReloadTheme() may need to load to query ArcObjects
                     // which could throw any number of exceptions.
-                    node.ReloadThemeAsync().RunSynchronously();
+                    await node.ReloadThemeAsync();
                 }
                 catch (Exception ex)
                 {

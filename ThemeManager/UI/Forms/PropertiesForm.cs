@@ -103,7 +103,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 form.Message = "Reloading all themes in " + node.Name + "...";
             form.AllowCancel = true;
             form.Node = node;
-            form.Command = form.ReloadNode;
+            form.Command = form.ReloadNodeAsync;
             form.ShowDialog();
             //Treeview may need updating.
             //Data type (icon) may have changed, and sub-themes may have been added/removed.
@@ -167,7 +167,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             form.Message = "Syncing all themes in " + node.Name + "...";
             form.AllowCancel = true;
             form.Node = node;
-            form.Command = form.SyncNode;
+            form.Command = form.SyncNodeAsync;
             form.ShowDialog();
             //Treeview may need updating.
             //Description is used for tool tips, and PubDate is used for highlighting the icon.
