@@ -55,7 +55,10 @@ namespace NPS.AKRO.ThemeManager.Model
         private bool _readonly;
         private ThemeListStatus _status;
         private TmNodeType _type;
-        private bool _issueUpdates = true; //Should this object issue update events or not, inherited from parent.
+        //Should this object issue update events or not, inherited from parent.
+        // We will likely be created on a background thread (loading or reloading),
+        // so don't update the UI until approved to do so.
+        private bool _issueUpdates = false;
 
         public TmNode(TmNodeType nodeType)
             : this(nodeType, null, null, null, null, null, null)
@@ -1365,18 +1368,32 @@ namespace NPS.AKRO.ThemeManager.Model
         #endregion
 
         #region events
+
+        // When doing tasks on a background thread (reloading/syncing...)
+        // We need to disable all of the property notifications that might
+        // update the UI (on a different thread).
         public void SuspendUpdates()
         {
             _issueUpdates = false;
+            Data.IssueUpdates = false;
+            Metadata.IssueUpdates = false;
             foreach (var child in Children)
                 child.SuspendUpdates();
+            //Also, turn off UI updates from the ThemeList Node (IsDirty property)
+            //Do not call SuspendUpdates() as that will call all nodes indefinitely
+            //Unfortunately, this field will be set multiple times (once for each node
+            //in the tree below this node)
+            ThemeList._issueUpdates = false;
         }
 
         public void ResumeUpdates()
         {
             _issueUpdates = true;
+            Data.IssueUpdates = true;
+            Metadata.IssueUpdates = true;
             foreach (var child in Children)
                 child.ResumeUpdates();
+            ThemeList._issueUpdates = true;
         }
 
 

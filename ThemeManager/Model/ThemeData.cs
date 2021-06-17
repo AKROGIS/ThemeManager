@@ -219,6 +219,8 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #endregion
 
+        internal bool IssueUpdates = true;
+
         #region INotifyPropertyChanged
 
         [field: NonSerializedAttribute()]
@@ -227,7 +229,8 @@ namespace NPS.AKRO.ThemeManager.Model
         private void OnPropertyChanged(string property)
         {
             PropertyChangedEventHandler handle = PropertyChanged;
-            handle?.Invoke(this, new PropertyChangedEventArgs(property));
+            if (handle != null && IssueUpdates)
+                handle(this, new PropertyChangedEventArgs(property));
         }
 
         #endregion
