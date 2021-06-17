@@ -32,7 +32,6 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.errorLabel = new System.Windows.Forms.Label();
             this.cancelButton = new System.Windows.Forms.Button();
-            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.progressLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
@@ -80,14 +79,6 @@
             this.cancelButton.Visible = false;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // backgroundWorker
-            // 
-            this.backgroundWorker.WorkerReportsProgress = true;
-            this.backgroundWorker.WorkerSupportsCancellation = true;
-            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
-            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
-            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
-            // 
             // progressLabel
             // 
             this.progressLabel.AutoSize = true;
@@ -126,7 +117,6 @@
         internal System.Windows.Forms.ProgressBar progressBar;
         internal System.Windows.Forms.Label errorLabel;
         internal System.Windows.Forms.Button cancelButton;
-        private System.ComponentModel.BackgroundWorker backgroundWorker;
         internal System.Windows.Forms.Label progressLabel;
 
     }
