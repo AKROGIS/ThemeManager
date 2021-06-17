@@ -45,6 +45,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
                 DataSourceName = _proxy.DataSourceName;
                 DataType = _proxy.DataType;
                 IsGroup = _proxy.IsGroup;
+                SubLayers = _proxy.SubLayers;
                 Name = _proxy.Name;
                 WorkspacePath = _proxy.WorkspacePath;
                 WorkspaceProgId = _proxy.WorkspaceProgId;
@@ -55,26 +56,15 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             {
                 IsGroup = true;
                 DataType = "Group Layer";
-                SubLayers = GetSubLayers();
+                SubLayers = _layerDoc.Layers.Select(l => new ProLayer(_path, _layerDoc, l));
             }
             else
             {
-                throw new ApplicationException("The layer file to have less than 1 layer");
-            }
-        }
-
-        private IEnumerable<IGisLayer> GetSubLayers()
-        {
-            if (_proxy == null)
-            {
-                return _layerDoc.Layers.Select(l => new ProLayer(_path, _layerDoc, l));
-            }
-            else
-            {
-                return _proxy.SubLayers;
+                throw new ApplicationException("The layer file has less than 1 layer");
             }
         }
     }
+
     public class ProLayer : GisLayer, IGisLayer
     {
         private readonly CIMDefinition _layer;
