@@ -64,7 +64,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
     public class TmLayer : GisLayer, IGisLayer
     {
         private readonly string _path;
-        private ILayer _layer;
 
         public TmLayer(string path)
         {
@@ -73,8 +72,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         internal TmLayer(ILayer layer)
         {
-            _layer = layer;
-            Initialize(_layer);
+            Initialize(layer);
         }
 
         public async Task LoadAsync()
@@ -191,7 +189,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             {
                 return subLayers;
             }
-            ICompositeLayer gl = (ICompositeLayer)_layer;
+            ICompositeLayer gl = (ICompositeLayer)layer;
             int count = gl.Count;
             for (int i = 0; i < count; i++)
                 subLayers.Add(new TmLayer(gl.Layer[i]));
