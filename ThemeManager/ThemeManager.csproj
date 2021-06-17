@@ -28,7 +28,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NPS.AKRO.ThemeManager</RootNamespace>
     <AssemblyName>ThemeManager</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetZone>LocalIntranet</TargetZone>
@@ -65,7 +65,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -385,9 +385,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ArcGisPro\ArcGisPro.csproj">
-      <Project>{38bb4ce3-56ca-4b50-a8ea-6682a5d4cef2}</Project>
-      <Name>ArcGisPro</Name>
+    <ProjectReference Include="..\ArcGIS10x\ArcGIS10x.csproj">
+      <Project>{27ca5cf4-3a56-4efb-8daf-293b365cac4a}</Project>
+      <Name>ArcGIS10x</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
