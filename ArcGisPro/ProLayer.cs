@@ -12,8 +12,6 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
     public class ProLayerDoc : GisLayer, IGisLayer
     {
         private readonly string _path;
-        private CIMLayerDocument _layerDoc;
-        private ProLayer _proxy;
 
         public ProLayerDoc(string path)
         {
@@ -26,16 +24,16 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private void Open()
         {
             var text = System.IO.File.ReadAllText(_path, Encoding.UTF8);
-            _layerDoc = CIMLayerDocument.FromJson(text);
-            Initialize();
+            var _layerDoc = CIMLayerDocument.FromJson(text);
+            Initialize(_layerDoc);
         }
 
-        private void Initialize()
+        private void Initialize(CIMLayerDocument _layerDoc)
         {
             // If a layer doc has only one layer, pose as that layer, otherwise pose as a group layer
             if (_layerDoc.Layers.Length == 1)
             {
-                _proxy = new ProLayer(_path, _layerDoc, _layerDoc.Layers[0]);
+                var _proxy = new ProLayer(_path, _layerDoc, _layerDoc.Layers[0]);
 
                 Container = _proxy.Container;
                 ContainerType = _proxy.ContainerType;
