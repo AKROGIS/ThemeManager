@@ -2,7 +2,6 @@
 using NPS.AKRO.ThemeManager.Model;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -45,7 +44,10 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             cancelButton.Text = "Stop";
             var result = await Command(Node);
             if (result == null)
+            {
                 Close();
+                return;
+            }
             errorLabel.Text = result;
             errorLabel.Visible = true;
             cancelButton.Visible = true;
@@ -121,11 +123,11 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 }
                 catch (Exception ex)
                 {
-                    root.ResumeUpdates(); 
+                    root.ResumeUpdates();
+                    return ex.Message;
                 }
                 if (CancelRequested)
                 {
-                    Console.WriteLine("Canceling...");
                     root.ResumeUpdates();
                     return null;
                 }
