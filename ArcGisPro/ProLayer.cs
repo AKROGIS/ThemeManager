@@ -722,11 +722,16 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         private string BuildFullDataSourceName()
         {
-            if (DataSourceName == null)
+            // Some odd data sources (i.e. raster functions) can have XML in the various names
+            if (DataSourceName != null && DataSourceName.StartsWith("<Xml")
+                && DataSourceName.Contains("FunctionRasterDatasetName"))
+                return "XML Raster Function Defintion";
+            //Still protect against other fields with illegal paths
+            if (DataSourceName == null || DataSourceName.StartsWith("<"))
                 return null;
-            if (WorkspacePath == null)
+            if (WorkspacePath == null || WorkspacePath.StartsWith("<"))
                 return DataSourceName;
-            if (Container == null)
+            if (Container == null || Container.StartsWith("<"))
                 return Path.Combine(WorkspacePath, DataSourceName);
             return Path.Combine(WorkspacePath, Container, DataSourceName);
         }
