@@ -36,7 +36,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         private static AoInitialize GetLicense(ProductCode product, esriLicenseProductCode level)
         {
-            AoInitialize aoInit = null;
+            AoInitialize aoInit;
             try
             {
                 Trace.TraceInformation($"Obtaining {product}-{level} license");

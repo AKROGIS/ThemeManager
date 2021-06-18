@@ -103,8 +103,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
         private void toolComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Tool tool = reportComboBox.SelectedItem as Tool;
-            if (tool != null)
+            if (reportComboBox.SelectedItem is Tool tool)
                 statusLabel.Text = tool.Description;
         }
 
@@ -112,14 +111,12 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
         {
             if (goButton.Text == "Go")
             {
-                Tool tool = reportComboBox.SelectedItem as Tool;
-                if (tool == null)
+                if (!(reportComboBox.SelectedItem is Tool tool))
                 {
                     MessageBox.Show("Unexpected error accessing the report Combo Box");
                     return;
                 }
-                TmNode themeList = themeListComboBox.SelectedItem as TmNode;
-                if (themeList == null)
+                if (!(themeListComboBox.SelectedItem is TmNode themeList))
                 {
                     MessageBox.Show("Unexpected error accessing the theme list Combo Box");
                     return;
@@ -429,8 +426,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
             else
             {
                 // if e.Cancelled = true, then e.Results throws and exception.
-                DataTable data = e.Result as DataTable;
-                if (data == null)// The operation completed normally.
+                if (!(e.Result is DataTable data))// The operation completed normally.
                     statusLabel.Text = "Error: No results were returned";
                 else
                 {

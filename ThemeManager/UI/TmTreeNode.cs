@@ -11,9 +11,7 @@ namespace NPS.AKRO.ThemeManager.UI
     {
         public TmTreeNode(TmNode tmNode)
         {
-            if (tmNode == null)
-                throw new ArgumentNullException("tmNode");
-            TmNode = tmNode;
+            TmNode = tmNode ?? throw new ArgumentNullException("tmNode");
             UpdateProperties();
 
             tmNode.PropertyChanged += Data_PropertyChanged;

@@ -286,7 +286,7 @@ namespace NPS.AKRO.ThemeManager.Model
             if ((data.IsEsriMapService || data.IsEsriImageService) && data.DataSource != null)
             {
                 newMetadata.Path = Regex.Replace(data.DataSource, "/arcgis/services/", "/arcgis/rest/services/", RegexOptions.IgnoreCase);
-                newMetadata.Path = newMetadata.Path + "/info/metadata";
+                newMetadata.Path += "/info/metadata";
                 newMetadata.Type = MetadataType.Url;
                 newMetadata.Format = MetadataFormat.Xml;
                 return newMetadata;
@@ -294,7 +294,7 @@ namespace NPS.AKRO.ThemeManager.Model
             if (data.IsEsriFeatureService && data.WorkspacePath != null)
             {
                 newMetadata.Path = Regex.Replace(data.WorkspacePath, "/arcgis/services/", "/arcgis/rest/services/", RegexOptions.IgnoreCase);
-                newMetadata.Path = newMetadata.Path + "/info/metadata";
+                newMetadata.Path += "/info/metadata";
                 newMetadata.Type = MetadataType.Url;
                 newMetadata.Format = MetadataFormat.Xml;
                 return newMetadata;
@@ -690,8 +690,6 @@ namespace NPS.AKRO.ThemeManager.Model
         /// This method may stall while an Esri license is obtained.
         /// </remarks>
         /// <returns>A tuple with Summary, Description, Tags and a Publication date</returns>
-        [SuppressMessage("ReSharper", "CommentTypo")]
-        [SuppressMessage("ReSharper", "StringLiteralTypo")]
         internal async Task<GeneralInfo> GetGeneralInfoAsync()
         {
             string description = null;
@@ -752,8 +750,7 @@ namespace NPS.AKRO.ThemeManager.Model
                                              !value.StartsWith("REQUIRED:"));  // Unpopulated data from FGDC template
                 // Normalize date string and convert to optional datetime
                 pubDateString = NormalizeFgdcDateString(pubDateString);
-                DateTime date;
-                if (DateTime.TryParse(pubDateString, out date))
+                if (DateTime.TryParse(pubDateString, out DateTime date))
                     publicationDate = date;
 
                 // Summary (aka Purpose)

@@ -48,7 +48,6 @@ namespace NPS.AKRO.ThemeManager.Model
     [Serializable]
     class TmNode : ICloneable, INotifyPropertyChanged
     {
-        static readonly int CountOfNodeTypes = Enum.GetValues(typeof(TmNodeType)).Length;
         private static readonly DateTime DefaultPubDate = new DateTime(1900, 01, 01); //FIXME - make default date a setting
         private ThemeData _data;
         private Store _dataStore;
@@ -72,8 +71,8 @@ namespace NPS.AKRO.ThemeManager.Model
             _name = name;
             Parent = parent;
 
-            _pubDate = pubDate.HasValue ? pubDate.Value : DefaultPubDate;
-            //_readonly = (Parent == null) ? false : Parent._readonly;
+            _pubDate = pubDate ?? DefaultPubDate;
+            //_readonly = Parent != null && Parent._readonly;
 
             _description = desc;
 
@@ -85,8 +84,10 @@ namespace NPS.AKRO.ThemeManager.Model
 
             if (_type == TmNodeType.ThemeList)
             {
-                Author = new ThemeListAuthor();
-                Author.Name = Environment.UserName;
+                Author = new ThemeListAuthor
+                {
+                    Name = Environment.UserName
+                };
                 _status = ThemeListStatus.Created;
                 _dataStore = TryToGetDataStore();
                 // TryToGetDataStore() will set _readonly for theme
@@ -636,7 +637,7 @@ namespace NPS.AKRO.ThemeManager.Model
                 //key = key + "lock";
                 key = "ThemeListlock";
             if (DaysSinceNewestPublication < Settings.Default.AgeInDays)
-                key = key + "new";
+                key += "new";
             return key;
         }
 
@@ -783,8 +784,10 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             Debug.Assert(this.IsCategory, "Should only be called on a Category Node");
             TmNode newNode = new TmNode(TmNodeType.ThemeList, this.Name, null, new ThemeData(path), this.Metadata.Clone() as Metadata, this.Description, null);
-            ThemeListAuthor author = new ThemeListAuthor();
-            author.Name = Environment.UserName;
+            ThemeListAuthor author = new ThemeListAuthor
+            {
+                Name = Environment.UserName
+            };
             newNode.Author = author;
             foreach (var child in Children)
                 newNode.Add(child.Copy());
@@ -884,12 +887,12 @@ namespace NPS.AKRO.ThemeManager.Model
 
         private TmNode ParentTheme(TmNode node)
         {
-            if (Parent == null)
+            if (node.Parent == null)
                 return null;
-            if (Parent.IsTheme)
-                return Parent;
-            if (Parent.IsSubTheme)
-                return ParentTheme(this);
+            if (node.Parent.IsTheme)
+                return node.Parent;
+            if (node.Parent.IsSubTheme)
+                return ParentTheme(node);
             return null;
         }
 
@@ -918,7 +921,7 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             foreach (SearchOptions search in searchParameters)
             {
-                bool lastSearch = (!searchParameters.MatchAll) ? true : searchParameters.IsLast(search);
+                bool lastSearch = (!searchParameters.MatchAll) || searchParameters.IsLast(search);
                 bool found;
                 switch (search.SearchType)
                 {
@@ -1115,8 +1118,8 @@ namespace NPS.AKRO.ThemeManager.Model
         {
             if (!IsValidThemeList)
                 throw new Exception("This is not a valid ThemeList");
-            if (_dataStore is MdbStore)
-                return ((MdbStore)_dataStore).BuildThemeFromId(themeId);
+            if (_dataStore is MdbStore store)
+                return store.BuildThemeFromId(themeId);
             else
                 throw new Exception("This is not a MDB ThemeList");
         }
@@ -1143,8 +1146,7 @@ namespace NPS.AKRO.ThemeManager.Model
             data = xele.Element("pubdate");
             if (data != null)
             {
-                DateTime temp;
-                if (DateTime.TryParse(data.Value, out temp))
+                if (DateTime.TryParse(data.Value, out DateTime temp))
                     PubDate = temp;
             }
 

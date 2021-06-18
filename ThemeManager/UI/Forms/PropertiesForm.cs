@@ -163,10 +163,12 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
                 MessageBox.Show("Internal Error:  Unable to find the node to sync.");
                 return;
             }
-            LoadingForm form = new LoadingForm();
-            form.Message = "Syncing all themes in " + node.Name + "...";
-            form.AllowCancel = true;
-            form.Node = node;
+            LoadingForm form = new LoadingForm
+            {
+                Message = "Syncing all themes in " + node.Name + "...",
+                AllowCancel = true,
+                Node = node
+            };
             form.Command = form.SyncNodeAsync;
             form.ShowDialog();
             //Treeview may need updating.

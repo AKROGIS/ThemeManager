@@ -353,7 +353,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         }
 #if !Pro25
         // Added in 2.6
-        private void InitGraphics(CIMGraphicsLayer layer)
+        private void InitGraphics(CIMGraphicsLayer _)
         {
             // No sub layers and no data connection, just show a node with a name and a type
         }
@@ -489,8 +489,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             InitDataConnection(connection.DataConnections[0]);
             ConnectionClassName = "Geostatistical Analysis";
         }
-        private void InitDataConnection(CIMInMemoryDatasetDataConnection connection) { }
-        private void InitDataConnection(CIMInMemoryWorkspaceDataConnection connection) { }
+        private void InitDataConnection(CIMInMemoryDatasetDataConnection _) { }
+        private void InitDataConnection(CIMInMemoryWorkspaceDataConnection _) { }
         private void InitDataConnection(CIMKMLDataConnection connection)
         {
             WorkspacePath = connection.KMLURI;
@@ -545,7 +545,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             InitDataConnection(connection.RouteFeatureClass);
             //InitDataConnection(connection.EventTable);
         }
-        private void InitDataConnection(CIMSceneDataConnection connection) { }
+        private void InitDataConnection(CIMSceneDataConnection _) { }
 
         // The next 7 are sub classes of CIMServiceConnection
         private void InitDataConnection(CIMAGSServiceConnection connection)
@@ -658,8 +658,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             WorkspaceType = connection.WorkspaceFactory.ToString();
             DataSource = BuildFullDataSourceName();
         }
-        private void InitDataConnection(CIMVectorTileDataConnection connection) { }
-        private void InitDataConnection(CIMVideoDataConnection connection) { }
+        private void InitDataConnection(CIMVectorTileDataConnection _) { }
+        private void InitDataConnection(CIMVideoDataConnection _) { }
         private void InitDataConnection(CIMWorkspaceConnection connection)
         {
             WorkspacePath = FixWorkspacePath(connection.WorkspaceConnectionString);
@@ -714,7 +714,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
             DataSource = BuildFullUrl();
             ConnectionClassName = "OGC API Service";
         }
-        private void InitDataConnection(CIMVoxelDataConnection connection) { }
+        private void InitDataConnection(CIMVoxelDataConnection _) { }
 #endif
 #endif
 

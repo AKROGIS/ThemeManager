@@ -13,7 +13,7 @@ namespace ThemeManager
     class Program
     {
         [STAThread]
-        static async Task Main(string[] args)
+        static async Task Main(string[] _)
         {
             //await InspectLayerFileAsync(@"C:\tmp\plants.lyrx");
             await InspectLayerFolderAsync(@"C:\tmp\ThemeMgrPro");
