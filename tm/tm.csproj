@@ -42,46 +42,46 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ThemeManager\Extensions\FileAsync.cs">
+    <Compile Include="..\ThemeManager10x\Extensions\FileAsync.cs">
       <Link>Extensions\FileAsync.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Extensions\LinqExtensions.cs">
+    <Compile Include="..\ThemeManager10x\Extensions\LinqExtensions.cs">
       <Link>Extensions\LinqExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Extensions\NativeMethods.cs">
+    <Compile Include="..\ThemeManager10x\Extensions\NativeMethods.cs">
       <Link>Extensions\NativeMethods.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Extensions\StringExtensions.cs">
+    <Compile Include="..\ThemeManager10x\Extensions\StringExtensions.cs">
       <Link>Extensions\StringExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Model\DateRange.cs">
+    <Compile Include="..\ThemeManager10x\Model\DateRange.cs">
       <Link>Model\DateRange.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Model\Metadata.cs">
+    <Compile Include="..\ThemeManager10x\Model\Metadata.cs">
       <Link>Model\Metadata.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Model\SearchParameters.cs">
+    <Compile Include="..\ThemeManager10x\Model\SearchParameters.cs">
       <Link>Model\SearchParameters.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Model\ThemeBuilder.cs">
+    <Compile Include="..\ThemeManager10x\Model\ThemeBuilder.cs">
       <Link>Model\ThemeBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Model\ThemeData.cs">
+    <Compile Include="..\ThemeManager10x\Model\ThemeData.cs">
       <Link>Model\ThemeData.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Model\ThemeListAuthor.cs">
+    <Compile Include="..\ThemeManager10x\Model\ThemeListAuthor.cs">
       <Link>Model\ThemeListAuthor.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Model\ThemeList\MdbStore.cs">
+    <Compile Include="..\ThemeManager10x\Model\ThemeList\MdbStore.cs">
       <Link>Model\ThemeList\MdbStore.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Model\ThemeList\Store.cs">
+    <Compile Include="..\ThemeManager10x\Model\ThemeList\Store.cs">
       <Link>Model\ThemeList\Store.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Model\ThemeList\XmlStore.cs">
+    <Compile Include="..\ThemeManager10x\Model\ThemeList\XmlStore.cs">
       <Link>Model\ThemeList\XmlStore.cs</Link>
     </Compile>
-    <Compile Include="..\ThemeManager\Model\TmNode.cs">
+    <Compile Include="..\ThemeManager10x\Model\TmNode.cs">
       <Link>Model\TmNode.cs</Link>
     </Compile>
     <Compile Include="Shims.cs" />
@@ -98,7 +98,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

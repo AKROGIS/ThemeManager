@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31313.79
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThemeManager", "ThemeManager\ThemeManager.csproj", "{612746C6-CED1-40E6-8E8B-1A8565700C00}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThemeManager10x", "ThemeManager10x\ThemeManager10x.csproj", "{612746C6-CED1-40E6-8E8B-1A8565700C00}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tm", "tm\tm.csproj", "{28C37214-9C9C-4893-ACB2-AD908E3B9EDF}"
 EndProject
