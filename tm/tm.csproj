@@ -92,9 +92,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ArcGIS10x\ArcGIS10x.csproj">
+    <ProjectReference Include="..\ArcGis10x\ArcGis10x.csproj">
       <Project>{27ca5cf4-3a56-4efb-8daf-293b365cac4a}</Project>
-      <Name>ArcGIS10x</Name>
+      <Name>ArcGis10x</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

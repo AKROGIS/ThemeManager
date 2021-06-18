@@ -38,7 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ArcGIS10x\IGisLayer.cs">
+    <Compile Include="..\ArcGis10x\IGisLayer.cs">
       <Link>IGisLayer.cs</Link>
     </Compile>
     <Compile Include="GisInterface.cs" />
