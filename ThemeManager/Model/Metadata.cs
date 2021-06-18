@@ -585,9 +585,7 @@ namespace NPS.AKRO.ThemeManager.Model
 
         private void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler handle = PropertyChanged;
-            if (handle != null)
-                handle(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); 
         }
 
         #endregion
