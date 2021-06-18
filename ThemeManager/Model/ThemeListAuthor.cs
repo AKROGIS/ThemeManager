@@ -25,37 +25,37 @@ namespace NPS.AKRO.ThemeManager.Model
         public string Name
         {
             get { return _name; }
-            set { SetField(ref _name, value); }
+            set { SetObservableField(ref _name, value); }
         }
         public string Title
         {
             get { return _title; }
-            set { SetField(ref _title, value); }
+            set { SetObservableField(ref _title, value); }
         }
         public string Organization
         {
             get { return _organization; }
-            set { SetField(ref _organization, value); }
+            set { SetObservableField(ref _organization, value); }
         }
         public string Address1
         {
             get { return _address1; }
-            set { SetField(ref _address1, value); }
+            set { SetObservableField(ref _address1, value); }
         }
         public string Address2
         {
             get { return _address2; }
-            set { SetField(ref _address2, value); }
+            set { SetObservableField(ref _address2, value); }
         }
         public string Email
         {
             get { return _email; }
-            set { SetField(ref _email, value); }
+            set { SetObservableField(ref _email, value); }
         }
         public string Phone
         {
             get { return _phone; }
-            set { SetField(ref _phone, value); }
+            set { SetObservableField(ref _phone, value); }
         }
 
         #endregion
@@ -132,8 +132,6 @@ namespace NPS.AKRO.ThemeManager.Model
 
         #region INotifyPropertyChanged
 
-        // From code provided by Marc Gravell (https://stackoverflow.com/a/1316417)
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -141,7 +139,8 @@ namespace NPS.AKRO.ThemeManager.Model
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
+        // From code provided by Marc Gravell (https://stackoverflow.com/a/1316417)
+        private bool SetObservableField<T>(ref T field, T value, [CallerMemberName] string propertyName = null) {
             if (EqualityComparer<T>.Default.Equals(field, value)) return false;
             field = value;
             OnPropertyChanged(propertyName);

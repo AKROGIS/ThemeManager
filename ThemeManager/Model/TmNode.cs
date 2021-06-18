@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -106,7 +107,6 @@ namespace NPS.AKRO.ThemeManager.Model
                 if (value != _isVisible)
                 {
                     _isVisible = value;
-                    //OnPropertyChanged();
                 }
             }
         }
@@ -119,14 +119,7 @@ namespace NPS.AKRO.ThemeManager.Model
         public bool IsHidden
         {
             get { return _isHidden; }
-            set
-            {
-                if (value != _isHidden)
-                {
-                    _isHidden = value;
-                    OnPropertyChanged("IsHidden");
-                }
-            }
+            set { SetObservableField(ref _isHidden, value); }
         }
         private bool _isHidden;
 
@@ -136,14 +129,7 @@ namespace NPS.AKRO.ThemeManager.Model
         public bool IsSelected
         {
             get { return _isSelected; }
-            set
-            {
-                if (value != _isSelected)
-                {
-                    _isSelected = value;
-                    OnPropertyChanged("IsSelected");
-                }
-            }
+            set { SetObservableField(ref _isSelected, value); }
         }
         //This is no serialized, because we do not what copied objects to be selected
         [NonSerialized]
@@ -286,10 +272,9 @@ namespace NPS.AKRO.ThemeManager.Model
                 //FIXME - Check that name does not have a path separator character
                 if (value != _name)
                 {
-                    _name = value;
                     if (ThemeList != null)
                         ThemeList.IsDirty = true;
-                    OnPropertyChanged("Name");
+                    SetObservableField(ref _name, value);
                 }
             }
         }
@@ -336,11 +321,10 @@ namespace NPS.AKRO.ThemeManager.Model
             {
                 if (value != _pubDate)
                 {
-                    _pubDate = value;
                     DaysSinceNewestPublication = CalcDaysSinceMyPublication();
                     if (ThemeList != null)
                         ThemeList.IsDirty = true;
-                    OnPropertyChanged("PubDate");
+                    SetObservableField(ref _pubDate, value);
                 }
             }
         }
@@ -356,10 +340,9 @@ namespace NPS.AKRO.ThemeManager.Model
                 var cleanValue = String.IsNullOrWhiteSpace(value) ? null : value;
                 if (cleanValue != _description)
                 {
-                    _description = cleanValue;
                     if (ThemeList != null)
                         ThemeList.IsDirty = true;
-                    OnPropertyChanged("Description");
+                    SetObservableField(ref _description, cleanValue);
                 }
             }
         }
@@ -373,10 +356,9 @@ namespace NPS.AKRO.ThemeManager.Model
                 var cleanValue = String.IsNullOrWhiteSpace(value) ? null : value;
                 if (cleanValue != _summary)
                 {
-                    _summary = cleanValue;
                     if (ThemeList != null)
                         ThemeList.IsDirty = true;
-                    OnPropertyChanged("Summary");
+                    SetObservableField(ref _summary, cleanValue);
                 }
             }
         }
@@ -390,10 +372,9 @@ namespace NPS.AKRO.ThemeManager.Model
                 var cleanValue = String.IsNullOrWhiteSpace(value) ? null : value;
                 if (cleanValue != _tags)
                 {
-                    _tags = cleanValue;
                     if (ThemeList != null)
                         ThemeList.IsDirty = true;
-                    OnPropertyChanged("Tags");
+                    SetObservableField(ref _tags, cleanValue);
                 }
             }
         }
@@ -407,14 +388,7 @@ namespace NPS.AKRO.ThemeManager.Model
                     _imageKey = GetImageKey();
                 return _imageKey;
             }
-            private set
-            {
-                if (value != _imageKey)
-                {
-                    _imageKey = value;
-                    OnPropertyChanged("ImageKey");
-                }
-            }
+            private set { SetObservableField(ref _imageKey, value); }
         }
         private string _imageKey;
 
@@ -1382,13 +1356,23 @@ namespace NPS.AKRO.ThemeManager.Model
 
 
         #region INotifyPropertyChanged
+
         [field: NonSerializedAttribute()]
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string property)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (_issueUpdates)
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        // From code provided by Marc Gravell (https://stackoverflow.com/a/1316417)
+        private bool SetObservableField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
         }
 
         #endregion

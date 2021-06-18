@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -539,19 +540,13 @@ namespace NPS.AKRO.ThemeManager.Model
         /// </remarks>
         public string Path
         {
-            get
-            {
-                return _path;
-            }
-            // ReSharper disable once MemberCanBePrivate.Global
-            set
-            {
+            get { return _path; }
+            set { 
                 if (_path != value)
                 {
-                    _path = value;
                     Type = MetadataType.Undefined;
                     Format = MetadataFormat.Undefined;
-                    OnPropertyChanged("Path");
+                    SetObservableField(ref _path, value);
                 }
             }
         }
@@ -583,9 +578,18 @@ namespace NPS.AKRO.ThemeManager.Model
         [field: NonSerializedAttribute()]
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); 
+        }
+
+        // From code provided by Marc Gravell (https://stackoverflow.com/a/1316417)
+        private bool SetObservableField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
         }
 
         #endregion

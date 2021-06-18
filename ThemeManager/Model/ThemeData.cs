@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
 //FIXME - Refactoring change - break into two objects: ThemeListData, ThemeData and SubThemeData
@@ -42,14 +44,7 @@ namespace NPS.AKRO.ThemeManager.Model
         public string Path
         {
             get { return _path; }
-            set
-            {
-                if (value != _path)
-                {
-                    _path = value;
-                    OnPropertyChanged("Path");
-                }
-            }
+            set { SetObservableField(ref _path, value); }
         }
         private string _path;
 
@@ -58,14 +53,7 @@ namespace NPS.AKRO.ThemeManager.Model
         public string Type
         {
             get { return _type; }
-            set
-            {
-                if (value != _type)
-                {
-                    _type = value;
-                    OnPropertyChanged("Type");
-                }
-            }
+            set { SetObservableField(ref _type, value); }
         }
         private string _type;
 
@@ -96,14 +84,7 @@ namespace NPS.AKRO.ThemeManager.Model
         public string DataSource
         {
             get { return _datasource; }
-            set
-            {
-                if (value != _datasource)
-                {
-                    _datasource = value;
-                    OnPropertyChanged("DataSource");
-                }
-            }
+            set { SetObservableField(ref _datasource, value); }
         }
         private string _datasource;
 
@@ -224,9 +205,18 @@ namespace NPS.AKRO.ThemeManager.Model
         [field: NonSerializedAttribute()]
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void OnPropertyChanged(string property)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property)); 
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); 
+        }
+
+        // From code provided by Marc Gravell (https://stackoverflow.com/a/1316417)
+        private bool SetObservableField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+            field = value;
+            OnPropertyChanged(propertyName);
+            return true;
         }
 
         #endregion
