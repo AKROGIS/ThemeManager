@@ -57,13 +57,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fgdb.cs" />
     <Compile Include="ProTM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StyleSheet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ArcGisPro\ArcGisPro.csproj">
+      <Project>{38bb4ce3-56ca-4b50-a8ea-6682a5d4cef2}</Project>
+      <Name>ArcGisPro</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
