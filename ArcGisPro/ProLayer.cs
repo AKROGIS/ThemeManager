@@ -428,6 +428,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         private void InitDataConnection(CIMDataConnection connection)
         {
             ConnectionClassName = BuildConnectionClassName(connection);
+            if (connection == null) return;
             if (connection is CIMFeatureDatasetDataConnection conn1) { InitDataConnection(conn1); }
             if (connection is CIMGADataConnection conn2) { InitDataConnection(conn2); }
             if (connection is CIMInMemoryDatasetDataConnection conn3) { InitDataConnection(conn3); }
@@ -775,6 +776,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         }
         private string BuildConnectionClassName(CIMDataConnection connection)
         {
+            if (connection == null) return "No Connection";
             return AddSpacesToClassName(connection.GetType().Name.Replace("CIM", "").Replace("DataConnection","").Replace("ServiceConnection", " Service"));
         }
 
