@@ -227,9 +227,6 @@
       <DependentUpon>WarningForm.cs</DependentUpon>
     </Compile>
     <None Include="app.config" />
-    <None Include="Docs\Change Log.md" />
-    <None Include="Docs\Help.md" />
-    <None Include="Docs\TaskList.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
