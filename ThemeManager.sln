@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcGisPro", "ArcGisPro\ArcG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThemeManagerNoGis", "ThemeManagerNoGis\ThemeManagerNoGis.csproj", "{05F6626B-55C1-405A-8FBE-4DBD715E4035}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThemeManagerPro", "ThemeManagerPro\ThemeManagerPro.csproj", "{D541C7C5-7B66-431B-9F63-E5549F6F7AC6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,14 @@ Global
 		{05F6626B-55C1-405A-8FBE-4DBD715E4035}.Release|Any CPU.Build.0 = Release|Any CPU
 		{05F6626B-55C1-405A-8FBE-4DBD715E4035}.Release|x86.ActiveCfg = Release|Any CPU
 		{05F6626B-55C1-405A-8FBE-4DBD715E4035}.Release|x86.Build.0 = Release|Any CPU
+		{D541C7C5-7B66-431B-9F63-E5549F6F7AC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D541C7C5-7B66-431B-9F63-E5549F6F7AC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D541C7C5-7B66-431B-9F63-E5549F6F7AC6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D541C7C5-7B66-431B-9F63-E5549F6F7AC6}.Debug|x86.Build.0 = Debug|Any CPU
+		{D541C7C5-7B66-431B-9F63-E5549F6F7AC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D541C7C5-7B66-431B-9F63-E5549F6F7AC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D541C7C5-7B66-431B-9F63-E5549F6F7AC6}.Release|x86.ActiveCfg = Release|Any CPU
+		{D541C7C5-7B66-431B-9F63-E5549F6F7AC6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

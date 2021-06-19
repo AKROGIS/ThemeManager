@@ -1,0 +1,513 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D541C7C5-7B66-431B-9F63-E5549F6F7AC6}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>NPS.AKRO.ThemeManager</RootNamespace>
+    <AssemblyName>ThemeManager</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>..\ThemeManager10x\Images\NPSLogo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>..\ThemeManager10x\Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\ThemeManager10x\Extensions\FileAsync.cs">
+      <Link>Extensions\FileAsync.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Extensions\FormExtensions.cs">
+      <Link>Extensions\FormExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Extensions\LinqExtensions.cs">
+      <Link>Extensions\LinqExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Extensions\NativeMethods.cs">
+      <Link>Extensions\NativeMethods.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Extensions\StringExtensions.cs">
+      <Link>Extensions\StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Model\DateRange.cs">
+      <Link>Model\DateRange.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Model\Metadata.cs">
+      <Link>Model\Metadata.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Model\SearchParameters.cs">
+      <Link>Model\SearchParameters.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Model\StyleSheets.cs">
+      <Link>Model\StyleSheets.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Model\ThemeBuilder.cs">
+      <Link>Model\ThemeBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Model\ThemeData.cs">
+      <Link>Model\ThemeData.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Model\ThemeListAuthor.cs">
+      <Link>Model\ThemeListAuthor.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Model\ThemeList\MdbStore.cs">
+      <Link>Model\ThemeList\MdbStore.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Model\ThemeList\Store.cs">
+      <Link>Model\ThemeList\Store.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Model\ThemeList\XmlStore.cs">
+      <Link>Model\ThemeList\XmlStore.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Model\TmNode.cs">
+      <Link>Model\TmNode.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Program.cs">
+      <Link>Program.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Properties\Resources.Designer.cs">
+      <Link>Properties\Resources.Designer.cs</Link>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\Properties\Settings.Designer.cs">
+      <Link>Properties\Settings.Designer.cs</Link>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\AboutForm.cs">
+      <Link>UI\Forms\AboutForm.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\AboutForm.designer.cs">
+      <Link>UI\Forms\AboutForm.designer.cs</Link>
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\AdminReports.cs">
+      <Link>UI\Forms\AdminReports.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\AdminReports.designer.cs">
+      <Link>UI\Forms\AdminReports.designer.cs</Link>
+      <DependentUpon>AdminReports.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\AdvancedPreferencesForm.cs">
+      <Link>UI\Forms\AdvancedPreferencesForm.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\AdvancedPreferencesForm.designer.cs">
+      <Link>UI\Forms\AdvancedPreferencesForm.designer.cs</Link>
+      <DependentUpon>AdvancedPreferencesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\LoadingForm.cs">
+      <Link>UI\Forms\LoadingForm.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\LoadingForm.designer.cs">
+      <Link>UI\Forms\LoadingForm.designer.cs</Link>
+      <DependentUpon>LoadingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\MainForm.cs">
+      <Link>UI\Forms\MainForm.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\MainForm.designer.cs">
+      <Link>UI\Forms\MainForm.designer.cs</Link>
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\PreferencesForm.cs">
+      <Link>UI\Forms\PreferencesForm.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\PreferencesForm.designer.cs">
+      <Link>UI\Forms\PreferencesForm.designer.cs</Link>
+      <DependentUpon>PreferencesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\PropertiesForm.cs">
+      <Link>UI\Forms\PropertiesForm.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\PropertiesForm.designer.cs">
+      <Link>UI\Forms\PropertiesForm.designer.cs</Link>
+      <DependentUpon>PropertiesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\SearchForm.cs">
+      <Link>UI\Forms\SearchForm.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\SearchForm.designer.cs">
+      <Link>UI\Forms\SearchForm.designer.cs</Link>
+      <DependentUpon>SearchForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\WarningForm.cs">
+      <Link>UI\Forms\WarningForm.cs</Link>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\Forms\WarningForm.designer.cs">
+      <Link>UI\Forms\WarningForm.designer.cs</Link>
+      <DependentUpon>WarningForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\TmTreeNode.cs">
+      <Link>UI\TmTreeNode.cs</Link>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\TmTreeView.cs">
+      <Link>UI\TmTreeView.cs</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\ThemeManager10x\UI\TreeViewSorter.cs">
+      <Link>UI\TreeViewSorter.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="..\ThemeManager10x\Properties\Resources.resx">
+      <Link>Properties\Resources.resx</Link>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\ThemeManager10x\UI\Forms\AboutForm.resx">
+      <Link>UI\Forms\AboutForm.resx</Link>
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\ThemeManager10x\UI\Forms\AdminReports.resx">
+      <Link>UI\Forms\AdminReports.resx</Link>
+      <DependentUpon>AdminReports.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\ThemeManager10x\UI\Forms\AdvancedPreferencesForm.resx">
+      <Link>UI\Forms\AdvancedPreferencesForm.resx</Link>
+      <DependentUpon>AdvancedPreferencesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\ThemeManager10x\UI\Forms\LoadingForm.resx">
+      <Link>UI\Forms\LoadingForm.resx</Link>
+      <DependentUpon>LoadingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\ThemeManager10x\UI\Forms\MainForm.resx">
+      <Link>UI\Forms\MainForm.resx</Link>
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\ThemeManager10x\UI\Forms\PreferencesForm.resx">
+      <Link>UI\Forms\PreferencesForm.resx</Link>
+      <DependentUpon>PreferencesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\ThemeManager10x\UI\Forms\PropertiesForm.resx">
+      <Link>UI\Forms\PropertiesForm.resx</Link>
+      <DependentUpon>PropertiesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\ThemeManager10x\UI\Forms\SearchForm.resx">
+      <Link>UI\Forms\SearchForm.resx</Link>
+      <DependentUpon>SearchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\ThemeManager10x\UI\Forms\WarningForm.resx">
+      <Link>UI\Forms\WarningForm.resx</Link>
+      <DependentUpon>WarningForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="..\ThemeManager10x\app.config">
+      <Link>app.config</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Properties\app.manifest">
+      <Link>Properties\app.manifest</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Properties\Settings.settings">
+      <Link>Properties\Settings.settings</Link>
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ThemeManager10x\Html\images\category.png">
+      <Link>Html\images\category.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\images\DB.png">
+      <Link>Html\images\DB.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\images\DB_lock.png">
+      <Link>Html\images\DB_lock.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\images\FavoriteStar_16x16.png">
+      <Link>Html\images\FavoriteStar_16x16.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\images\help.png">
+      <Link>Html\images\help.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\images\newCategory.png">
+      <Link>Html\images\newCategory.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\images\newDB.png">
+      <Link>Html\images\newDB.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\images\newDocument.png">
+      <Link>Html\images\newDocument.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\images\open.png">
+      <Link>Html\images\open.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\images\save.png">
+      <Link>Html\images\save.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ThemeManager10x\Html\Help.html">
+      <Link>Html\Help.html</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\NoInitialData.html">
+      <Link>Html\NoInitialData.html</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\NoMetadata.html">
+      <Link>Html\NoMetadata.html</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\Startup.html">
+      <Link>Html\Startup.html</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Html\tm.css">
+      <Link>Html\tm.css</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\ThemeManager10x\Images\ArcMap_MXD_File16.png">
+      <Link>Images\ArcMap_MXD_File16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\BlmLogo.ico">
+      <Link>Images\BlmLogo.ico</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="..\ThemeManager10x\Stylesheets\Alaska.xslt">
+      <Link>Stylesheets\Alaska.xslt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Stylesheets\Unformatted Xml.xslt">
+      <Link>Stylesheets\Unformatted Xml.xslt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\ThemeManager10x\Images\category.png">
+      <Link>Images\category.png</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Images\copy.png">
+      <Link>Images\copy.png</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Images\cut.png">
+      <Link>Images\cut.png</Link>
+    </None>
+    <Content Include="..\ThemeManager10x\Images\DataFrame16.png">
+      <Link>Images\DataFrame16.png</Link>
+    </Content>
+    <None Include="..\ThemeManager10x\Images\DB.png">
+      <Link>Images\DB.png</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Images\delete.png">
+      <Link>Images\delete.png</Link>
+    </None>
+    <Content Include="..\ThemeManager10x\Images\FavoriteStar_16x16.png">
+      <Link>Images\FavoriteStar_16x16.png</Link>
+    </Content>
+    <None Include="..\ThemeManager10x\Images\help.png">
+      <Link>Images\help.png</Link>
+    </None>
+    <Content Include="..\ThemeManager10x\Images\KmlIcon.png">
+      <Link>Images\KmlIcon.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerAnnotation16.png">
+      <Link>Images\LayerAnnotation16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerBasemap16.png">
+      <Link>Images\LayerBasemap16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerBroken16.png">
+      <Link>Images\LayerBroken16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerCAD16.png">
+      <Link>Images\LayerCAD16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerCadastral16.png">
+      <Link>Images\LayerCadastral16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerDimension16.png">
+      <Link>Images\LayerDimension16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerElevation16.png">
+      <Link>Images\LayerElevation16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerGeneric16.png">
+      <Link>Images\LayerGeneric16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerGeostatistical16.png">
+      <Link>Images\LayerGeostatistical16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerGroup16.png">
+      <Link>Images\LayerGroup16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerKML16.png">
+      <Link>Images\LayerKML16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerLine16.png">
+      <Link>Images\LayerLine16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerMultiPatch16.png">
+      <Link>Images\LayerMultiPatch16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerNetwork16.png">
+      <Link>Images\LayerNetwork16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerNew16.png">
+      <Link>Images\LayerNew16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerPdf16.png">
+      <Link>Images\LayerPdf16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerPoint16.png">
+      <Link>Images\LayerPoint16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerPolygon16.png">
+      <Link>Images\LayerPolygon16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerRaster16.png">
+      <Link>Images\LayerRaster16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerSchematic16.png">
+      <Link>Images\LayerSchematic16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerServiceGlobe16.png">
+      <Link>Images\LayerServiceGlobe16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerServiceMap16.png">
+      <Link>Images\LayerServiceMap16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerTerrain16.png">
+      <Link>Images\LayerTerrain16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerTIN16.png">
+      <Link>Images\LayerTIN16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerTool16.png">
+      <Link>Images\LayerTool16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerTopology16.png">
+      <Link>Images\LayerTopology16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerTracking16.png">
+      <Link>Images\LayerTracking16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\LayerWord16.png">
+      <Link>Images\LayerWord16.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\lock_overlay.png">
+      <Link>Images\lock_overlay.png</Link>
+    </Content>
+    <None Include="..\ThemeManager10x\Images\newCategory.png">
+      <Link>Images\newCategory.png</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Images\newDB.png">
+      <Link>Images\newDB.png</Link>
+    </None>
+    <Content Include="..\ThemeManager10x\Images\newDocument.png">
+      <Link>Images\newDocument.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\newTheme.png">
+      <Link>Images\newTheme.png</Link>
+    </Content>
+    <None Include="..\ThemeManager10x\Images\newTheme_old.png">
+      <Link>Images\newTheme_old.png</Link>
+    </None>
+    <Content Include="..\ThemeManager10x\Images\new_overlay.png">
+      <Link>Images\new_overlay.png</Link>
+    </Content>
+    <Content Include="..\ThemeManager10x\Images\NPSLogo.ico">
+      <Link>Images\NPSLogo.ico</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="..\ThemeManager10x\Images\open.png">
+      <Link>Images\open.png</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Images\paste.png">
+      <Link>Images\paste.png</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Images\print.png">
+      <Link>Images\print.png</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Images\properties.png">
+      <Link>Images\properties.png</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Images\save.png">
+      <Link>Images\save.png</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Images\SaveAll.png">
+      <Link>Images\SaveAll.png</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Images\search.png">
+      <Link>Images\search.png</Link>
+    </None>
+    <None Include="..\ThemeManager10x\Images\SortAZ.png">
+      <Link>Images\SortAZ.png</Link>
+    </None>
+    <Content Include="..\ThemeManager10x\Images\SortNone.png">
+      <Link>Images\SortNone.png</Link>
+    </Content>
+    <None Include="..\ThemeManager10x\Images\SortZA.png">
+      <Link>Images\SortZA.png</Link>
+    </None>
+    <Content Include="..\ThemeManager10x\Images\theme.png">
+      <Link>Images\theme.png</Link>
+    </Content>
+    <None Include="..\ThemeManager10x\Images\tools.png">
+      <Link>Images\tools.png</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ArcGisPro\ArcGisPro.csproj">
+      <Project>{38bb4ce3-56ca-4b50-a8ea-6682a5d4cef2}</Project>
+      <Name>ArcGisPro</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
