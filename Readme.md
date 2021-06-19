@@ -26,7 +26,7 @@ version of ArcGIS. You may need a different version for Pro and for 10.x.
   * Copy the file `C:\Program Files\ArcGIS\Pro\bin\Extensions\Metadata\ArcGIS.Desktop.Metadata.dll`
     to the `ArcGisPro` folder.
   * Download and extract the [File Geodatabase API](https://github.com/Esri/file-geodatabase-api).
-    Copy `Esri.FileGDBAPI.dll`, `FileGDBAPI.dll`, and ``FileGDBAPID.dll` from
+    Copy `Esri.FileGDBAPI.dll`, `FileGDBAPI.dll`, and `FileGDBAPID.dll` from
     the `64bit` folder to `ArcGisPro` folder.  See `ArcGisPro\Fgdb.cs` or the
     readme with the download for details.
   * Install the Pro SDK as a visual studio extension (see
@@ -108,7 +108,7 @@ not expect the user to have any GIS installed or licensed. This project has
 no code of it's own -- it links to the code in `ThemeManager10x` and provide
 the different build instructions.
 
-## Command Line Utility `tm`
+### Command Line Utility `tm`
 
 This project is a command line utility which
 when run with a theme list, i.e. `$ tm \path\to\themelist.tml`,
@@ -131,7 +131,7 @@ of `ArcGIS10x` it can be run with ArcGIS Pro.  Note that only the 10.x version
 will be able to reload themes based on `*.lyr` or `*.mxd` files, and only the
 Pro version will be able to reload themes based on a `*.lyrx` file.
 
-## Command Line Utility `tmpro`
+### Command Line Utility `tmpro`
 
 This project also includes a command line utility called `tmpro` which
 when run will print a CSV report to the standard output listing all the data
