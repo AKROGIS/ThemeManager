@@ -22,7 +22,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -322,7 +321,6 @@
       <Link>Images\BlmLogo.ico</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="NPSLogo.ico" />
     <None Include="..\ThemeManager10x\Stylesheets\Alaska.xslt">
       <Link>Stylesheets\Alaska.xslt</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
