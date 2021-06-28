@@ -26,7 +26,7 @@
 .markdown-preview:not([data-use-github-style]) code { color: rgb(255, 255, 255); background-color: rgb(58, 63, 75); }
 .markdown-preview:not([data-use-github-style]) pre.editor-colors { margin: 1.5em 0px; padding: 1em; font-size: 0.92em; border-radius: 3px; background-color: rgb(49, 54, 63); }
 .markdown-preview:not([data-use-github-style]) kbd { color: rgb(255, 255, 255); border-width: 1px 1px 2px; border-style: solid; border-color: rgb(75, 83, 98) rgb(75, 83, 98) rgb(62, 68, 81); border-image: initial; background-color: rgb(58, 63, 75); }
-.markdown-preview[data-use-github-style] { font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif; line-height: 1.6; word-wrap: break-word; padding: 30px; font-size: 16px; color: rgb(51, 51, 51); background-color: rgb(255, 255, 255); overflow: scroll; }
+.markdown-preview[data-use-github-style] { font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif; line-height: 1.6; overflow-wrap: break-word; padding: 30px; font-size: 16px; color: rgb(51, 51, 51); background-color: rgb(255, 255, 255); overflow: scroll; }
 .markdown-preview[data-use-github-style] > :first-child { margin-top: 0px !important; }
 .markdown-preview[data-use-github-style] > :last-child { margin-bottom: 0px !important; }
 .markdown-preview[data-use-github-style] a:not([href]) { color: inherit; text-decoration: none; }
@@ -91,8 +91,8 @@
 .markdown-preview[data-use-github-style] .highlight { margin-bottom: 16px; }
 .markdown-preview[data-use-github-style] .highlight pre, .markdown-preview[data-use-github-style] pre { padding: 16px; overflow: auto; font-size: 85%; line-height: 1.45; background-color: rgb(247, 247, 247); border-radius: 3px; }
 .markdown-preview[data-use-github-style] .highlight pre { margin-bottom: 0px; word-break: normal; }
-.markdown-preview[data-use-github-style] pre { word-wrap: normal; }
-.markdown-preview[data-use-github-style] pre code, .markdown-preview[data-use-github-style] pre tt { display: inline; max-width: initial; padding: 0px; margin: 0px; overflow: initial; line-height: inherit; word-wrap: normal; background-color: transparent; border: 0px; }
+.markdown-preview[data-use-github-style] pre { overflow-wrap: normal; }
+.markdown-preview[data-use-github-style] pre code, .markdown-preview[data-use-github-style] pre tt { display: inline; max-width: initial; padding: 0px; margin: 0px; overflow: initial; line-height: inherit; overflow-wrap: normal; background-color: transparent; border: 0px; }
 .markdown-preview[data-use-github-style] pre code::before, .markdown-preview[data-use-github-style] pre tt::before, .markdown-preview[data-use-github-style] pre code::after, .markdown-preview[data-use-github-style] pre tt::after { content: normal; }
 .markdown-preview[data-use-github-style] kbd { display: inline-block; padding: 3px 5px; font-size: 11px; line-height: 10px; color: rgb(85, 85, 85); vertical-align: middle; background-color: rgb(252, 252, 252); border-width: 1px; border-style: solid; border-color: rgb(204, 204, 204) rgb(204, 204, 204) rgb(187, 187, 187); border-image: initial; border-radius: 3px; box-shadow: rgb(187, 187, 187) 0px -1px 0px inset; }
 .markdown-preview[data-use-github-style] a { color: rgb(51, 122, 183); }
@@ -203,7 +203,7 @@ pre.editor-colors .fold-marker:after {
   color: #e5c07b;
 }
 .syntax--entity.syntax--other.syntax--inherited-class {
-  color: #98c379;
+  color: #e5c07b;
 }
 .syntax--keyword {
   color: #c678dd;
@@ -212,7 +212,7 @@ pre.editor-colors .fold-marker:after {
   color: #c678dd;
 }
 .syntax--keyword.syntax--operator {
-  color: #abb2bf;
+  color: #c678dd;
 }
 .syntax--keyword.syntax--other.syntax--special-method {
   color: #61afef;
@@ -410,12 +410,6 @@ pre.editor-colors .fold-marker:after {
 .syntax--markup.syntax--raw {
   color: #98c379;
 }
-.syntax--source.syntax--c .syntax--keyword.syntax--operator {
-  color: #c678dd;
-}
-.syntax--source.syntax--cpp .syntax--keyword.syntax--operator {
-  color: #c678dd;
-}
 .syntax--source.syntax--cs .syntax--keyword.syntax--operator {
   color: #c678dd;
 }
@@ -476,9 +470,6 @@ pre.editor-colors .fold-marker:after {
 .syntax--source.syntax--gfm .syntax--link .syntax--entity {
   color: #61afef;
 }
-.syntax--source.syntax--go .syntax--storage.syntax--type.syntax--string {
-  color: #c678dd;
-}
 .syntax--source.syntax--ini .syntax--keyword.syntax--other.syntax--definition.syntax--ini {
   color: #e06c75;
 }
@@ -496,18 +487,6 @@ pre.editor-colors .fold-marker:after {
 }
 .syntax--source.syntax--java-properties .syntax--meta.syntax--key-pair > .syntax--punctuation {
   color: #abb2bf;
-}
-.syntax--source.syntax--js .syntax--keyword.syntax--operator {
-  color: #56b6c2;
-}
-.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--delete,
-.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--in,
-.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--of,
-.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--instanceof,
-.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--new,
-.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--typeof,
-.syntax--source.syntax--js .syntax--keyword.syntax--operator.syntax--void {
-  color: #c678dd;
 }
 .syntax--source.syntax--ts .syntax--keyword.syntax--operator {
   color: #56b6c2;
@@ -568,17 +547,259 @@ pre.editor-colors .fold-marker:after {
 .syntax--ng.syntax--attribute-with-value .syntax--string.syntax--end {
   color: #abb2bf;
 }
-.syntax--source.syntax--ruby .syntax--constant.syntax--other.syntax--symbol > .syntax--punctuation {
-  color: inherit;
-}
 .syntax--source.syntax--php .syntax--class.syntax--bracket {
   color: #abb2bf;
 }
-.syntax--source.syntax--python .syntax--keyword.syntax--operator.syntax--logical.syntax--python {
+/*
+   This defines styling rules for syntax classes.
+
+   See the naming conventions for a list of syntax classes:
+   https://flight-manual.atom.io/hacking-atom/sections/syntax-naming-conventions
+
+   When styling rules conflict:
+   - The last rule overrides previous rules.
+   - The rule with most classes and pseudo-classes overrides the last rule.
+*/
+.syntax--keyword {
   color: #c678dd;
 }
-.syntax--source.syntax--python .syntax--variable.syntax--parameter {
+.syntax--keyword.syntax--type {
+  color: #56b6c2;
+}
+.syntax--keyword.syntax--function {
+  color: #e06c75;
+}
+.syntax--keyword.syntax--variable {
+  color: #e06c75;
+}
+.syntax--entity {
+  color: #abb2bf;
+}
+.syntax--entity.syntax--parameter {
+  color: #abb2bf;
+}
+.syntax--entity.syntax--support {
+  color: #e06c75;
+}
+.syntax--entity.syntax--decorator:last-child {
+  color: #61afef;
+}
+.syntax--entity.syntax--label {
+  text-decoration: underline;
+}
+.syntax--entity.syntax--function {
+  color: #61afef;
+}
+.syntax--entity.syntax--operator {
+  color: #61afef;
+}
+.syntax--entity.syntax--operator.syntax--symbolic {
+  color: #abb2bf;
+}
+.syntax--entity.syntax--type {
+  color: #56b6c2;
+}
+.syntax--entity.syntax--tag {
+  color: #e06c75;
+}
+.syntax--entity.syntax--attribute {
   color: #d19a66;
+}
+.syntax--punctuation {
+  color: #abb2bf;
+}
+.syntax--punctuation.syntax--accessor {
+  color: #abb2bf;
+}
+.syntax--punctuation.syntax--accessor.syntax--member,
+.syntax--punctuation.syntax--accessor.syntax--scope {
+  color: #c678dd;
+}
+.syntax--punctuation.syntax--embedded {
+  color: #c678dd;
+}
+.syntax--string {
+  color: #98c379;
+}
+.syntax--string.syntax--immutable {
+  color: #98c379;
+}
+.syntax--string.syntax--part {
+  color: #56b6c2;
+}
+.syntax--string.syntax--interpolation {
+  color: #c678dd;
+}
+.syntax--string.syntax--regexp {
+  color: #98c379;
+}
+.syntax--string.syntax--regexp.syntax--language {
+  color: #c678dd;
+}
+.syntax--string.syntax--regexp.syntax--variable {
+  color: #61afef;
+}
+.syntax--string.syntax--regexp.syntax--punctuation {
+  color: #c678dd;
+}
+.syntax--constant {
+  color: #d19a66;
+}
+.syntax--constant.syntax--character {
+  color: #98c379;
+}
+.syntax--constant.syntax--character.syntax--escape {
+  color: #98c379;
+}
+.syntax--constant.syntax--character.syntax--code {
+  color: #56b6c2;
+}
+.syntax--text {
+  color: #abb2bf;
+}
+.syntax--markup.syntax--heading {
+  color: #e06c75;
+}
+.syntax--markup.syntax--list.syntax--punctuation {
+  color: #e06c75;
+}
+.syntax--markup.syntax--quote {
+  color: #5c6370;
+  font-style: italic;
+}
+.syntax--markup.syntax--bold {
+  color: #d19a66;
+  font-weight: bold;
+}
+.syntax--markup.syntax--italic {
+  color: #c678dd;
+  font-style: italic;
+}
+.syntax--markup.syntax--underline {
+  color: #56b6c2;
+  text-decoration: underline;
+}
+.syntax--markup.syntax--strike {
+  color: #e06c75;
+}
+.syntax--markup.syntax--raw {
+  color: #98c379;
+}
+.syntax--markup.syntax--link {
+  color: #56b6c2;
+}
+.syntax--markup.syntax--alt {
+  color: #61afef;
+}
+.syntax--markup.syntax--inserted {
+  color: #98c379;
+}
+.syntax--markup.syntax--inserted .syntax--punctuation {
+  color: #98c379;
+}
+.syntax--markup.syntax--highlighted {
+  color: #98c379;
+}
+.syntax--markup.syntax--highlighted .syntax--punctuation {
+  color: #98c379;
+}
+.syntax--markup.syntax--deleted {
+  color: #e06c75;
+}
+.syntax--markup.syntax--deleted .syntax--punctuation {
+  color: #e06c75;
+}
+.syntax--markup.syntax--changed {
+  color: #c678dd;
+}
+.syntax--markup.syntax--changed .syntax--punctuation {
+  color: #c678dd;
+}
+.syntax--markup.syntax--commented {
+  color: #5c6370;
+}
+.syntax--markup.syntax--commented .syntax--punctuation {
+  color: #5c6370;
+}
+.syntax--comment {
+  color: #5c6370;
+  font-style: italic;
+}
+.syntax--comment.syntax--caption {
+  color: #6a7181;
+  font-weight: bold;
+}
+.syntax--comment.syntax--term {
+  color: #707989;
+}
+.syntax--comment.syntax--punctuation {
+  color: #5c6370;
+  font-weight: normal;
+}
+.syntax--invalid:not(.syntax--punctuation).syntax--illegal {
+  color: white !important;
+  background-color: #e05252 !important;
+}
+.syntax--invalid:not(.syntax--punctuation).syntax--deprecated {
+  color: #523d14 !important;
+  background-color: #e0c285 !important;
+}
+.syntax--source.syntax--css .syntax--entity.syntax--function {
+  color: #828997;
+}
+.syntax--source.syntax--css .syntax--entity.syntax--function.syntax--support {
+  color: #56b6c2;
+}
+.syntax--source.syntax--css .syntax--entity.syntax--selector {
+  color: #d19a66;
+}
+.syntax--source.syntax--css .syntax--entity.syntax--selector.syntax--tag {
+  color: #e06c75;
+}
+.syntax--source.syntax--css .syntax--entity.syntax--selector.syntax--id {
+  color: #61afef;
+}
+.syntax--source.syntax--css .syntax--entity.syntax--property {
+  color: #828997;
+}
+.syntax--source.syntax--css .syntax--entity.syntax--property.syntax--support {
+  color: #abb2bf;
+}
+.syntax--source.syntax--css .syntax--entity.syntax--variable {
+  color: #e06c75;
+}
+.syntax--source.syntax--css .syntax--constant {
+  color: #828997;
+}
+.syntax--source.syntax--css .syntax--constant.syntax--support {
+  color: #abb2bf;
+}
+.syntax--source.syntax--css .syntax--constant.syntax--numeric {
+  color: #d19a66;
+}
+.syntax--source.syntax--css .syntax--constant.syntax--media {
+  color: #d19a66;
+}
+.syntax--source.syntax--css .syntax--constant.syntax--color {
+  color: #d19a66;
+}
+.syntax--source.syntax--css .syntax--constant.syntax--offset {
+  color: #abb2bf;
+}
+.syntax--source.syntax--css .syntax--constant.syntax--attribute-value {
+  color: #98c379;
+}
+.syntax--source.syntax--css .syntax--punctuation.syntax--selector {
+  color: #d19a66;
+}
+.syntax--source.syntax--css .syntax--punctuation.syntax--selector.syntax--wildcard {
+  color: #e06c75;
+}
+.syntax--source.syntax--css .syntax--punctuation.syntax--selector.syntax--id {
+  color: #61afef;
+}
+.syntax--source.syntax--css .syntax--punctuation.syntax--selector.syntax--attribute {
+  color: #abb2bf;
 }
 </style>
         </head>
@@ -595,6 +816,7 @@ pre.editor-colors .fold-marker:after {
 </ul>
 </li>
 <li><a href="#whats-new">What's New</a><ul>
+<li><a href="#theme-manager-33">Theme Manager 3.3</a></li>
 <li><a href="#theme-manager-32">Theme Manager 3.2</a></li>
 <li><a href="#theme-manager-31">Theme Manager 3.1</a></li>
 <li><a href="#theme-manager-30">Theme Manager 3.0</a></li>
@@ -653,14 +875,23 @@ pre.editor-colors .fold-marker:after {
 <h1 id="introduction">Introduction</h1>
 <p>Theme Manager simplifies access to GIS data. It provides the most benefit to occasional GIS users, and those in organizations with large data holdings. It can be used on a computer without any GIS software, but to get full access to all the features you must have ArcGIS Desktop version 10 installed (and licensed) on your computer. It is an alternative to the <em>file based</em> ArcCatalog method of data management. Theme Manager uses an XML database to organize layer in a hierarchical structure while not affecting the underlying data storage structure. As a result, users are presented a simple, consistent, and quick way to browse, search and access symbolized datasets</p>
 <h1 id="quick-start">Quick Start</h1>
-<p>A separate <a href="Startup.html">Quick Start Tutorial</a> is available from the help menu</p>
+<p>A separate <a href="./Startup.html">Quick Start Tutorial</a> is available from the help menu</p>
 <h1 id="installation">Installation</h1>
 <p>Theme Manager is delivered as a zip file that can be extracted to any convenient location[^1]. Theme Manager does not write to the registry, or make any changes to your system, so no administrative privileges are required to install or run it.</p>
 <p>To run Theme Manager, just double click on the executable file (Theme Manager.exe) in the folder where you extracted the download.</p>
 <p>The executable file (Theme Manager.exe) relies on various files and sub-folders that come with it, and it expects to find them in the same relative locations. This means that if you want to move or copy the application, you must move or copy the entire folder. Putting a shortcut to the executable file on your desktop is fine (use ctrl-shift-drag or right click, create shortcut), but do not copy just Theme Manager.exe to your desktop and expect it to run correctly.</p>
 <h2 id="requirements">Requirements</h2>
-<p>Theme Manager 3.1 requires the Microsoft .Net Framework 4.5 or higher (This is also a requirement for ArcGIS 10.4+ and other software, and has been a core component of Windows software since 2013, so you probably have it. If not, it can be downloaded for free from Microsoft.</p>
-<p>Theme Manager can be used on a computer without any GIS software, but to get full access to all the features you must have ArcGIS Desktop version 10.5 (or higher) installed (and licensed) on your computer. There is a different version of Theme Manager for each version for ArcGIS. If you have installed mismatched versions, Theme Manager will run but you will get error and you will not have access to any of the features that require ArcGIS. Theme Manager will work with ArcGIS Pro, but some features (mainly previewing themes and loading/searching/displaying metadata in a geodatabase) do not work.</p>
+<p>Theme Manager 3.1+ for ArcGIS 10.x requires the Microsoft .Net Framework 4.5 or higher (This is also a requirement for ArcGIS 10.4+ and other software, and has been a core component of Windows software since 2013, so you probably have it. If not, it can be downloaded for free from Microsoft).
+Theme Manager 3.3+ for ArcGIS Pro requires the Microsoft .Net Framework 4.8 or
+higher (This is also a requirement for ArcGIS Pro 2.5).</p>
+<p>Theme Manager can be used on a computer without any GIS software, but to get full access to all the features you must have ArcGIS Desktop version 10.5 (or higher) installed (and licensed) on your computer. There is a different version of Theme Manager for each version for ArcGIS. If you have installed mismatched versions, Theme Manager will run but you will get error and you will not have access to any of the features that require ArcGIS. Theme Manager will work with ArcGIS Pro, but some features (mainly previewing themes and reading metadata in an SDE geodatabase)
+are not supported.</p>
+<p>The ArcGIS 10.x version of Theme Manager is required for adding details about
+a <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">*.lyr</code> file to a theme list.  The ArcGIS Pro version of Theme Manager can
+add a <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">*.lyr</code> file to a theme list, but it treats it as an unknown file type,
+and details about the layer file, including metadata will need to be edited
+manually. Similarly, the ArcGIS Pro version of Theme Manager is required for
+adding details about a <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">*.lyrx</code> file to a theme list.</p>
 <p>Theme Manager 3.0 is available for ArcGIS 9.3 through ArcGIS 10.6.</p>
 <h2 id="using-esri-metadata-stylesheets">Using Esri Metadata Stylesheets</h2>
 <p>Theme Manager comes with two stylesheets to convert XML metadata into an HTML file suitable for display.
@@ -672,9 +903,9 @@ installed on your computer. Then follow these steps:</p>
 <ol>
 <li><p>Copy the dll to Theme Manager</p>
 <ul>
-<li><p><strong>Desktop</strong>: Copy the file <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">C:\Program Files (x86)\ArcGIS\Desktop10.5\bin\ESRI.ArcGIS.MetadataEditor.dll</code> (or similar) to the location where Theme Manager is installed. The dll must be in the same folder as ThemeManager.exe.</p>
+<li><p><strong>Desktop</strong>: Copy the file <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">C:\Program Files (x86)\ArcGIS\Desktop10.5\bin\ESRI.ArcGIS.MetadataEditor.dll</code> (or similar) to the location where ArcGIS 10.x version of Theme Manager is installed. The dll must be in the same folder as ThemeManager.exe.</p>
 </li>
-<li><p><strong>Pro</strong>: Copy <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">C:\Program Files\ArcGIS\Pro\bin\Extensions\Metadata\ArcGIS.Desktop.Metadata.dll</code> to the location where Theme Manager is installed. The dll must be in the same folder as ThemeManager.exe. <strong>Note</strong>: You will need a special build of Theme Manager specifically for Pro.</p>
+<li><p><strong>Pro</strong>: Copy <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">C:\Program Files\ArcGIS\Pro\bin\Extensions\Metadata\ArcGIS.Desktop.Metadata.dll</code> to the location where ArcGIS Pro version of Theme Manager is installed. The dll must be in the same folder as ThemeManager.exe.</p>
 </li>
 </ul>
 </li>
@@ -702,14 +933,21 @@ You also need to copy the folder <code style="font-family: Menlo, Consolas, &quo
 </li>
 </ol>
 <h2 id="using-theme-manager-on-a-network">Using Theme Manager on a Network</h2>
-<p>A single install of Theme Manager can be used by multiple users if the application is unzipped to a shared folder on a network drive. If the domain administrators have not designated the server or shared folder as a trusted location, you will be prompted to accept a security warning when you launch the application. In some cases you may be denied the ability to run the application from the network. This is a site specific domain security issue beyond the programmer's control. If it is a problem at your site, contact your domain administrator, or copy the application to a local (trusted) location and execute it from there. If you have administrative control on your computer there are also ways to run off this security warning, but that is beyond the scope of this document – consult the Google.</p>
-<h2 id="accessing-theme-manager-from-arcmap">Accessing Theme Manager from ArcMap</h2>
+<p>A single install of Theme Manager can be used by multiple users if the application is unzipped to a shared folder on a network drive. If the domain administrators have not designated the server or shared folder as a trusted location, you will be prompted to accept a security warning when you launch the application. In some cases you may be denied the ability to run the application from the network. This is a site specific domain security issue beyond the programmer's control. If it is a problem at your site, contact your domain administrator, or copy the application to a local (trusted) location and execute it from there. If you have administrative control on your computer there are also ways to turn off this security warning, but that is beyond the scope of this document – consult the Google.</p>
+<h2 id="accessing-theme-manager-from-arcmap-10x">Accessing Theme Manager from ArcMap 10.x</h2>
 <p>Theme Manager is a stand-alone windows application. It is not an ArcGIS extension. It is typically launched via a shortcut on your desktop.</p>
 <p>To launch the application from ArcMap requires installing an ArcMap Add-In, installing Theme Manager in a well known location, and putting that location into the code for the Add-In. An Add-In may be available for your site (contact your GIS Specialist, or the programmer), if not an Add-In can be created using the Esri tutorials. Put the following code in the <code style="font-family: Menlo, Consolas, &quot;DejaVu Sans Mono&quot;, monospace;">OnClick()</code> method of the tool you create.</p>
 <pre class="editor-colors lang-c#"><div class="line"><span class="syntax--text syntax--plain syntax--null-grammar"><span class="leading-whitespace">    </span>//Change the following path to your installation location</span></div><div class="line"><span class="syntax--text syntax--plain syntax--null-grammar"><span class="leading-whitespace">    </span>string directory = "X:\Path\To\ThemeManager\Folder";</span></div><div class="line"><span class="syntax--text syntax--plain syntax--null-grammar"><span class="leading-whitespace">    </span>System.Diagnostics.ProcessStartInfo startInfo =</span></div><div class="line"><span class="syntax--text syntax--plain syntax--null-grammar"><span class="leading-whitespace">        </span>newSystem.Diagnostics.ProcessStartInfo(directory + "\ThemeManager.exe");</span></div><div class="line"><span class="syntax--text syntax--plain syntax--null-grammar"><span class="leading-whitespace">    </span>startInfo.WorkingDirectory = directory;</span></div><div class="line"><span class="syntax--text syntax--plain syntax--null-grammar"><span class="leading-whitespace">    </span>Process.Start(startInfo);</span></div></pre>
 <p>[^1]: Provided you have write permission in that location – However, you do not need write permission to the installation location in order to run Theme Manager.</p>
 <h1 id="whats-new">What's New</h1>
 <p>This section assumes you have used previous versions of Theme Manager. If you are a new user you can ignore it.</p>
+<h2 id="theme-manager-33">Theme Manager 3.3</h2>
+<ul>
+<li>Added support for using Theme Manager without ArcGis 10.x. There are now
+two additional ways to build and run Theme Manager if you have ArcGIS Pro or
+no GIS at all.</li>
+<li>Removed the loading dialog when checking for an ArcGIS license.</li>
+</ul>
 <h2 id="theme-manager-32">Theme Manager 3.2</h2>
 <ul>
 <li>Resize the text boxes in the Theme Properties tab</li>
@@ -1432,5 +1670,9 @@ You also need to copy the folder <code style="font-family: Menlo, Consolas, &quo
 <li>Expand WMS Group Layers in tree view</li>
 </ul>
 <h1 id="contact-information">Contact Information</h1>
-<p>Alaska Region GIS Team<br>National Park Service<br>240 West 5th Avenue<br>Anchorage Alaska 99501<br><a href="mailto:akro_gis_helpdesk@nps.gov?subject=ThemeManager3.0">akro_gis_helpdesk@nps.gov</a></p></body>
+<p>Alaska Region GIS Team
+National Park Service
+240 West 5th Avenue
+Anchorage Alaska 99501
+<a href="mailto:akro_gis_helpdesk@nps.gov?subject=ThemeManager3.2">akro_gis_helpdesk@nps.gov</a></p></body>
       </html>
