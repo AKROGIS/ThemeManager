@@ -10,6 +10,7 @@ Theme Manager Help
   * [Using Theme Manager on a Network](#using-theme-manager-on-a-network)
   * [Accessing Theme Manager from ArcMap](#accessing-theme-manager-from-arcmap)
 * [What's New](#whats-new)
+  * [Theme Manager 3.3](#theme-manager-33)
   * [Theme Manager 3.2](#theme-manager-32)
   * [Theme Manager 3.1](#theme-manager-31)
   * [Theme Manager 3.0](#theme-manager-30)
@@ -69,9 +70,19 @@ The executable file (Theme Manager.exe) relies on various files and sub-folders 
 
 ## Requirements
 
-Theme Manager 3.1+ requires the Microsoft .Net Framework 4.5 or higher (This is also a requirement for ArcGIS 10.4+ and other software, and has been a core component of Windows software since 2013, so you probably have it. If not, it can be downloaded for free from Microsoft.
+Theme Manager 3.1+ for ArcGIS 10.x requires the Microsoft .Net Framework 4.5 or higher (This is also a requirement for ArcGIS 10.4+ and other software, and has been a core component of Windows software since 2013, so you probably have it. If not, it can be downloaded for free from Microsoft).
+Theme Manager 3.3+ for ArcGIS Pro requires the Microsoft .Net Framework 4.8 or
+higher (This is also a requirement for ArcGIS Pro 2.5).
 
-Theme Manager can be used on a computer without any GIS software, but to get full access to all the features you must have ArcGIS Desktop version 10.5 (or higher) installed (and licensed) on your computer. There is a different version of Theme Manager for each version for ArcGIS. If you have installed mismatched versions, Theme Manager will run but you will get error and you will not have access to any of the features that require ArcGIS. Theme Manager will work with ArcGIS Pro, but some features (mainly previewing themes and loading/searching/displaying metadata in a geodatabase) do not work.
+Theme Manager can be used on a computer without any GIS software, but to get full access to all the features you must have ArcGIS Desktop version 10.5 (or higher) installed (and licensed) on your computer. There is a different version of Theme Manager for each version for ArcGIS. If you have installed mismatched versions, Theme Manager will run but you will get error and you will not have access to any of the features that require ArcGIS. Theme Manager will work with ArcGIS Pro, but some features (mainly previewing themes and reading metadata in an SDE geodatabase)
+are not supported.
+
+The ArcGIS 10.x version of Theme Manager is required for adding details about
+a `*.lyr` file to a theme list.  The ArcGIS Pro version of Theme Manager can
+add a `*.lyr` file to a theme list, but it treats it as an unknown file type,
+and details about the layer file, including metadata will need to be edited
+manually. Similarly, the ArcGIS Pro version of Theme Manager is required for
+adding details about a `*.lyrx` file to a theme list.
 
 Theme Manager 3.0 is available for ArcGIS 9.3 through ArcGIS 10.6.
 
@@ -87,9 +98,9 @@ installed on your computer. Then follow these steps:
 
 1. Copy the dll to Theme Manager
 
-  * **Desktop**: Copy the file `C:\Program Files (x86)\ArcGIS\Desktop10.5\bin\ESRI.ArcGIS.MetadataEditor.dll` (or similar) to the location where Theme Manager is installed. The dll must be in the same folder as ThemeManager.exe.
+  * **Desktop**: Copy the file `C:\Program Files (x86)\ArcGIS\Desktop10.5\bin\ESRI.ArcGIS.MetadataEditor.dll` (or similar) to the location where ArcGIS 10.x version of Theme Manager is installed. The dll must be in the same folder as ThemeManager.exe.
 
-  * **Pro**: Copy `C:\Program Files\ArcGIS\Pro\bin\Extensions\Metadata\ArcGIS.Desktop.Metadata.dll` to the location where Theme Manager is installed. The dll must be in the same folder as ThemeManager.exe. **Note**: You will need a special build of Theme Manager specifically for Pro.
+  * **Pro**: Copy `C:\Program Files\ArcGIS\Pro\bin\Extensions\Metadata\ArcGIS.Desktop.Metadata.dll` to the location where ArcGIS Pro version of Theme Manager is installed. The dll must be in the same folder as ThemeManager.exe.
 
 2. Create a folder called `Esri` in Theme Manager's stylesheet folder. The stylesheet folder
    is typically called `StyleSheets` in the folder where Theme Manager is installed. However, it
@@ -115,7 +126,7 @@ installed on your computer. Then follow these steps:
 
 A single install of Theme Manager can be used by multiple users if the application is unzipped to a shared folder on a network drive. If the domain administrators have not designated the server or shared folder as a trusted location, you will be prompted to accept a security warning when you launch the application. In some cases you may be denied the ability to run the application from the network. This is a site specific domain security issue beyond the programmer's control. If it is a problem at your site, contact your domain administrator, or copy the application to a local (trusted) location and execute it from there. If you have administrative control on your computer there are also ways to turn off this security warning, but that is beyond the scope of this document – consult the Google.
 
-## Accessing Theme Manager from ArcMap
+## Accessing Theme Manager from ArcMap 10.x
 
 Theme Manager is a stand-alone windows application. It is not an ArcGIS extension. It is typically launched via a shortcut on your desktop.
 
@@ -135,6 +146,13 @@ To launch the application from ArcMap requires installing an ArcMap Add-In, inst
 # What's New
 
 This section assumes you have used previous versions of Theme Manager. If you are a new user you can ignore it.
+
+## Theme Manager 3.3
+
+* Added support for using Theme Manager without ArcGis 10.x. There are now
+  two additional ways to build and run Theme Manager if you have ArcGIS Pro or
+  no GIS at all.
+* Removed the loading dialog when checking for an ArcGIS license.
 
 ## Theme Manager 3.2
 
@@ -160,7 +178,6 @@ This section assumes you have used previous versions of Theme Manager. If you ar
 - Cleaner formatting of display when metadata is missing or has errors.
 - Improvements to reloading, syncing and saving theme lists.
 - Resize text boxes on theme properties form to show more metadata details.
-
 
 ## Theme Manager 3.0
 Theme Manager 3.0 is a complete re-write of the previous versions of Theme Manager. As a result, there is a completely new look and feel to the application. Most of the core functionality is the same but it may be accessed in a slightly different manner. This section will not provide a complete cross walk of all the new ways to access previous functionality. Chances are that you have already discovered most of what you need to know from experimenting. Only the major differences are listed below.
@@ -583,8 +600,8 @@ The following is a brainstorming list and not a planning document. Some of the i
 
 # Contact Information
 
-Alaska Region GIS Team  
-National Park Service  
-240 West 5th Avenue  
-Anchorage Alaska 99501  
+Alaska Region GIS Team
+National Park Service
+240 West 5th Avenue
+Anchorage Alaska 99501
 [akro_gis_helpdesk@nps.gov](mailto:akro_gis_helpdesk@nps.gov?subject=ThemeManager3.2)
