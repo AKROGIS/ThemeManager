@@ -32,6 +32,9 @@ version of ArcGIS. You may need a different version for Pro and for 10.x.
   * Install the Pro SDK as a visual studio extension (see
   <https://github.com/Esri/arcgis-pro-sdk/wiki/ProGuide-Installation-and-Upgrade>)
 * Open `ThemeManager.sln` in Visual Studio.
+* If building for ArcGIS Pro 2.5 or 2.6, add `Pro25` or `Pro26` as a
+  _Conditional compilation symbol_ in the _Build_ tab of the properties page
+  for the `ArcGisPro` project.
 * Select `Build -> Build Solution` from the Visual Studio menu.  If you are not
 supporting both ArcGIS Pro and 10.x, then you may need to build only the supported
 projects.
@@ -59,6 +62,11 @@ folder to a new location renamed `Theme Manager 3.x for ArcGIS 10.y`
 (editing `x` and `y` as appropriate).
 * Zip up `Theme Manager 3.x for ArcGIS 10.y`
 * Distribute
+
+### Theme Manager for Pro
+
+Instructions are the same as for `10.x` above with the obvious corrections
+for file names and version numbers.
 
 ## Using
 
