@@ -54,6 +54,8 @@ The following instructions are how to build the zip file from the repo.
 
 * Build a release version
 * Delete the file `ThemeManager10x/bin/release/ThemeManager.pdb`
+* **For 10.x only**, Copy `ArcGis10x/bin/release/ArcGis10x.dll` and
+  ``ArcGis10x/ESRI.ArcGIS.MetadataEditor.dll` to `ThemeManager10x/bin/release`
 * Copy the `ThemeManager10x/bin/release`
 folder to a new location renamed `Theme Manager 3.x for ArcGIS 10.y`
 (editing `x` and `y` as appropriate).
