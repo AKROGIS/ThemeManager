@@ -17,7 +17,7 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
             if (!_cache.ContainsKey(datapath))
             {
-                await EsriLicense.GetLicenseAsync();
+                //await EsriLicense.GetLicenseAsync();
                 await LoadAsync(datapath);
             }
             if (_cache.ContainsKey(datapath))
