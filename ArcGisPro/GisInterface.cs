@@ -74,6 +74,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         public static string Uuid => "{0B8C5258-EDBA-441A-AA5F-C364BF31C2E8}";
 
+        public static string Name => "ArcGIS Pro";
+
     }
 }
 

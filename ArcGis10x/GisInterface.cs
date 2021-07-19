@@ -81,6 +81,11 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         public static string Uuid => "{2FE4D2B8-6C44-4B80-BBB2-0901B57E603B}";
 
+        // Could crash (no installed runtimes), and will be misleading if it was actuall built for a different version.
+        // public static string Name => "ArcGIS " + ESRI.ArcGIS.RuntimeManager.InstalledRuntimes.First().Version;
+        // Just leave it generic for now.
+        public static string Name => "ArcGIS 10.x";
+
     }
 }
 

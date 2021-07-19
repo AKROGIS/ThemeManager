@@ -43,6 +43,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
 
         public static string Uuid => "{AFC0AC76-5982-4DD8-B544-06766CD46634}";
 
+        public static string Name => "No GIS";
+
     }
 }
 

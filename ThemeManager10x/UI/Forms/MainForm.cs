@@ -1554,7 +1554,7 @@ namespace NPS.AKRO.ThemeManager.UI.Forms
 
         private void RestoreSettings()
         {
-            Text = Settings.Default.AppName;
+            Text = Settings.Default.AppName + " for " + ArcGIS.GisInterface.Name;
             Size = Settings.Default.mainFormSize;
             Location = Settings.Default.mainFormLocation;
             SanitizeSizeAndLocation();
