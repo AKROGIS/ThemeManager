@@ -11,7 +11,7 @@ namespace NPS.AKRO.ThemeManager
     {
         // Introduce a Mutex, to enforce a single instance application.
         // code from http://sanity-free.org/143/csharp_dotnet_single_instance_application.html
-        static readonly Mutex AppLock = new Mutex(true, "{2FE4D2B8-6C44-4B80-BBB2-0901B57E603B}");
+        static readonly Mutex AppLock = new Mutex(true, ArcGIS.GisInterface.Uuid);
 
         /// <summary>
         /// The main entry point for the application.

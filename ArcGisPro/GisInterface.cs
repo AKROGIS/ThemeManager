@@ -72,6 +72,8 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         // display a progressing dialog or message on main form if message is not null
         public static string ProgressorMessage { get; internal set; }
 
+        public static string Uuid => "{0B8C5258-EDBA-441A-AA5F-C364BF31C2E8}";
+
     }
 }
 
