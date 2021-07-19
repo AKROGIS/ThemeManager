@@ -749,9 +749,38 @@ namespace NPS.AKRO.ThemeManager.ArcGIS
         {
             if (layer is CIMAnnotationLayer) return "Annotation";
             if (layer is CIMDimensionLayer) return "Dimension";
-            if (layer is CIMFeatureLayer)
+            if (layer is CIMFeatureLayer featureLayer)
             {
-                var symbolName = layer.SelectionSymbol.Symbol.GetType().Name;
+                string symbolName = null;
+                if (layer.SelectionSymbol != null) {
+                    symbolName = layer.SelectionSymbol.Symbol.GetType().Name;
+                } else
+                {
+                    if (featureLayer.Renderer is CIMSimpleRenderer sRenderer)
+                    {
+                        try
+                        {
+                            symbolName = sRenderer.Symbol.Symbol.GetType().Name;
+                        }
+                        catch { }
+                    }
+                    else if (featureLayer.Renderer is CIMUniqueValueRenderer uRenderer)
+                    {
+                        try
+                        {
+                            symbolName = uRenderer.Groups[0].Classes[0].Symbol.Symbol.GetType().Name;
+                        }
+                        catch { }
+                    }
+                    else if (featureLayer.Renderer is CIMClassBreaksRenderer cRenderer)
+                    {
+                        try
+                        {
+                            symbolName = cRenderer.Breaks[0].Symbol.Symbol.GetType().Name;
+                        }
+                        catch { }
+                    }
+                }
                 switch (symbolName)
                 {
                     case "CIMLineSymbol": return "Polyline";
